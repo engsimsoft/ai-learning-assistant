@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Course-level selection in LessonSelector** - New checkbox for each course to select all lessons at once
+  - Added checkbox next to each course name (AI Web Learning, Project Setup Guide, Additional Materials)
+  - Click checkbox to select/deselect all lessons in that course
+  - Indeterminate state when some (but not all) lessons selected
+  - Improved UX: no need to expand modules and select lessons individually
+
 ### Fixed
 - **LessonSelector UI display issue** - Course names now visible with proper styling
   - Added missing `--secondary-color` CSS variable to `frontend/src/index.css`

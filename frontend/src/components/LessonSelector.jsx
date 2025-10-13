@@ -81,6 +81,41 @@ export default function LessonSelector({ lessons, selected, onChange }) {
     }));
   };
 
+  // Toggle all lessons in a course
+  const handleToggleCourse = (courseKey, modules) => {
+    const courseLessonIds = Object.values(modules)
+      .flat()
+      .map(lesson => lesson.id);
+
+    const allSelected = courseLessonIds.every(id => selected.includes(id));
+
+    if (allSelected) {
+      // Deselect all lessons in this course
+      onChange(selected.filter(id => !courseLessonIds.includes(id)));
+    } else {
+      // Select all lessons in this course
+      const newSelected = [...new Set([...selected, ...courseLessonIds])];
+      onChange(newSelected);
+    }
+  };
+
+  // Check if all lessons in a course are selected
+  const isAllCourseSelected = (modules) => {
+    const courseLessonIds = Object.values(modules)
+      .flat()
+      .map(lesson => lesson.id);
+    return courseLessonIds.length > 0 && courseLessonIds.every(id => selected.includes(id));
+  };
+
+  // Check if some (but not all) lessons in a course are selected
+  const isSomeCourseSelected = (modules) => {
+    const courseLessonIds = Object.values(modules)
+      .flat()
+      .map(lesson => lesson.id);
+    const selectedCount = courseLessonIds.filter(id => selected.includes(id)).length;
+    return selectedCount > 0 && selectedCount < courseLessonIds.length;
+  };
+
   return (
     <div className="lesson-selector">
       <button
@@ -114,17 +149,31 @@ export default function LessonSelector({ lessons, selected, onChange }) {
               {Object.entries(groupedLessons).sort().map(([courseKey, modules]) => {
                 const info = courseInfo[courseKey] || { name: courseKey, icon: '📚' };
                 const isExpanded = expandedCourses[courseKey];
+                const allSelected = isAllCourseSelected(modules);
+                const someSelected = isSomeCourseSelected(modules);
 
                 return (
                   <div key={courseKey} className="course-block">
-                    <button
-                      className="course-button"
-                      onClick={() => toggleCourse(courseKey)}
-                    >
-                      <span className="course-icon">{info.icon}</span>
-                      <span className="course-title">{info.name}</span>
-                      <span className="course-arrow">{isExpanded ? '▼' : '▶'}</span>
-                    </button>
+                    <div className="course-header">
+                      <input
+                        type="checkbox"
+                        className="course-checkbox"
+                        checked={allSelected}
+                        ref={input => {
+                          if (input) input.indeterminate = someSelected;
+                        }}
+                        onChange={() => handleToggleCourse(courseKey, modules)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <button
+                        className="course-button"
+                        onClick={() => toggleCourse(courseKey)}
+                      >
+                        <span className="course-icon">{info.icon}</span>
+                        <span className="course-title">{info.name}</span>
+                        <span className="course-arrow">{isExpanded ? '▼' : '▶'}</span>
+                      </button>
+                    </div>
 
                     {isExpanded && (
                       <div className="course-modules">
