@@ -14,7 +14,7 @@
 ## 📘 Основные модули (30 уроков)
 
 ### Module 1: Основы (5 уроков)
-**Путь:** `backend/data/lessons/module-1-basics/`
+**Путь:** `backend/data/lessons/ai-web-learning/1-basics/`
 
 1. `lesson-01-client-server.md` — Архитектура клиент-сервер
 2. `lesson-02-http-basics.md` — Основы HTTP протокола
@@ -22,14 +22,13 @@
 4. `lesson-04-rest-api.md` — Принципы REST API
 5. `lesson-05-framework-choice.md` — Выбор фреймворка
 
-**Дополнительные материалы:**
-- `Объяснение к первому уроку.md`
-- `Урок 1.1.1 - Структура проекта EngineCamPro v2.md`
+**Дополнительные материалы в extras:**
+- `backend/data/lessons/extras/Урок 1.1.1 - Структура проекта EngineCamPro v2.md`
 
 ---
 
 ### Module 2: Backend (8 уроков)
-**Путь:** `backend/data/lessons/module-2-backend/`
+**Путь:** `backend/data/lessons/ai-web-learning/2-backend/`
 
 1. `lesson-2-1-fastapi-intro.md` — Введение в FastAPI
 2. `lesson-2-2-http-methods.md` — HTTP методы (GET, POST, PUT, DELETE)
@@ -43,7 +42,7 @@
 ---
 
 ### Module 3: Database (4 урока)
-**Путь:** `backend/data/lessons/module-3-database/`
+**Путь:** `backend/data/lessons/ai-web-learning/3-database/`
 
 1. `lesson_3_1_sql_vs_nosql.txt` — SQL vs NoSQL: выбор БД
 2. `lesson_3_2_postgresql_sqlalchemy.txt` — PostgreSQL + SQLAlchemy
@@ -53,7 +52,7 @@
 ---
 
 ### Module 4: Frontend (6 уроков)
-**Путь:** `backend/data/lessons/module-4-frontend/`
+**Путь:** `backend/data/lessons/ai-web-learning/4-frontend/`
 
 1. `lesson-4-1-html-css-js.md` — Основы HTML, CSS, JavaScript
 2. `lesson-4-2-fetch-api.md` — Fetch API для запросов
@@ -65,7 +64,7 @@
 ---
 
 ### Module 5: Integration (3 урока)
-**Путь:** `backend/data/lessons/module-5-integration/`
+**Путь:** `backend/data/lessons/ai-web-learning/5-integration/`
 
 1. `lesson-5-1-frontend-backend.md` — Связка Frontend + Backend
 2. `lesson-5-2-error-loading.md` — Обработка ошибок и загрузки
@@ -74,7 +73,7 @@
 ---
 
 ### Module 6: Monetization (2 урока)
-**Путь:** `backend/data/lessons/module-6-monetization/`
+**Путь:** `backend/data/lessons/ai-web-learning/6-monetization/`
 
 1. `lesson-6-1-auth-clerk.md` — Аутентификация с Clerk
 2. `lesson-6-2-payments-stripe.md` — Платежи через Stripe
@@ -82,7 +81,7 @@
 ---
 
 ### Module 7: Deploy (2 урока)
-**Путь:** `backend/data/lessons/module-7-deploy/`
+**Путь:** `backend/data/lessons/ai-web-learning/7-deploy/`
 
 1. `lesson-7-1-hosting-platforms.md` — Платформы хостинга
 2. `lesson-7-2-production-deploy.md` — Production деплой
@@ -92,7 +91,7 @@
 ## 📕 Опциональные модули (11 уроков)
 
 ### Module 8: Next.js Full-Stack (5 уроков) ⚡
-**Путь:** `backend/data/lessons/module-8- Next.js Full-Stack/`
+**Путь:** `backend/data/lessons/ai-web-learning/8-nextjs/`
 
 1. `lesson-8-0-fullstack.md` — Full-stack разработка
 2. `lesson-8-1-monolith.md` — Монолитная архитектура
@@ -100,14 +99,12 @@
 4. `lesson-8-3-ssr-csr.md` — SSR vs CSR
 5. `lesson-8-4-routing.md` — Роутинг в Next.js
 
-**Дополнительные материалы:**
-- `lesson-ntro.md`
-- `Модуль 8: Next.js Full-Stack (опциональный).md`
+**Примечание:** Intro урок lesson-8-intro.md включен в основной список уроков модуля
 
 ---
 
-### Module 9: RAG + AI Agent (5 уроков) 🤖
-**Путь:** `backend/data/lessons/module-9 - RAG + AI Агент/`
+### Module 9: RAG + AI Agent (8 уроков) 🤖
+**Путь:** `backend/data/lessons/ai-web-learning/9-rag-ai/`
 
 1. `lesson-9-0-rag-intro.md` — Введение в RAG
 2. `lesson-9-1-embeddings.md` — Embeddings и векторные БД
@@ -118,15 +115,16 @@
 7. `lesson-9-6-gemini-ai-agent.md` — AI агент на Gemini
 8. `lesson-9-7-production-optimization.md` — Production оптимизация
 
-**Дополнительные материалы:**
-- `module-9-overview.md`
-- `ai-assistant-final-report-v2.md`
-- `compass_AI Models.md`
+**Дополнительные материалы в extras:**
+- `backend/data/lessons/extras/ai-assistant-final-report-v2.md`
+- `backend/data/lessons/extras/compass_AI Models.md`
+
+**Примечание:** Overview урок module-9-overview.md включен в основной список уроков модуля
 
 ---
 
 ### Module 10: Machine Learning (1 урок) 🧠
-**Путь:** `backend/data/lessons/module-10 -  Введение в ML/`
+**Путь:** `backend/data/lessons/ai-web-learning/10-ml/`
 
 1. `ml-intro-lesson.md` — Введение в ML для веб-приложений
 

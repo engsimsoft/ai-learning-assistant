@@ -41,7 +41,7 @@
 ## 📘 Содержание курса (по частям)
 
 ### Часть 1: Основы организации проекта (9 уроков) 🏗️
-**Путь:** `backend/data/lessons/Часть 1 /`
+**Путь:** `backend/data/lessons/project-setup-guide/1-fundamentals/`
 
 1. **1.1 Философия правильной организации проекта.md**
    - Почему структура проекта критична
@@ -94,7 +94,7 @@
 ---
 
 ### Часть 2: FastAPI + React Setup (6 уроков) 🚀
-**Путь:** `backend/data/lessons/Часть 2/`
+**Путь:** `backend/data/lessons/project-setup-guide/2-fastapi-react/`
 
 **Тип проекта:** Разделенный Backend (FastAPI) + Frontend (React)
 
@@ -135,7 +135,7 @@
 ---
 
 ### Часть 3: Next.js Setup (4 урока) ⚡
-**Путь:** `backend/data/lessons/Часть 3 /`
+**Путь:** `backend/data/lessons/project-setup-guide/3-nextjs/`
 
 **Тип проекта:** Full-stack монолит (Next.js App Router)
 
@@ -163,7 +163,7 @@
 ---
 
 ### Часть 5: Работа с ИИ (1 урок) 🤖
-**Путь:** `backend/data/lessons/Часть 5/`
+**Путь:** `backend/data/lessons/project-setup-guide/5-ai-tools/`
 
 1. **5.1 Работа с ИИ для правильной структуры.md**
    - Как правильно просить ИИ создать структуру
@@ -175,7 +175,7 @@
 ---
 
 ### Часть 6: Шаблоны и чек-листы (1 урок) ✅
-**Путь:** `backend/data/lessons/Часть 6 /`
+**Путь:** `backend/data/lessons/project-setup-guide/6-templates/`
 
 1. **6.1 Шаблоны и чек-листы.md**
    - Готовые шаблоны структур

@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Course structure reorganization** - Improved lesson organization with clear separation
+  - Created `ai-web-learning/` directory (10 modules, 41+ lessons)
+  - Created `project-setup-guide/` directory (5 parts, 21 lessons)
+  - Created `extras/` directory for additional materials (3 files)
+  - Renamed all module folders: removed "module-" and "part-" prefixes
+  - New naming: `1-basics`, `2-backend`, `3-database`, etc. (auto-sorted)
+- **Documentation improvements**
+  - Added `docs/course-structure.md` - detailed AI Web Learning course structure
+  - Added `docs/project-setup-guide-structure.md` - Project Setup Guide structure
+  - Updated README.md with course overview section
+  - Added critical pre-commit checklist to CLAUDE.md
+- **Backend updates**
+  - Updated `context_service.py` to support new folder structure
+  - Added support for 3 categories: ai-web-learning, project-setup-guide, extras
+  - Improved lesson loading with course/module tracking
+  - Successfully loads all 70 lessons with new structure
+
+### Changed
+- Reorganized 72 lessons into logical course-based structure
+- Simplified folder names for better navigation
+- Moved lesson intro/overview files back to their modules
+
+### Removed
+- Deleted obsolete explanation files
+- Removed duplicate module description files
+
 ### Planned
 - User authentication and accounts
 - Conversation history persistence (PostgreSQL)

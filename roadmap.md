@@ -135,6 +135,12 @@
 - ✅ Обновили зависимости для Python 3.13 (FastAPI 0.115+, Pydantic 2.10+)
 - ✅ Создали Git репозиторий и залили на GitHub
 - ✅ Локальное тестирование пройдено успешно (backend + frontend работают)
+- ✅ Реорганизовали структуру курсов в backend/data/lessons/
+- ✅ Создали три категории: ai-web-learning, project-setup-guide, extras
+- ✅ Упростили названия модулей (удалили префиксы "module-" и "part-")
+- ✅ Обновили context_service.py для поддержки новой структуры
+- ✅ Создали документацию курсов (docs/course-structure.md, docs/project-setup-guide-structure.md)
+- ✅ Добавили критически важное правило в CLAUDE.md о предкоммитном обновлении документации
 
 **Что сделано:**
 1. Backend с поддержкой 4 оптимальных LLM через OpenRouter
