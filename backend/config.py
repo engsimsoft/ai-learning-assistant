@@ -17,34 +17,34 @@ class Config:
     OPENROUTER_API_BASE: str = "https://openrouter.ai/api/v1"
 
     # Model Configuration
-    DEFAULT_MODEL: str = os.getenv("DEFAULT_MODEL", "anthropic/claude-3.5-sonnet")
-    FALLBACK_MODEL: str = os.getenv("FALLBACK_MODEL", "google/gemini-pro")
+    DEFAULT_MODEL: str = os.getenv("DEFAULT_MODEL", "google/gemini-2.5-flash-preview-09-2025")
+    FALLBACK_MODEL: str = os.getenv("FALLBACK_MODEL", "x-ai/grok-4-fast")
 
     # Available models for user selection
     AVAILABLE_MODELS = [
         {
-            "id": "anthropic/claude-3.5-sonnet",
-            "name": "Claude 3.5 Sonnet",
-            "description": "Best for reasoning and code",
-            "context_length": 200000
-        },
-        {
-            "id": "openai/gpt-4-turbo",
-            "name": "GPT-4 Turbo",
-            "description": "Good all-rounder",
-            "context_length": 128000
-        },
-        {
-            "id": "google/gemini-pro",
-            "name": "Gemini Pro",
-            "description": "Large context window",
+            "id": "google/gemini-2.5-flash-preview-09-2025",
+            "name": "Gemini 2.5 Flash Preview",
+            "description": "Latest Gemini, fast & cost-effective (default)",
             "context_length": 1000000
         },
         {
-            "id": "meta-llama/llama-3-70b",
-            "name": "Llama 3 70B",
-            "description": "Open source, cost-effective",
-            "context_length": 8000
+            "id": "x-ai/grok-4-fast",
+            "name": "Grok 4 Fast",
+            "description": "FREE now! 2M context, auto-cache, cheapest output",
+            "context_length": 2000000
+        },
+        {
+            "id": "openai/gpt-4.1-mini",
+            "name": "GPT-4.1 Mini",
+            "description": "Compact OpenAI model, balanced performance",
+            "context_length": 1000000
+        },
+        {
+            "id": "anthropic/claude-sonnet-4.5",
+            "name": "Claude Sonnet 4.5",
+            "description": "Best reasoning & code, premium quality",
+            "context_length": 200000
         }
     ]
 

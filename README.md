@@ -1,6 +1,6 @@
 # AI Learning Agent
 
-AI-наставник с доступом к 72 урокам веб-разработки. Отвечает на вопросы студентов с поддержкой множества LLM через OpenRouter (Claude, GPT-4, Gemini и др.).
+AI-наставник с доступом к 72 урокам веб-разработки. Отвечает на вопросы студентов с поддержкой 4 оптимальных LLM через OpenRouter (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5).
 
 ## Быстрый старт
 
@@ -49,10 +49,10 @@ Frontend: http://localhost:5173
 ## Технологии
 
 **Backend:**
-- FastAPI 0.104.1
-- OpenRouter API (доступ ко всем LLM)
-- Поддержка: Claude 3.5, GPT-4, Gemini Pro, Llama и др.
-- Python 3.11+
+- FastAPI 0.115+
+- OpenRouter API (доступ к топовым LLM)
+- Поддержка 4 моделей: Gemini 2.5 Flash (default), Grok 4 Fast (FREE!), GPT-4.1 Mini, Claude Sonnet 4.5
+- Python 3.13
 
 **Frontend:**
 - React 18
@@ -88,11 +88,12 @@ frontend/
 
 ## Возможности
 
-- **Множество AI моделей** - выбор из Claude 3.5, GPT-4, Gemini Pro, Llama 3
+- **4 оптимальные AI модели** - Gemini 2.5 Flash, Grok 4 Fast (FREE!), GPT-4.1 Mini, Claude Sonnet 4.5
 - **Контекстно-зависимые ответы** - AI знает 72 урока
 - **Гибкий выбор уроков** - используй все или выбери конкретные модули
-- **Автоматический fallback** - переключение на резервную модель при ошибке
+- **Автоматический fallback** - Gemini → Grok при ошибке
 - **Real-time чат** - интерактивный диалог с историей
+- **Open Source** - github.com/engsimsoft/ai-learning-assistant
 
 ## Roadmap
 

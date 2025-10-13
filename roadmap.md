@@ -1,19 +1,20 @@
 # Roadmap: AI Learning Agent
 
 ## 🎯 Цель проекта
-Создать AI-агента наставника с доступом к 70+ урокам в Markdown. Агент отвечает на вопросы студентов, используя множество LLM моделей через OpenRouter.
+Создать AI-агента наставника с доступом к 72 урокам в Markdown. Агент отвечает на вопросы студентов, используя 4 оптимальные LLM модели через OpenRouter.
 
 **Технологии:**
-- Backend: FastAPI + Python + OpenRouter (доступ ко всем LLM)
-- Frontend: React + Vite
+- Backend: FastAPI + Python 3.13 + OpenRouter (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5)
+- Frontend: React 18 + Vite 5
 - Deployment: Railway (2 сервиса)
+- Version Control: Git + GitHub (github.com/engsimsoft/ai-learning-assistant)
 
 ---
 
 ## 📊 Текущий статус
-- **Этап:** Завершен - Готово к локальному тестированию
-- **Прогресс:** 31/31 задач (100%)
-- **Следующее:** Локальное тестирование, затем деплой на Railway
+- **Этап:** Готово к Production Deployment
+- **Прогресс:** 32/32 задач (100%)
+- **Следующее:** Deployment на Railway
 
 ---
 
@@ -128,19 +129,26 @@
 - ✅ Реализовали Backend (FastAPI + OpenRouter)
 - ✅ Реализовали Frontend (React + Vite)
 - ✅ Скопировали все 72 урока в backend/data/lessons (включая Project Setup Guide)
-- ✅ Создали всю документацию
+- ✅ Создали всю документацию по принципу SSOT
 - ✅ Завершили все 6 этапов разработки
+- ✅ Настроили 4 оптимальные AI модели (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5)
+- ✅ Обновили зависимости для Python 3.13 (FastAPI 0.115+, Pydantic 2.10+)
+- ✅ Создали Git репозиторий и залили на GitHub
+- ✅ Локальное тестирование пройдено успешно (backend + frontend работают)
 
 **Что сделано:**
-1. Backend с поддержкой множества LLM через OpenRouter
-2. Context service для управления уроками
+1. Backend с поддержкой 4 оптимальных LLM через OpenRouter
+2. Context service для управления 72 уроками
 3. Полноценный React интерфейс с 5 компонентами
 4. Современный responsive дизайн
-5. Comprehensive документация (README, setup, architecture, deployment, troubleshooting)
-6. ADR документы и CHANGELOG
+5. Comprehensive документация (README, CLAUDE.md, DOCUMENTATION_GUIDE.md, setup, architecture, deployment, troubleshooting)
+6. ADR документы и CHANGELOG (актуализированы)
+7. Git + GitHub интеграция (github.com/engsimsoft/ai-learning-assistant)
+8. Virtual environment setup (backend/venv)
+9. Node modules setup (frontend/node_modules)
 
 **Следующие шаги:**
-1. Локальное тестирование (см. docs/setup.md)
+1. ✅ Локальное тестирование (ЗАВЕРШЕНО)
 2. Deployment на Railway (см. docs/deployment.md)
 3. Production проверка
 
