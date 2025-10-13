@@ -28,10 +28,21 @@ npm run dev
 
 Frontend: http://localhost:5173
 
+## Образовательные курсы
+
+Проект содержит **два курса** по веб-разработке (72 урока):
+
+- **[AI Web Learning](docs/course-structure.md)** (41+ урок) - что создавать: Backend, Frontend, Database, RAG, ML
+- **[Project Setup Guide](docs/project-setup-guide-structure.md)** (21 урок) - как организовать: структура, архитектура, работа с ИИ
+
+**Как связаны:** Setup Guide учит организовать проект, AI Web Learning - что в нём создавать.
+
 ## Документация
 
 - [Детальная установка](docs/setup.md) - пошаговая инструкция
 - [Архитектура](docs/architecture.md) - как работает система
+- [Структура курса "AI Web Learning"](docs/course-structure.md) - 10 модулей веб-разработки
+- [Структура курса "Project Setup Guide"](docs/project-setup-guide-structure.md) - правильная организация проектов
 - [Deployment](docs/deployment.md) - деплой на Railway
 - [Troubleshooting](docs/troubleshooting.md) - решение проблем
 
