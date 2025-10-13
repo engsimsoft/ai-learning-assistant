@@ -141,6 +141,11 @@
 - ✅ Обновили context_service.py для поддержки новой структуры
 - ✅ Создали документацию курсов (docs/course-structure.md, docs/project-setup-guide-structure.md)
 - ✅ Добавили критически важное правило в CLAUDE.md о предкоммитном обновлении документации
+- ✅ Исправлена критическая проблема UI с отображением названий курсов
+- ✅ Установлен и использован Playwright MCP для диагностики CSS проблем
+- ✅ Добавлена недостающая CSS переменная --secondary-color в index.css
+- ✅ Переписан LessonSelector.jsx с улучшенной структурой и natural sorting
+- ✅ Обновлен backend для возврата поля course вместо category
 
 **Что сделано:**
 1. Backend с поддержкой 4 оптимальных LLM через OpenRouter

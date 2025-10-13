@@ -42,6 +42,7 @@ class LessonInfo(BaseModel):
     id: int = Field(..., description="Lesson ID")
     title: str = Field(..., description="Lesson title")
     filename: str = Field(..., description="Filename")
+    course: Optional[str] = Field(default=None, description="Course name (ai-web-learning, project-setup-guide, extras)")
     module: Optional[str] = Field(default=None, description="Module name")
 
 

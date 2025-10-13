@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **LessonSelector UI display issue** - Course names now visible with proper styling
+  - Added missing `--secondary-color` CSS variable to `frontend/src/index.css`
+  - Fixed gradient background not rendering (was causing white text on white background)
+  - Complete rewrite of LessonSelector component with improved structure
+  - Added natural sorting for modules (1-10 instead of alphabetical 1, 10, 2...)
+  - Backend now returns `course` field instead of `category` for three-level hierarchy
+  - Used Playwright MCP for browser inspection and CSS debugging
+
 ### Added
 - **Course structure reorganization** - Improved lesson organization with clear separation
   - Created `ai-web-learning/` directory (10 modules, 41+ lessons)

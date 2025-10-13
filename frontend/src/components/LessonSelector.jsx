@@ -2,17 +2,17 @@
  * LessonSelector Component
  * Allows users to select specific lessons for context
  */
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './LessonSelector.css';
 
 export default function LessonSelector({ lessons, selected, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [useAllLessons, setUseAllLessons] = useState(true);
-  const [expandedCategories, setExpandedCategories] = useState({});
+  const [expandedCourses, setExpandedCourses] = useState({});
   const [expandedModules, setExpandedModules] = useState({});
 
-  // Category names and display text
-  const categoryInfo = {
+  // Course display information
+  const courseInfo = {
     'ai-web-learning': {
       name: 'AI Web Learning',
       icon: '🚀',
@@ -21,23 +21,33 @@ export default function LessonSelector({ lessons, selected, onChange }) {
     'project-setup-guide': {
       name: 'Project Setup Guide',
       icon: '📋',
-      description: 'Project organization methodology'
+      description: 'Project organization'
     },
-    'additional-materials': {
+    'extras': {
       name: 'Additional Materials',
       icon: '📄',
-      description: 'Reference documents and analysis'
+      description: 'Extra resources'
     }
   };
 
-  // Group lessons by category, then by module
-  const lessonsByCategory = lessons.reduce((acc, lesson) => {
-    const category = lesson.category || 'ai-web-learning';
-    const module = lesson.module || 'Other';
+  // Natural sort for modules (1-basics, 2-backend, ..., 10-ml)
+  const naturalSort = (a, b) => {
+    const aNum = parseInt(a.split('-')[0]);
+    const bNum = parseInt(b.split('-')[0]);
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return aNum - bNum;
+    }
+    return a.localeCompare(b);
+  };
 
-    if (!acc[category]) acc[category] = {};
-    if (!acc[category][module]) acc[category][module] = [];
-    acc[category][module].push(lesson);
+  // Group lessons by course, then by module
+  const groupedLessons = lessons.reduce((acc, lesson) => {
+    const course = lesson.course || 'ai-web-learning';
+    const module = lesson.module || 'unknown';
+
+    if (!acc[course]) acc[course] = {};
+    if (!acc[course][module]) acc[course][module] = [];
+    acc[course][module].push(lesson);
 
     return acc;
   }, {});
@@ -57,17 +67,17 @@ export default function LessonSelector({ lessons, selected, onChange }) {
     }
   };
 
-  const toggleCategory = (category) => {
-    setExpandedCategories(prev => ({
+  const toggleCourse = (course) => {
+    setExpandedCourses(prev => ({
       ...prev,
-      [category]: !prev[category]
+      [course]: !prev[course]
     }));
   };
 
-  const toggleModule = (categoryModuleKey) => {
+  const toggleModule = (key) => {
     setExpandedModules(prev => ({
       ...prev,
-      [categoryModuleKey]: !prev[categoryModuleKey]
+      [key]: !prev[key]
     }));
   };
 
@@ -101,59 +111,57 @@ export default function LessonSelector({ lessons, selected, onChange }) {
 
           {!useAllLessons && (
             <div className="lessons-list">
-              {Object.entries(lessonsByCategory).map(([categoryKey, modules]) => {
-                const catInfo = categoryInfo[categoryKey] || {
-                  name: categoryKey,
-                  icon: '📚',
-                  description: ''
-                };
-                const isCategoryExpanded = expandedCategories[categoryKey];
+              {Object.entries(groupedLessons).sort().map(([courseKey, modules]) => {
+                const info = courseInfo[courseKey] || { name: courseKey, icon: '📚' };
+                const isExpanded = expandedCourses[courseKey];
 
                 return (
-                  <div key={categoryKey} className="category-group">
-                    <div
-                      className="category-header"
-                      onClick={() => toggleCategory(categoryKey)}
+                  <div key={courseKey} className="course-block">
+                    <button
+                      className="course-button"
+                      onClick={() => toggleCourse(courseKey)}
                     >
-                      <span className="category-icon">{catInfo.icon}</span>
-                      <span className="category-name">{catInfo.name}</span>
-                      <span className="category-arrow">{isCategoryExpanded ? '▼' : '▶'}</span>
-                    </div>
+                      <span className="course-icon">{info.icon}</span>
+                      <span className="course-title">{info.name}</span>
+                      <span className="course-arrow">{isExpanded ? '▼' : '▶'}</span>
+                    </button>
 
-                    {isCategoryExpanded && (
-                      <div className="category-content">
-                        {Object.entries(modules).map(([module, moduleLessons]) => {
-                          const moduleKey = `${categoryKey}-${module}`;
-                          const isModuleExpanded = expandedModules[moduleKey];
+                    {isExpanded && (
+                      <div className="course-modules">
+                        {Object.entries(modules)
+                          .sort(([a], [b]) => naturalSort(a, b))
+                          .map(([moduleName, moduleLessons]) => {
+                            const moduleKey = `${courseKey}-${moduleName}`;
+                            const isModuleExpanded = expandedModules[moduleKey];
 
-                          return (
-                            <div key={moduleKey} className="module-group">
-                              <div
-                                className="module-header"
-                                onClick={() => toggleModule(moduleKey)}
-                              >
-                                <span className="module-name">{module}</span>
-                                <span className="module-count">({moduleLessons.length})</span>
-                                <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
+                            return (
+                              <div key={moduleKey} className="module-block">
+                                <button
+                                  className="module-button"
+                                  onClick={() => toggleModule(moduleKey)}
+                                >
+                                  <span className="module-name">{moduleName}</span>
+                                  <span className="module-count">({moduleLessons.length})</span>
+                                  <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
+                                </button>
+
+                                {isModuleExpanded && (
+                                  <div className="module-lessons">
+                                    {moduleLessons.map(lesson => (
+                                      <label key={lesson.id} className="lesson-checkbox">
+                                        <input
+                                          type="checkbox"
+                                          checked={selected.includes(lesson.id)}
+                                          onChange={() => handleToggleLesson(lesson.id)}
+                                        />
+                                        <span className="lesson-text">{lesson.title}</span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-
-                              {isModuleExpanded && (
-                                <div className="module-content">
-                                  {moduleLessons.map(lesson => (
-                                    <label key={lesson.id} className="lesson-item">
-                                      <input
-                                        type="checkbox"
-                                        checked={selected.includes(lesson.id)}
-                                        onChange={() => handleToggleLesson(lesson.id)}
-                                      />
-                                      <span className="lesson-title">{lesson.title}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
                       </div>
                     )}
                   </div>

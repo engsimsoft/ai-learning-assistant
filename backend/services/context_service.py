@@ -130,15 +130,15 @@ class ContextService:
         Get list of all lessons with metadata
 
         Returns:
-            List of lesson info dictionaries with category, module, and title
+            List of lesson info dictionaries with course, module, and title
         """
         return [
             {
                 "id": lesson["id"],
                 "title": lesson["title"],
                 "filename": lesson["filename"],
-                "module": lesson.get("module", "unknown"),
-                "category": lesson.get("category", "ai-web-learning")
+                "course": lesson.get("course", "unknown"),
+                "module": lesson.get("module", "unknown")
             }
             for lesson in sorted(self.lessons_cache.values(), key=lambda x: x["id"])
         ]

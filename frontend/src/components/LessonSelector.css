@@ -18,6 +18,7 @@
   justify-content: space-between;
   align-items: center;
   transition: border-color 0.2s;
+  cursor: pointer;
 }
 
 .selector-toggle:hover {
@@ -71,76 +72,88 @@
   padding: 8px;
 }
 
-/* Category level (Level 1) */
-.category-group {
+/* Course level */
+.course-block {
   margin-bottom: 16px;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
 }
 
-.category-header {
+.course-button {
+  width: 100%;
   padding: 12px 16px;
-  font-weight: 700;
-  font-size: 0.95em;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
+  color: white !important;
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 0.95em;
+  font-weight: 700;
   transition: opacity 0.2s;
+  text-align: left;
 }
 
-.category-header:hover {
+.course-button:hover {
   opacity: 0.9;
 }
 
-.category-icon {
+.course-icon {
   font-size: 1.2em;
+  flex-shrink: 0;
 }
 
-.category-name {
+.course-title {
   flex: 1;
+  text-align: left;
+  font-size: 1em;
+  color: white !important;
+  display: block;
+  min-width: 0;
 }
 
-.category-arrow {
+.course-arrow {
   font-size: 0.8em;
   opacity: 0.8;
 }
 
-.category-content {
+.course-modules {
   padding: 8px;
   background-color: #fafbfc;
 }
 
-/* Module level (Level 2) */
-.module-group {
+/* Module level */
+.module-block {
   margin-bottom: 8px;
   border: 1px solid #e0e7ff;
   border-radius: 6px;
   overflow: hidden;
 }
 
-.module-header {
+.module-button {
+  width: 100%;
   padding: 10px 14px;
-  font-weight: 600;
-  font-size: 0.88em;
-  color: var(--primary-color);
   background-color: #f0f9ff;
+  color: var(--primary-color);
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.88em;
+  font-weight: 600;
   transition: background-color 0.2s;
 }
 
-.module-header:hover {
+.module-button:hover {
   background-color: #e0f2fe;
 }
 
 .module-name {
   flex: 1;
+  text-align: left;
 }
 
 .module-count {
@@ -153,12 +166,13 @@
   color: var(--text-secondary);
 }
 
-.module-content {
+.module-lessons {
   padding: 4px;
   background-color: white;
 }
 
-.lesson-item {
+/* Lesson checkboxes */
+.lesson-checkbox {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -169,11 +183,11 @@
   font-size: 0.9em;
 }
 
-.lesson-item:hover {
+.lesson-checkbox:hover {
   background-color: #f9fafb;
 }
 
-.lesson-title {
+.lesson-text {
   flex: 1;
   line-height: 1.4;
 }
