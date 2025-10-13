@@ -8,12 +8,37 @@ import './LessonSelector.css';
 export default function LessonSelector({ lessons, selected, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [useAllLessons, setUseAllLessons] = useState(true);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [expandedModules, setExpandedModules] = useState({});
 
-  // Group lessons by module
-  const lessonsByModule = lessons.reduce((acc, lesson) => {
+  // Category names and display text
+  const categoryInfo = {
+    'ai-web-learning': {
+      name: 'AI Web Learning',
+      icon: '🚀',
+      description: 'Main technical course'
+    },
+    'project-setup-guide': {
+      name: 'Project Setup Guide',
+      icon: '📋',
+      description: 'Project organization methodology'
+    },
+    'additional-materials': {
+      name: 'Additional Materials',
+      icon: '📄',
+      description: 'Reference documents and analysis'
+    }
+  };
+
+  // Group lessons by category, then by module
+  const lessonsByCategory = lessons.reduce((acc, lesson) => {
+    const category = lesson.category || 'ai-web-learning';
     const module = lesson.module || 'Other';
-    if (!acc[module]) acc[module] = [];
-    acc[module].push(lesson);
+
+    if (!acc[category]) acc[category] = {};
+    if (!acc[category][module]) acc[category][module] = [];
+    acc[category][module].push(lesson);
+
     return acc;
   }, {});
 
@@ -30,6 +55,20 @@ export default function LessonSelector({ lessons, selected, onChange }) {
     if (checked) {
       onChange([]);
     }
+  };
+
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
+  const toggleModule = (categoryModuleKey) => {
+    setExpandedModules(prev => ({
+      ...prev,
+      [categoryModuleKey]: !prev[categoryModuleKey]
+    }));
   };
 
   return (
@@ -62,21 +101,64 @@ export default function LessonSelector({ lessons, selected, onChange }) {
 
           {!useAllLessons && (
             <div className="lessons-list">
-              {Object.entries(lessonsByModule).map(([module, moduleLessons]) => (
-                <div key={module} className="module-group">
-                  <div className="module-header">{module}</div>
-                  {moduleLessons.map(lesson => (
-                    <label key={lesson.id} className="lesson-item">
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(lesson.id)}
-                        onChange={() => handleToggleLesson(lesson.id)}
-                      />
-                      <span className="lesson-title">{lesson.title}</span>
-                    </label>
-                  ))}
-                </div>
-              ))}
+              {Object.entries(lessonsByCategory).map(([categoryKey, modules]) => {
+                const catInfo = categoryInfo[categoryKey] || {
+                  name: categoryKey,
+                  icon: '📚',
+                  description: ''
+                };
+                const isCategoryExpanded = expandedCategories[categoryKey];
+
+                return (
+                  <div key={categoryKey} className="category-group">
+                    <div
+                      className="category-header"
+                      onClick={() => toggleCategory(categoryKey)}
+                    >
+                      <span className="category-icon">{catInfo.icon}</span>
+                      <span className="category-name">{catInfo.name}</span>
+                      <span className="category-arrow">{isCategoryExpanded ? '▼' : '▶'}</span>
+                    </div>
+
+                    {isCategoryExpanded && (
+                      <div className="category-content">
+                        {Object.entries(modules).map(([module, moduleLessons]) => {
+                          const moduleKey = `${categoryKey}-${module}`;
+                          const isModuleExpanded = expandedModules[moduleKey];
+
+                          return (
+                            <div key={moduleKey} className="module-group">
+                              <div
+                                className="module-header"
+                                onClick={() => toggleModule(moduleKey)}
+                              >
+                                <span className="module-name">{module}</span>
+                                <span className="module-count">({moduleLessons.length})</span>
+                                <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
+                              </div>
+
+                              {isModuleExpanded && (
+                                <div className="module-content">
+                                  {moduleLessons.map(lesson => (
+                                    <label key={lesson.id} className="lesson-item">
+                                      <input
+                                        type="checkbox"
+                                        checked={selected.includes(lesson.id)}
+                                        onChange={() => handleToggleLesson(lesson.id)}
+                                      />
+                                      <span className="lesson-title">{lesson.title}</span>
+                                    </label>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

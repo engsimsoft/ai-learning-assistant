@@ -41,11 +41,21 @@ class ContextService:
                         with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
 
-                        # Extract module name from path
+                        # Extract course and module from path
+                        # Examples:
+                        #   ai-web-learning/1-basics/lesson-01.md -> course=ai-web-learning, module=1-basics
+                        #   extras/report.md -> course=extras, module=extras
                         relative_path = file_path.relative_to(self.lessons_dir)
-                        module = relative_path.parts[0] if len(relative_path.parts) > 1 else "root"
+                        course = relative_path.parts[0] if len(relative_path.parts) > 0 else "root"
+
+                        # For extras, module is same as course
+                        if course == "extras":
+                            module = "extras"
+                        else:
+                            module = relative_path.parts[1] if len(relative_path.parts) > 1 else "root"
 
                         title = self._extract_title(content, filename)
+                        category = self._categorize_lesson(course, module, filename)
 
                         self.lessons_cache[lesson_id] = {
                             "id": lesson_id,
@@ -53,11 +63,13 @@ class ContextService:
                             "filepath": str(file_path),
                             "content": content,
                             "title": title,
-                            "module": module
+                            "course": course,
+                            "module": module,
+                            "category": category
                         }
 
                         lesson_id += 1
-                        logger.info(f"Loaded lesson {lesson_id - 1}: {title}")
+                        logger.info(f"Loaded lesson {lesson_id - 1}: {title} [{course}/{module}]")
 
                     except Exception as e:
                         logger.error(f"Error loading {file_path}: {e}")
@@ -88,19 +100,45 @@ class ContextService:
         # Fallback to filename without extension
         return filename.replace('.md', '').replace('.txt', '').replace('-', ' ').replace('_', ' ')
 
+    def _categorize_lesson(self, course: str, module: str, filename: str) -> str:
+        """
+        Categorize lesson based on course, module and filename
+
+        Args:
+            course: Course directory name (ai-web-learning, project-setup-guide, extras)
+            module: Module name from directory structure
+            filename: Lesson filename
+
+        Returns:
+            Category: 'ai-web-learning', 'project-setup-guide', or 'extras'
+        """
+        course_lower = course.lower()
+
+        # Direct mapping based on course directory
+        if 'ai-web-learning' in course_lower:
+            return 'ai-web-learning'
+        elif 'project-setup-guide' in course_lower:
+            return 'project-setup-guide'
+        elif 'extras' in course_lower:
+            return 'extras'
+
+        # Fallback to AI Web Learning
+        return 'ai-web-learning'
+
     def get_lessons_list(self) -> List[Dict]:
         """
         Get list of all lessons with metadata
 
         Returns:
-            List of lesson info dictionaries
+            List of lesson info dictionaries with category, module, and title
         """
         return [
             {
                 "id": lesson["id"],
                 "title": lesson["title"],
                 "filename": lesson["filename"],
-                "module": lesson.get("module", "unknown")
+                "module": lesson.get("module", "unknown"),
+                "category": lesson.get("category", "ai-web-learning")
             }
             for lesson in sorted(self.lessons_cache.values(), key=lambda x: x["id"])
         ]
