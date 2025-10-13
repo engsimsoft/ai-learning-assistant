@@ -52,6 +52,17 @@ class LessonsListResponse(BaseModel):
     lessons: List[LessonInfo] = Field(..., description="List of lessons")
 
 
+class LessonDetailResponse(BaseModel):
+    """Response model for /lessons/:id endpoint"""
+    id: int = Field(..., description="Lesson ID")
+    title: str = Field(..., description="Lesson title")
+    filename: str = Field(..., description="Filename")
+    content: str = Field(..., description="Lesson content in Markdown format")
+    course: Optional[str] = Field(default=None, description="Course name")
+    module: Optional[str] = Field(default=None, description="Module name")
+    category: Optional[str] = Field(default=None, description="Lesson category")
+
+
 class ModelInfo(BaseModel):
     """Information about available AI model"""
     id: str = Field(..., description="Model identifier")

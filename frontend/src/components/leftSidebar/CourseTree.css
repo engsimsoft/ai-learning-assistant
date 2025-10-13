@@ -1,0 +1,178 @@
+/**
+ * CourseTree Styles
+ */
+
+.course-tree {
+  padding: 0;
+}
+
+/* Course Level */
+.course-block {
+  margin-bottom: 4px;
+}
+
+.course-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-align: left;
+}
+
+.course-header:hover {
+  background-color: var(--left-hover);
+}
+
+.course-header.expanded {
+  background-color: var(--left-selected);
+  color: var(--text-primary);
+}
+
+.course-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.course-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-count {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.course-arrow {
+  font-size: 10px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Course Modules Container */
+.course-modules {
+  padding-left: 0;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Module Level */
+.module-block {
+  margin-bottom: 2px;
+}
+
+.module-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 32px;
+  background-color: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-align: left;
+}
+
+.module-header:hover {
+  background-color: var(--left-hover);
+}
+
+.module-header.expanded {
+  background-color: var(--left-selected);
+}
+
+.module-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.module-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.module-count {
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.module-arrow {
+  font-size: 9px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Module Lessons Container */
+.module-lessons {
+  padding-left: 0;
+  animation: slideDown 0.15s ease;
+}
+
+/* Lesson Level */
+.lesson-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 48px;
+  background-color: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.lesson-item:hover {
+  background-color: var(--left-hover);
+}
+
+.lesson-item.active {
+  background-color: var(--left-selected);
+  border-left-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.lesson-icon {
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.lesson-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

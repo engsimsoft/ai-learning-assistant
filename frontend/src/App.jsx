@@ -1,15 +1,12 @@
 /**
- * Main App Component
+ * Main App Component - v2.0
+ * Three-panel layout with Claude-inspired design
  */
-import ChatInterface from './components/ChatInterface';
+import Layout from './components/layout/Layout';
 import './App.css';
 
 function App() {
-  return (
-    <div className="app">
-      <ChatInterface />
-    </div>
-  );
+  return <Layout />;
 }
 
 export default App;

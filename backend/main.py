@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from config import config
 from models import (
     ChatRequest, ChatResponse,
-    LessonsListResponse, LessonInfo,
+    LessonsListResponse, LessonInfo, LessonDetailResponse,
     ModelsListResponse, ModelInfo,
     HealthResponse
 )
@@ -124,6 +124,31 @@ async def get_lessons():
     return LessonsListResponse(
         total=len(lessons_list),
         lessons=[LessonInfo(**lesson) for lesson in lessons_list]
+    )
+
+
+@app.get("/lessons/{lesson_id}", response_model=LessonDetailResponse, tags=["Lessons"])
+async def get_lesson(lesson_id: int):
+    """
+    Get detailed information about a specific lesson including its content
+    Returns lesson with Markdown content
+    """
+    lesson = context_service.get_lesson(lesson_id)
+
+    if not lesson:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Lesson with ID {lesson_id} not found"
+        )
+
+    return LessonDetailResponse(
+        id=lesson["id"],
+        title=lesson["title"],
+        filename=lesson["filename"],
+        content=lesson["content"],
+        course=lesson.get("course"),
+        module=lesson.get("module"),
+        category=lesson.get("category")
     )
 
 

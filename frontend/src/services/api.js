@@ -21,6 +21,23 @@ class APIService {
   }
 
   /**
+   * Get detailed lesson by ID including content
+   * @param {number} lessonId - Lesson ID
+   */
+  async getLesson(lessonId) {
+    try {
+      const response = await fetch(`${API_URL}/lessons/${lessonId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch lesson ${lessonId}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching lesson ${lessonId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * Get list of available AI models
    */
   async getModels() {

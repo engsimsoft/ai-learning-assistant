@@ -5,7 +5,89 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - Unreleased
+
+### Major Changes
+- **🎨 Complete UI Rефакторинг** - Переход на трёхпанельный layout в стиле Claude
+  - LEFT sidebar: дерево курсов с навигацией
+  - CENTER: просмотр урока с Markdown рендерингом
+  - RIGHT sidebar: Claude AI чат с темной темой
+  - Drag-resize для RIGHT sidebar (400-800px)
+  - Сворачивание панелей для fullscreen reading mode
+  - Только десктоп (минимум 1366px, оптимально 1920px)
+
+### Added (2025-10-13) - Phase 1 Implementation
+
+#### Phase 1: UI Layout ✅ ПОЧТИ ЗАВЕРШЕНО (26/29 задач)
+
+**Frontend Structure:**
+- [X] Трёхпанельная структура Layout.jsx с Header
+- [X] Новая структура папок: components/{layout, leftSidebar, center, rightSidebar}
+- [X] Константы размеров панелей (layoutSizes.js)
+- [X] Обновленная цветовая схема (Claude-style) в index.css
+
+**LEFT Sidebar - Course Navigation:**
+- [X] LeftSidebar.jsx с загрузкой уроков из API
+- [X] CourseTree.jsx с иерархией (Course → Module → Lesson)
+- [X] Раскрытие/сворачивание с анимацией
+- [X] Выделение активного урока
+- [X] Кнопка "Hide Sidebar"
+
+**CENTER - Lesson Viewer:**
+- [X] LessonViewer.jsx с загрузкой через API
+- [X] Интеграция react-markdown + remark-gfm
+- [X] Markdown стили (H1-H6, code blocks, lists)
+- [X] Компактная навигация Prev/Next
+- [X] Scroll to top при смене урока
+
+**RIGHT Sidebar - Claude AI Chat:**
+- [X] ClaudeAISidebar.jsx с темной темой
+- [X] ModelSelector (4 модели)
+- [X] MessageList с метаданными
+- [X] MessageInput с кнопкой Send
+- [X] Опция "Include all lessons"
+
+**Drag-Resize:**
+- [X] ResizeHandle.jsx для RIGHT sidebar
+- [X] Сохранение размера в localStorage
+
+**Backend:**
+- [X] Endpoint GET /lessons/:id
+- [X] LessonDetailResponse в models.py
+
+**Remaining:**
+- [ ] Тестирование адаптивности (1366px/1920px)
+
+### Planned Features
+
+#### Phase 2: Стоимость и кэширование (1-2 недели)
+- [ ] Цены моделей в config (input, output, cached)
+- [ ] Backend расчёт стоимости с учётом кэша
+- [ ] UI метаданных: токены (input/cached/output)
+- [ ] Отображение стоимости и экономии от кэша
+- [ ] Пример: "💰 Cost: $0.003 | 💾 Saved: $0.009 (75% from cache)"
+
+#### Phase 3: Ограничение Claude Sonnet (1 неделя)
+- [ ] Лимит контекста для Claude Sonnet 4.5 (100K/20 уроков)
+- [ ] UI выбора модулей в RIGHT sidebar
+- [ ] Счётчики в реальном времени (18/20 lessons, 90K/100K tokens)
+- [ ] Валидация в backend
+
+#### Phase 4: Поиск по документации (2 недели)
+- [ ] База официальных источников (React, FastAPI, Python и т.д.)
+- [ ] Brave Search API интеграция
+- [ ] Определение технологии из вопроса
+- [ ] Двухэтапный процесс (курс → официальная документация)
+- [ ] Кнопка "🔍 Search Official Docs" в сообщении AI
+
+### Technical Details
+- **Подход:** Long Context Window (1M-2M токенов) вместо RAG
+- **Модели:** Gemini 2.5 Flash (1M), Grok 4 Fast (2M), GPT-4.1 Mini (1M), Claude Sonnet 4.5 (200K)
+- **Roadmap:** [roadmap.md](roadmap.md) - 58 задач в 4 фазах (~6-8 недель)
+
+---
+
+## [1.0.0] - 2025-10-13
 
 ### Added
 - **Course-level selection in LessonSelector** - New checkbox for each course to select all lessons at once

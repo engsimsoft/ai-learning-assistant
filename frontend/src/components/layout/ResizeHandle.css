@@ -1,0 +1,43 @@
+/**
+ * ResizeHandle Styles
+ */
+
+.resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px; /* Увеличил ширину для лучшей видимости */
+  cursor: col-resize;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast);
+  background-color: rgba(204, 120, 92, 0.05); /* Очень лёгкий фон всегда видимый */
+}
+
+.resize-handle:hover,
+.resize-handle.dragging {
+  background-color: rgba(204, 120, 92, 0.1); /* Claude orange accent with transparency */
+}
+
+.resize-handle-line {
+  width: 3px; /* Сделал толще */
+  height: 60px; /* Длиннее для лучшей видимости */
+  background-color: rgba(204, 120, 92, 0.4); /* Полупрозрачный оранжевый */
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+}
+
+.resize-handle:hover .resize-handle-line,
+.resize-handle.dragging .resize-handle-line {
+  background-color: var(--right-accent);
+  height: 80px; /* Ещё длиннее при hover */
+  width: 4px; /* Ещё толще при hover */
+}
+
+/* Show resize cursor when dragging */
+.resize-handle.dragging {
+  background-color: rgba(204, 120, 92, 0.2);
+}
