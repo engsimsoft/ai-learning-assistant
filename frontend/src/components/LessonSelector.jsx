@@ -116,6 +116,34 @@ export default function LessonSelector({ lessons, selected, onChange }) {
     return selectedCount > 0 && selectedCount < courseLessonIds.length;
   };
 
+  // Toggle all lessons in a module
+  const handleToggleModule = (moduleLessons) => {
+    const moduleLessonIds = moduleLessons.map(lesson => lesson.id);
+    const allSelected = moduleLessonIds.every(id => selected.includes(id));
+
+    if (allSelected) {
+      // Deselect all lessons in this module
+      onChange(selected.filter(id => !moduleLessonIds.includes(id)));
+    } else {
+      // Select all lessons in this module
+      const newSelected = [...new Set([...selected, ...moduleLessonIds])];
+      onChange(newSelected);
+    }
+  };
+
+  // Check if all lessons in a module are selected
+  const isAllModuleSelected = (moduleLessons) => {
+    const moduleLessonIds = moduleLessons.map(lesson => lesson.id);
+    return moduleLessonIds.length > 0 && moduleLessonIds.every(id => selected.includes(id));
+  };
+
+  // Check if some (but not all) lessons in a module are selected
+  const isSomeModuleSelected = (moduleLessons) => {
+    const moduleLessonIds = moduleLessons.map(lesson => lesson.id);
+    const selectedCount = moduleLessonIds.filter(id => selected.includes(id)).length;
+    return selectedCount > 0 && selectedCount < moduleLessonIds.length;
+  };
+
   return (
     <div className="lesson-selector">
       <button
@@ -182,17 +210,31 @@ export default function LessonSelector({ lessons, selected, onChange }) {
                           .map(([moduleName, moduleLessons]) => {
                             const moduleKey = `${courseKey}-${moduleName}`;
                             const isModuleExpanded = expandedModules[moduleKey];
+                            const allModuleSelected = isAllModuleSelected(moduleLessons);
+                            const someModuleSelected = isSomeModuleSelected(moduleLessons);
 
                             return (
                               <div key={moduleKey} className="module-block">
-                                <button
-                                  className="module-button"
-                                  onClick={() => toggleModule(moduleKey)}
-                                >
-                                  <span className="module-name">{moduleName}</span>
-                                  <span className="module-count">({moduleLessons.length})</span>
-                                  <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
-                                </button>
+                                <div className="module-header">
+                                  <input
+                                    type="checkbox"
+                                    className="module-checkbox"
+                                    checked={allModuleSelected}
+                                    ref={input => {
+                                      if (input) input.indeterminate = someModuleSelected;
+                                    }}
+                                    onChange={() => handleToggleModule(moduleLessons)}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <button
+                                    className="module-button"
+                                    onClick={() => toggleModule(moduleKey)}
+                                  >
+                                    <span className="module-name">{moduleName}</span>
+                                    <span className="module-count">({moduleLessons.length})</span>
+                                    <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
+                                  </button>
+                                </div>
 
                                 {isModuleExpanded && (
                                   <div className="module-lessons">

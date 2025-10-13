@@ -148,10 +148,31 @@
   overflow: hidden;
 }
 
-.module-button {
-  width: 100%;
-  padding: 10px 14px;
+.module-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background-color: #f0f9ff;
+  padding: 10px 10px 10px 14px;
+  transition: background-color 0.2s;
+}
+
+.module-header:hover {
+  background-color: #e0f2fe;
+}
+
+.module-checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.module-button {
+  flex: 1;
+  padding: 0;
+  background: transparent;
   color: var(--primary-color);
   border: none;
   cursor: pointer;
@@ -160,11 +181,6 @@
   gap: 8px;
   font-size: 0.88em;
   font-weight: 600;
-  transition: background-color 0.2s;
-}
-
-.module-button:hover {
-  background-color: #e0f2fe;
 }
 
 .module-name {

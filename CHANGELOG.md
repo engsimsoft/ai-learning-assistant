@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Click checkbox to select/deselect all lessons in that course
   - Indeterminate state when some (but not all) lessons selected
   - Improved UX: no need to expand modules and select lessons individually
+- **Module-level selection in LessonSelector** - New checkbox for each module to select all lessons in module
+  - Added checkbox next to each module name (1-basics, 2-backend, 3-database, etc.)
+  - Click checkbox to select/deselect all lessons in that module
+  - Indeterminate state when some (but not all) lessons in module selected
+  - Three-level selection: Course → Module → Individual Lessons
 
 ### Fixed
 - **LessonSelector UI display issue** - Course names now visible with proper styling
