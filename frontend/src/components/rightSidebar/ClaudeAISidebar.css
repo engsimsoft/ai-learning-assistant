@@ -70,6 +70,8 @@
   font-size: 13px;
   cursor: pointer;
   color: var(--right-text);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .context-option input[type="checkbox"] {
@@ -131,10 +133,11 @@
 }
 
 .message.user {
-  background-color: var(--right-accent);
-  color: white;
+  background-color: var(--right-user-msg);
+  color: var(--right-text);
   margin-left: 20%;
   align-self: flex-end;
+  border: 1px solid var(--right-border);
 }
 
 .message.assistant {
@@ -169,9 +172,10 @@
 .model-badge,
 .tokens-badge {
   padding: 2px 6px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--right-surface);
+  border: 1px solid var(--right-border);
   border-radius: 4px;
-  color: #ccc;
+  color: var(--right-text-secondary);
 }
 
 /* Loading animation */
@@ -247,17 +251,17 @@
 .btn-send {
   padding: 8px 16px;
   background-color: var(--right-accent);
-  color: white;
-  border: none;
+  color: var(--right-text);
+  border: 1px solid var(--right-border);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-send:hover:not(:disabled) {
-  opacity: 0.9;
+  background-color: var(--right-hover);
 }
 
 .btn-send:disabled {
@@ -265,7 +269,7 @@
   cursor: not-allowed;
 }
 
-/* Scrollbar styling for dark theme */
+/* Scrollbar styling for light theme */
 .messages-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -275,10 +279,10 @@
 }
 
 .messages-container::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #d1d5db;
   border-radius: 4px;
 }
 
 .messages-container::-webkit-scrollbar-thumb:hover {
-  background: #666;
+  background: #9ca3af;
 }

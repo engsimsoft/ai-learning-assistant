@@ -20,15 +20,15 @@
   --center-heading: #111827;
   --center-secondary: #374151;
 
-  /* RIGHT Sidebar colors (dark theme, Claude official colors from screenshot) */
-  --right-bg: #1f1f1f;           /* Claude main dark background (almost black) */
-  --right-surface: #2f2f2f;      /* Message bubbles, slightly lighter */
-  --right-user-msg: #3a3a3a;     /* User message background */
-  --right-text: #ececec;         /* Main text color (light gray) */
-  --right-text-secondary: #999999; /* Secondary text (medium gray) */
-  --right-border: #3a3a3a;       /* Borders (subtle) */
-  --right-accent: #cc785c;       /* Claude orange/brown accent (from screenshot) */
-  --right-hover: #2a2a2a;        /* Hover state */
+  /* RIGHT Sidebar colors (light theme, like Cline interface) */
+  --right-bg: #ffffff;           /* White background */
+  --right-surface: #f9fafb;      /* Light gray surface */
+  --right-user-msg: #f3f4f6;     /* User message background (light gray) */
+  --right-text: #1f2937;         /* Dark text */
+  --right-text-secondary: #6b7280; /* Secondary text (gray) */
+  --right-border: #e5e7eb;       /* Light borders */
+  --right-accent: #9ca3af;       /* Neutral gray accent (for Send button) */
+  --right-hover: #f3f4f6;        /* Light hover state */
 
   /* Common colors */
   --background: #f9fafb;
