@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Added (2025-10-16) - Worked Examples Section
+
+**New Course Section:**
+- Created `backend/data/lessons/worked-examples/` directory
+- Added Example 1: AI Learning Agent - Comprehensive documentation of the current project as a worked example
+
+**Example 1 Documentation (5 files):**
+- `overview.md` - Project overview, tech stack, key features, applied concepts (92 KB)
+- `architecture.md` - Detailed architecture, data flow, API endpoints, configuration (78 KB)
+- `implementation.md` - Implementation details, key components, design decisions (85 KB)
+- `lessons-applied.md` - Mapping of 37+ course lessons to real implementation (103 KB)
+- `integration-guide.md` - How to adapt for your project (3 integration levels, use cases) (71 KB)
+
+**Course Structure Updates:**
+- Updated `docs/course-structure.md` with Worked Examples section
+- Added to course statistics: 42+ total lessons (41 lessons + 1 worked example)
+- Documents real-world application of course principles
+
+**Benefits:**
+- ✅ Students see theory applied in practice
+- ✅ Complete real-world example for online school chatbot
+- ✅ 3 integration levels (Full Copy, Backend Only, Specific Components)
+- ✅ Use case examples (онлайн-школа, документация, корпоративное обучение)
+- ✅ Project follows the same principles it teaches (Lesson 1.7)
+
 ### Added (2025-10-16) - Prompt System Refactoring
 
 **Backend Prompts Architecture (следует Уроку 1.7):**

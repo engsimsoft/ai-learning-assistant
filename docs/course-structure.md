@@ -151,7 +151,50 @@
 |-----------|-------------------|-------------------|
 | **Основные модули** | 7 | 30 |
 | **Опциональные модули** | 3 | 11+ |
-| **Всего** | 10 | 41+ |
+| **Worked Examples** | 1 | 1 |
+| **Всего** | 11 | 42+ |
+
+---
+
+## 💼 Worked Examples (Практические примеры)
+
+**Путь:** `backend/data/lessons/worked-examples/`
+
+Реальные примеры внедрения веб-приложений с использованием принципов из курса.
+
+### Example 1: AI Learning Agent 🤖
+**Путь:** `worked-examples/example-1-ai-learning-agent/`
+
+Полноценное веб-приложение для интерактивного обучения с AI-ассистентом.
+
+**Документация:**
+1. `overview.md` — Обзор проекта, технический стек, возможности
+2. `architecture.md` — Детальная архитектура, data flow, API endpoints
+3. `implementation.md` — Детали реализации ключевых компонентов
+4. `lessons-applied.md` — Карта применения уроков из курса
+5. `integration-guide.md` — Как адаптировать для своего проекта
+
+**Охватывает модули:**
+- Module 1: Client-Server, HTTP, REST API
+- Module 2: FastAPI backend (8 уроков)
+- Module 4: React frontend (6 уроков)
+- Module 5: Frontend-Backend integration
+- Module 9: AI agent integration
+- Project Setup Guide: Все принципы (особенно Lesson 1.7 - SSOT)
+
+**Особенности:**
+- ✅ Three-panel Claude-style layout
+- ✅ Multi-model support (Gemini, Claude, GPT, Grok)
+- ✅ Markdown-based prompts (следует Lesson 1.7)
+- ✅ Context-aware responses
+- ✅ Fallback mechanism
+- ✅ Production-ready architecture
+
+**Применение:**
+- Онлайн-школы с AI-ассистентом
+- Документация с AI-поиском
+- Корпоративные учебные платформы
+- Интерактивные туториалы
 
 ---
 
@@ -166,8 +209,9 @@
 
 - **Главная страница проекта:** [README.md](../README.md)
 - **Архитектура системы:** [architecture.md](architecture.md)
+- **Система промптов:** [prompt-system.md](prompt-system.md)
 - **План развития:** [roadmap.md](../roadmap.md)
 
 ---
 
-**Последнее обновление:** 2025-10-13
+**Последнее обновление:** 2025-10-16
