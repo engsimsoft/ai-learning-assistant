@@ -1,14 +1,29 @@
 /**
  * CourseTree Component
  * Hierarchical tree: Courses → Modules → Lessons
+ * With progress tracking
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import progressService from '../../services/progressService';
 import './CourseTree.css';
 
 export default function CourseTree({ lessons, currentLessonId, onLessonSelect }) {
   // State for expanded courses and modules
   const [expandedCourses, setExpandedCourses] = useState({});
   const [expandedModules, setExpandedModules] = useState({});
+
+  // Force re-render when progress changes
+  const [, forceUpdate] = useState(0);
+
+  // Listen for progress updates from LessonViewer
+  useEffect(() => {
+    const handleProgressUpdate = () => {
+      forceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('progressUpdated', handleProgressUpdate);
+    return () => window.removeEventListener('progressUpdated', handleProgressUpdate);
+  }, []);
 
   // Course metadata
   const courseInfo = {
@@ -21,6 +36,11 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
       name: 'Project Setup Guide',
       icon: '📋',
       description: 'Project organization'
+    },
+    'worked-examples': {
+      name: 'Worked Examples',
+      icon: '💼',
+      description: 'Real-world examples'
     },
     'extras': {
       name: 'Additional Materials',
@@ -70,7 +90,15 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
 
   // Handle lesson click
   const handleLessonClick = (lessonId) => {
+    progressService.updateLastVisited(lessonId);
     onLessonSelect(lessonId);
+  };
+
+  // Handle checkbox click (toggle completion)
+  const handleCheckboxClick = (e, lessonId) => {
+    e.stopPropagation(); // Prevent lesson selection
+    progressService.toggleLessonCompletion(lessonId);
+    forceUpdate(prev => prev + 1); // Force re-render
   };
 
   return (
@@ -79,7 +107,9 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
         const info = courseInfo[courseKey] || { name: courseKey, icon: '📚' };
         const isExpanded = expandedCourses[courseKey];
         const moduleCount = Object.keys(modules).length;
-        const lessonCount = Object.values(modules).flat().length;
+
+        // Calculate course progress
+        const courseProgress = progressService.getCourseProgress(lessons, courseKey);
 
         return (
           <div key={courseKey} className="course-block">
@@ -90,9 +120,21 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
             >
               <span className="course-icon">{info.icon}</span>
               <span className="course-title">{info.name}</span>
-              <span className="course-count">({lessonCount})</span>
+              <span className="course-progress">
+                ({courseProgress.completed}/{courseProgress.total})
+              </span>
               <span className="course-arrow">{isExpanded ? '▼' : '▶'}</span>
             </button>
+
+            {/* Course Progress Bar */}
+            {courseProgress.total > 0 && (
+              <div className="course-progress-bar">
+                <div
+                  className="course-progress-fill"
+                  style={{ width: `${courseProgress.percentage}%` }}
+                ></div>
+              </div>
+            )}
 
             {/* Course Modules */}
             {isExpanded && (
@@ -103,6 +145,13 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
                     const moduleKey = `${courseKey}-${moduleName}`;
                     const isModuleExpanded = expandedModules[moduleKey];
 
+                    // Calculate module progress
+                    const moduleProgress = progressService.getModuleProgress(
+                      lessons,
+                      courseKey,
+                      moduleName
+                    );
+
                     return (
                       <div key={moduleKey} className="module-block">
                         {/* Module Header */}
@@ -112,23 +161,56 @@ export default function CourseTree({ lessons, currentLessonId, onLessonSelect })
                         >
                           <span className="module-icon">📂</span>
                           <span className="module-name">{moduleName}</span>
-                          <span className="module-count">({moduleLessons.length})</span>
+                          <span className="module-progress">
+                            ({moduleProgress.completed}/{moduleProgress.total})
+                          </span>
                           <span className="module-arrow">{isModuleExpanded ? '▼' : '▶'}</span>
                         </button>
+
+                        {/* Module Progress Bar */}
+                        {moduleProgress.total > 0 && (
+                          <div className="module-progress-bar">
+                            <div
+                              className="module-progress-fill"
+                              style={{ width: `${moduleProgress.percentage}%` }}
+                            ></div>
+                          </div>
+                        )}
 
                         {/* Module Lessons */}
                         {isModuleExpanded && (
                           <div className="module-lessons">
-                            {moduleLessons.map(lesson => (
-                              <button
-                                key={lesson.id}
-                                className={`lesson-item ${currentLessonId === lesson.id ? 'active' : ''}`}
-                                onClick={() => handleLessonClick(lesson.id)}
-                              >
-                                <span className="lesson-icon">📄</span>
-                                <span className="lesson-title">{lesson.title}</span>
-                              </button>
-                            ))}
+                            {moduleLessons.map(lesson => {
+                              const isCompleted = progressService.isLessonCompleted(lesson.id);
+                              const isActive = currentLessonId === lesson.id;
+
+                              return (
+                                <div
+                                  key={lesson.id}
+                                  className={`lesson-item-wrapper ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
+                                >
+                                  {/* Completion Checkbox */}
+                                  <button
+                                    className="lesson-checkbox"
+                                    onClick={(e) => handleCheckboxClick(e, lesson.id)}
+                                    title={isCompleted ? 'Mark as incomplete' : 'Mark as completed'}
+                                  >
+                                    <span className="checkbox-icon">
+                                      {isCompleted ? '✓' : '☐'}
+                                    </span>
+                                  </button>
+
+                                  {/* Lesson Link */}
+                                  <button
+                                    className="lesson-item"
+                                    onClick={() => handleLessonClick(lesson.id)}
+                                  >
+                                    <span className="lesson-icon">📄</span>
+                                    <span className="lesson-title">{lesson.title}</span>
+                                  </button>
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
                       </div>

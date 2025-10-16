@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Added (2025-10-16) - Smart Context Selector for AI Chat
+
+**New Feature: Flexible Context Management**
+- Implemented smart context selector modal for AI Assistant
+- 4 context modes: Current Lesson, Current Module, All Lessons, Custom Selection
+- Real-time token estimation and cost preview before sending messages
+- Hierarchical lesson tree with checkboxes for granular selection
+
+**Backend Changes:**
+- Added `/context/preview` endpoint - estimates tokens and cost for selected lessons
+- Added `/lessons/grouped` endpoint - returns lessons grouped by course and module
+- New methods in `ContextService`: `get_grouped_lessons()`, `get_lessons_in_module()`, `estimate_tokens()`
+- New Pydantic models: `ContextPreviewRequest`, `ContextPreviewResponse`, `LessonsGroupedResponse`
+
+**Frontend Changes:**
+- Created `ContextSelectorModal` component - main modal for context configuration
+- Created `LessonTree` component - hierarchical tree with checkboxes and expand/collapse
+- Created `ContextEstimate` component - displays token count and estimated cost
+- Added utility functions: `tokenEstimation.js`, `lessonTree.js`
+- Updated `ClaudeAISidebar` - replaced simple checkbox with smart context selector
+- Updated API service with `previewContext()` and `getLessonsGrouped()` methods
+
+**User Experience:**
+- ✅ Visual feedback showing selected context (e.g., "Current Module: ai-web-learning → 2-backend")
+- ✅ Token count estimation (~341K tokens for all lessons)
+- ✅ Cost preview (e.g., "$0.03 in / $0.10 out")
+- ✅ Prevents accidental selection of all lessons (expensive!)
+- ✅ Supports selecting entire courses, modules, or individual lessons
+- ✅ Light theme UI consistent with existing design
+
 ### Added (2025-10-16) - Worked Examples Section
 
 **New Course Section:**

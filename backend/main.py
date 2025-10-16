@@ -9,10 +9,12 @@ from contextlib import asynccontextmanager
 
 from config import config
 from models import (
-    ChatRequest, ChatResponse,
+    ChatRequest, ChatResponse, TokensUsage, CostInfo,
     LessonsListResponse, LessonInfo, LessonDetailResponse,
     ModelsListResponse, ModelInfo,
-    HealthResponse
+    HealthResponse,
+    ContextPreviewRequest, ContextPreviewResponse,
+    LessonsGroupedResponse
 )
 from services import ContextService, OpenRouterService, PromptLoader
 
@@ -133,6 +135,16 @@ async def get_lessons():
     )
 
 
+@app.get("/lessons/grouped", response_model=LessonsGroupedResponse, tags=["Lessons"])
+async def get_lessons_grouped():
+    """
+    Get lessons grouped by course and module
+    Returns hierarchical structure for tree display
+    """
+    grouped = context_service.get_grouped_lessons()
+    return LessonsGroupedResponse(groups=grouped)
+
+
 @app.get("/lessons/{lesson_id}", response_model=LessonDetailResponse, tags=["Lessons"])
 async def get_lesson(lesson_id: int):
     """
@@ -170,6 +182,48 @@ async def get_models():
     )
 
 
+@app.post("/context/preview", response_model=ContextPreviewResponse, tags=["Context"])
+async def preview_context(request: ContextPreviewRequest):
+    """
+    Preview context token count and estimated cost
+    Useful for showing users impact of their lesson selection
+    """
+    try:
+        # Estimate tokens
+        estimated_tokens = context_service.estimate_tokens(request.lesson_ids)
+
+        # Get lesson count
+        if request.lesson_ids:
+            lesson_count = len(request.lesson_ids)
+            lessons = context_service.get_lesson_titles(request.lesson_ids)
+        else:
+            lesson_count = context_service.get_total_lessons()
+            lessons = ["All available lessons"]
+
+        # Calculate estimated cost (using default model pricing as baseline)
+        # Using Gemini Flash 2.5 Preview: $0.075/1M input, $0.30/1M output
+        input_cost_per_1m = 0.075
+        output_cost_per_1m = 0.30
+
+        estimated_cost_input = (estimated_tokens / 1_000_000) * input_cost_per_1m
+        estimated_cost_output = (estimated_tokens / 1_000_000) * output_cost_per_1m
+
+        return ContextPreviewResponse(
+            lesson_count=lesson_count,
+            estimated_tokens=estimated_tokens,
+            estimated_cost_input=estimated_cost_input,
+            estimated_cost_output=estimated_cost_output,
+            lessons=lessons
+        )
+
+    except Exception as e:
+        logger.error(f"Context preview error: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error previewing context: {str(e)}"
+        )
+
+
 @app.post("/chat", response_model=ChatResponse, tags=["Chat"])
 async def chat(request: ChatRequest):
     """
@@ -205,11 +259,16 @@ async def chat(request: ChatRequest):
             model=request.model
         )
 
+        # Build response with tokens and cost info
+        tokens_data = result.get("tokens_used")
+        cost_data = result.get("cost")
+
         return ChatResponse(
             response=result["response"],
             model_used=result["model_used"],
             lessons_used=lessons_used,
-            tokens_used=result.get("tokens_used"),
+            tokens_used=TokensUsage(**tokens_data) if tokens_data else None,
+            cost=CostInfo(**cost_data) if cost_data else None,
             context_length=result.get("context_length")
         )
 

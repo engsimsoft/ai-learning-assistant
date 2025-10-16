@@ -89,6 +89,50 @@ class APIService {
   }
 
   /**
+   * Get lessons grouped by course and module
+   */
+  async getLessonsGrouped() {
+    try {
+      const response = await fetch(`${API_URL}/lessons/grouped`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch grouped lessons`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching grouped lessons:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Preview context token count and estimated cost
+   * @param {number[]|null} lessonIds - Array of lesson IDs or null for all
+   */
+  async previewContext(lessonIds = null) {
+    try {
+      const response = await fetch(`${API_URL}/context/preview`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lesson_ids: lessonIds
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP ${response.status}: Failed to preview context`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error previewing context:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Check backend health
    */
   async checkHealth() {

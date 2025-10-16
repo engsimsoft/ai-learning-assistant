@@ -28,12 +28,26 @@ class ChatRequest(BaseModel):
     )
 
 
+class TokensUsage(BaseModel):
+    """Token usage breakdown"""
+    input: int = Field(..., description="Input tokens (prompt)")
+    output: int = Field(..., description="Output tokens (completion)")
+    total: int = Field(..., description="Total tokens")
+
+
+class CostInfo(BaseModel):
+    """Cost information"""
+    usd: float = Field(..., description="Cost in USD")
+    rub: float = Field(..., description="Cost in RUB (1 USD = 90 RUB)")
+
+
 class ChatResponse(BaseModel):
     """Response model for /chat endpoint"""
     response: str = Field(..., description="AI's response")
     model_used: str = Field(..., description="Which model was used")
     lessons_used: List[str] = Field(..., description="Titles of lessons included in context")
-    tokens_used: Optional[int] = Field(default=None, description="Total tokens used")
+    tokens_used: Optional[TokensUsage] = Field(default=None, description="Token usage breakdown")
+    cost: Optional[CostInfo] = Field(default=None, description="Cost information")
     context_length: Optional[int] = Field(default=None, description="Length of context in characters")
 
 
@@ -69,6 +83,9 @@ class ModelInfo(BaseModel):
     name: str = Field(..., description="Display name")
     description: str = Field(..., description="Model description")
     context_length: int = Field(..., description="Maximum context length")
+    context_display: str = Field(..., description="Human-readable context size (e.g., '1M', '2M')")
+    input_cost_per_1m: float = Field(..., description="Cost per 1M input tokens in USD")
+    output_cost_per_1m: float = Field(..., description="Cost per 1M output tokens in USD")
 
 
 class ModelsListResponse(BaseModel):
@@ -82,3 +99,28 @@ class HealthResponse(BaseModel):
     status: str = Field(..., description="Service status")
     version: str = Field(default="1.0.0", description="API version")
     lessons_loaded: int = Field(..., description="Number of lessons loaded")
+
+
+class ContextPreviewRequest(BaseModel):
+    """Request model for /context/preview endpoint"""
+    lesson_ids: Optional[List[int]] = Field(
+        default=None,
+        description="List of lesson IDs to preview. None = all lessons"
+    )
+
+
+class ContextPreviewResponse(BaseModel):
+    """Response model for /context/preview endpoint"""
+    lesson_count: int = Field(..., description="Number of lessons in selection")
+    estimated_tokens: int = Field(..., description="Estimated token count")
+    estimated_cost_input: float = Field(..., description="Estimated cost for input in USD")
+    estimated_cost_output: float = Field(..., description="Estimated cost for output in USD (4x input)")
+    lessons: List[str] = Field(..., description="Titles of selected lessons")
+
+
+class LessonsGroupedResponse(BaseModel):
+    """Response model for /lessons/grouped endpoint"""
+    groups: Dict[str, Dict[str, List[Dict[str, Any]]]] = Field(
+        ...,
+        description="Lessons grouped by course and module"
+    )

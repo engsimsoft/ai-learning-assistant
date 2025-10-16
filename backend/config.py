@@ -27,6 +27,9 @@ class Config:
             "name": "Gemini 2.5 Flash Preview",
             "description": "Latest Gemini, fast & cost-effective (default)",
             "context_length": 1000000,
+            "context_display": "1M",
+            "input_cost_per_1m": 0.075,
+            "output_cost_per_1m": 0.30,
             "temperature": 0.7,
             "max_tokens": 4000,
             "top_p": 1.0
@@ -36,6 +39,9 @@ class Config:
             "name": "Grok 4 Fast",
             "description": "FREE now! 2M context, auto-cache, cheapest output",
             "context_length": 2000000,
+            "context_display": "2M",
+            "input_cost_per_1m": 0.0,
+            "output_cost_per_1m": 0.0,
             "temperature": 0.7,
             "max_tokens": 4000,
             "top_p": 1.0
@@ -45,6 +51,9 @@ class Config:
             "name": "GPT-4.1 Mini",
             "description": "Compact OpenAI model, balanced performance",
             "context_length": 1000000,
+            "context_display": "1M",
+            "input_cost_per_1m": 0.15,
+            "output_cost_per_1m": 0.60,
             "temperature": 0.6,
             "max_tokens": 3000,
             "top_p": 0.95
@@ -54,6 +63,9 @@ class Config:
             "name": "Claude Sonnet 4.5",
             "description": "Best reasoning & code, premium quality",
             "context_length": 200000,
+            "context_display": "200K",
+            "input_cost_per_1m": 3.0,
+            "output_cost_per_1m": 15.0,
             "temperature": 0.5,
             "max_tokens": 8000,
             "top_p": 0.95

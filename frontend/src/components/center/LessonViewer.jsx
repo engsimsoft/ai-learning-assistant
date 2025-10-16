@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import apiService from '../../services/api';
+import progressService from '../../services/progressService';
 import LessonNavigation from './LessonNavigation';
 import './LessonViewer.css';
 
@@ -13,6 +14,7 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
   const [lessonContent, setLessonContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isCompleted, setIsCompleted] = useState(false);
   const contentRef = useRef(null);
 
   // Find current lesson metadata
@@ -27,8 +29,12 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
   useEffect(() => {
     if (!lessonId) {
       setLessonContent('');
+      setIsCompleted(false);
       return;
     }
+
+    // Update completion status
+    setIsCompleted(progressService.isLessonCompleted(lessonId));
 
     const loadLessonContent = async () => {
       try {
@@ -38,6 +44,9 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
         // Fetch lesson content from backend
         const lessonData = await apiService.getLesson(lessonId);
         setLessonContent(lessonData.content);
+
+        // Update last visited
+        progressService.updateLastVisited(lessonId);
 
       } catch (err) {
         console.error('Error loading lesson content:', err);
@@ -57,6 +66,15 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
       contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [lessonId]);
+
+  // Handle completion toggle
+  const handleToggleCompletion = () => {
+    const newCompletionState = progressService.toggleLessonCompletion(lessonId);
+    setIsCompleted(newCompletionState);
+
+    // Trigger CourseTree re-render by dispatching custom event
+    window.dispatchEvent(new CustomEvent('progressUpdated'));
+  };
 
   if (!lessonId) {
     return (
@@ -110,6 +128,21 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
           >
             {lessonContent}
           </ReactMarkdown>
+
+          {/* Progress Action */}
+          <div className="lesson-progress-action">
+            <button
+              className={`lesson-complete-button ${isCompleted ? 'completed' : ''}`}
+              onClick={handleToggleCompletion}
+            >
+              <span className="button-icon">
+                {isCompleted ? '✓' : '☐'}
+              </span>
+              <span className="button-text">
+                {isCompleted ? 'Completed' : 'Mark as completed'}
+              </span>
+            </button>
+          </div>
 
           {/* Navigation */}
           <LessonNavigation

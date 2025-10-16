@@ -162,14 +162,38 @@ class OpenRouterService:
         # Extract response
         try:
             ai_response = data["choices"][0]["message"]["content"]
-            tokens_used = data.get("usage", {}).get("total_tokens")
+            usage = data.get("usage", {})
 
-            logger.info(f"Received response, tokens used: {tokens_used}")
+            # Extract token usage
+            input_tokens = usage.get("prompt_tokens", 0)
+            output_tokens = usage.get("completion_tokens", 0)
+            total_tokens = usage.get("total_tokens", input_tokens + output_tokens)
+
+            # Calculate cost
+            model_config = self.model_configs.get(model, {})
+            input_cost_per_1m = model_config.get("input_cost_per_1m", 0)
+            output_cost_per_1m = model_config.get("output_cost_per_1m", 0)
+
+            cost_usd = (
+                (input_tokens / 1_000_000) * input_cost_per_1m +
+                (output_tokens / 1_000_000) * output_cost_per_1m
+            )
+            cost_rub = cost_usd * 90  # 1 USD = 90 RUB
+
+            logger.info(f"Received response, tokens: {total_tokens} (in: {input_tokens}, out: {output_tokens}), cost: ${cost_usd:.6f}")
 
             return {
                 "response": ai_response,
                 "model_used": model,
-                "tokens_used": tokens_used,
+                "tokens_used": {
+                    "input": input_tokens,
+                    "output": output_tokens,
+                    "total": total_tokens
+                },
+                "cost": {
+                    "usd": cost_usd,
+                    "rub": cost_rub
+                },
                 "context_length": len(context)
             }
 

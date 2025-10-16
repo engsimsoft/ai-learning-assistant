@@ -42,6 +42,7 @@ export const STORAGE_KEYS = {
   RIGHT_SIDEBAR_WIDTH: 'ai-learning-agent-right-sidebar-width',
   LEFT_SIDEBAR_OPEN: 'ai-learning-agent-left-sidebar-open',
   RIGHT_SIDEBAR_OPEN: 'ai-learning-agent-right-sidebar-open',
+  PROGRESS: 'ai-learning-agent-progress',  // Learning progress data
 };
 
 // Animation durations (ms)

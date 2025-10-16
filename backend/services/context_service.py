@@ -222,3 +222,61 @@ class ContextService:
     def get_total_lessons(self) -> int:
         """Get total number of loaded lessons"""
         return len(self.lessons_cache)
+
+    def get_grouped_lessons(self) -> Dict[str, Dict[str, List[Dict]]]:
+        """
+        Get lessons grouped by course and module
+
+        Returns:
+            Dictionary structured as {course: {module: [lessons]}}
+        """
+        grouped = {}
+
+        for lesson in self.lessons_cache.values():
+            course = lesson.get("course", "unknown")
+            module = lesson.get("module", "unknown")
+
+            if course not in grouped:
+                grouped[course] = {}
+
+            if module not in grouped[course]:
+                grouped[course][module] = []
+
+            grouped[course][module].append({
+                "id": lesson["id"],
+                "title": lesson["title"],
+                "filename": lesson["filename"]
+            })
+
+        return grouped
+
+    def get_lessons_in_module(self, course: str, module: str) -> List[int]:
+        """
+        Get all lesson IDs from a specific course and module
+
+        Args:
+            course: Course name
+            module: Module name
+
+        Returns:
+            List of lesson IDs in that module
+        """
+        return [
+            lesson["id"] for lesson in self.lessons_cache.values()
+            if lesson.get("course") == course and lesson.get("module") == module
+        ]
+
+    def estimate_tokens(self, lesson_ids: Optional[List[int]] = None) -> int:
+        """
+        Estimate number of tokens for given lessons
+        Uses approximation: 1 token ≈ 4 characters
+
+        Args:
+            lesson_ids: List of lesson IDs. If None, estimates for all lessons
+
+        Returns:
+            Estimated token count
+        """
+        context = self.build_context(lesson_ids)
+        # Rough estimate: 1 token ≈ 4 characters for English text
+        return len(context) // 4

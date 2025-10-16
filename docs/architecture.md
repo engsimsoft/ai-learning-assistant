@@ -25,15 +25,19 @@
 │  ┌──────────────────────────────────────┐ │
 │  │  main.py                             │ │
 │  │  • GET /lessons                      │ │
+│  │  • GET /lessons/grouped              │ │
 │  │  • GET /models                       │ │
 │  │  • POST /chat                        │ │
+│  │  • POST /context/preview             │ │
 │  │  • CORS middleware                   │ │
 │  └────────┬─────────────────────────────┘ │
 │           │                                │
 │  ┌────────▼─────────────────────────────┐ │
 │  │  context_service.py                  │ │
-│  │  • Loads 50+ lessons                 │ │
+│  │  • Loads 72 lessons                  │ │
 │  │  • Builds context                    │ │
+│  │  • Groups lessons by course/module   │ │
+│  │  • Estimates tokens                  │ │
 │  │  • Selects requested lessons         │ │
 │  └────────┬─────────────────────────────┘ │
 │           │                                │
@@ -187,10 +191,13 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - API contract definition
 
 **context_service.py**
-- Lesson file loading
+- Lesson file loading (72 lessons from 2 courses)
 - Context building
 - Lesson metadata extraction
 - Module organization
+- Lesson grouping by course and module
+- Token estimation (1 token ≈ 4 characters)
+- Lesson IDs in module retrieval
 
 **openrouter_service.py**
 - OpenRouter API communication
@@ -226,6 +233,25 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - Model information display
 - Default model handling
 
+**ContextSelectorModal.jsx** (NEW - v2.0)
+- Smart context selector modal
+- 4 modes: Current Lesson, Current Module, All Lessons, Custom
+- Real-time token and cost estimation
+- Hierarchical lesson tree
+- Shows selected context description
+
+**LessonTree.jsx** (NEW - v2.0)
+- Hierarchical tree with checkboxes
+- Expand/collapse courses and modules
+- Select entire courses or modules
+- Indeterminate checkbox state support
+
+**ContextEstimate.jsx** (NEW - v2.0)
+- Displays estimated token count
+- Shows input/output cost preview
+- Loading and error states
+- Real-time updates with debounce
+
 ## Security Considerations
 
 **API Keys:**
@@ -256,9 +282,12 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - No database queries
 
 **Context Size:**
-- Can select specific lessons
-- Reduces token usage
+- Smart context selector with 4 modes
+- Token estimation before sending (prevents expensive mistakes)
+- Select specific lessons, modules, or entire courses
+- Reduces token usage significantly
 - Faster response times
+- Cost preview (e.g., "$0.03 in / $0.10 out")
 
 **Model Selection:**
 - Choose appropriate model for task
