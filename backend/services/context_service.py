@@ -105,12 +105,12 @@ class ContextService:
         Categorize lesson based on course, module and filename
 
         Args:
-            course: Course directory name (ai-web-learning, project-setup-guide, extras)
+            course: Course directory name (ai-web-learning, project-setup-guide, web-design-fundamentals, extras)
             module: Module name from directory structure
             filename: Lesson filename
 
         Returns:
-            Category: 'ai-web-learning', 'project-setup-guide', or 'extras'
+            Category: 'ai-web-learning', 'project-setup-guide', 'web-design-fundamentals', or 'extras'
         """
         course_lower = course.lower()
 
@@ -119,6 +119,8 @@ class ContextService:
             return 'ai-web-learning'
         elif 'project-setup-guide' in course_lower:
             return 'project-setup-guide'
+        elif 'web-design-fundamentals' in course_lower:
+            return 'web-design-fundamentals'
         elif 'extras' in course_lower:
             return 'extras'
 

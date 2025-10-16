@@ -211,6 +211,8 @@
 - **Архитектура системы:** [architecture.md](architecture.md)
 - **Система промптов:** [prompt-system.md](prompt-system.md)
 - **План развития:** [roadmap.md](../roadmap.md)
+- **Project Setup Guide:** [project-setup-guide-structure.md](project-setup-guide-structure.md)
+- **Web Design Fundamentals:** [web-design-fundamentals-structure.md](web-design-fundamentals-structure.md)
 
 ---
 

@@ -33,12 +33,13 @@ Frontend: http://localhost:5173
 
 ## Образовательные курсы
 
-Проект содержит **два курса** по веб-разработке (72 урока):
+Проект содержит **три курса** по веб-разработке (94+ урока):
 
-- **[AI Web Learning](docs/course-structure.md)** (41+ урок) - что создавать: Backend, Frontend, Database, RAG, ML
-- **[Project Setup Guide](docs/project-setup-guide-structure.md)** (21 урок) - как организовать: структура, архитектура, работа с ИИ
+- **[AI Web Learning](docs/course-structure.md)** (42+ урок) - ЧТО создавать: Backend, Frontend, Database, RAG, ML
+- **[Project Setup Guide](docs/project-setup-guide-structure.md)** (21 урок) - КАК организовать: структура, архитектура, работа с ИИ
+- **[Web Design Fundamentals](docs/web-design-fundamentals-structure.md)** (11 уроков) - КАК называть: UI/UX терминология и артефакты дизайна для работы с ИИ
 
-**Как связаны:** Setup Guide учит организовать проект, AI Web Learning - что в нём создавать.
+**Как связаны:** Setup Guide учит организовать проект, AI Web Learning - что в нём создавать, Web Design Fundamentals - как правильно называть UI элементы и работать с артефактами дизайна.
 
 ## Документация
 

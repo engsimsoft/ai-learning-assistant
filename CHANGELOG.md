@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Added (2025-10-16) - Web Design Fundamentals Course
+
+**New Course: UI/UX Terminology for AI-Assisted Development**
+- Created `backend/data/lessons/web-design-fundamentals/` directory structure
+- **Module 1: UI Terminology** (5 lessons) - ✅ ЗАВЕРШЕН
+  - Lesson 1.1: Layout Elements (Header, Footer, Sidebar, Main, Container, Three-panel layout)
+  - Lesson 1.2: Navigation Elements (Navbar, Tree Navigation, Breadcrumbs, Tabs, Pagination, Prev/Next)
+  - Lesson 1.3: Interactive Elements (Button, Input, Dropdown, Checkbox, Radio, Toggle, Slider)
+  - Lesson 1.4: Feedback Elements (Modal, Toast, Loading Spinner, Progress Bar, Badge, Tooltip)
+  - Lesson 1.5: Prompting for UI (Templates, good vs bad prompts, complete workflows)
+- **Module 2: Artifacts** (6 lessons) - ✅ ЗАВЕРШЕН
+  - Lesson 2.1: What are Artifacts (Introduction, lifecycle, types, tools)
+  - Lesson 2.2: Wireframes, Mockups, Prototypes (Lo-Fi, Mid-Fi, Hi-Fi approaches)
+  - Lesson 2.3: Design Systems (Atomic Design, Design Tokens, Material/Ant/Chakra)
+  - Lesson 2.4: Component Libraries (MUI, Ant Design, Chakra UI, shadcn/ui, Storybook)
+  - Lesson 2.5: Handoff Process (Figma, extracting specs, export settings)
+  - Lesson 2.6: Prompting with Artifacts (Masterclass: progressive prompting, anti-patterns, workflows)
+- **Worked Examples:**
+  - `ui-terminology-guide.md` - Complete UI element map of AI Learning Agent (Module 1)
+  - `design-artifacts-guide.md` - Design artifacts for AI Learning Agent (Module 2)
+
+**Documentation:**
+- Added `docs/web-design-fundamentals-structure.md` - complete course structure
+- Updated README.md section "Образовательные курсы" (2 курса → 3 курса, 72 → 94 урока)
+- Updated `docs/course-structure.md` with link to new course
+- Project now teaches: WHAT to create (AI Web Learning), HOW to organize (Project Setup Guide), HOW to name (Web Design Fundamentals)
+
+**Backend Integration:**
+- Updated `backend/services/context_service.py` with `COURSE_PATHS["web-design-fundamentals"]`
+- Course accessible through lesson selector
+
+**Course Statistics:**
+- Total lessons: 11 (5 + 6)
+- Total lines: ~13,000+ lines
+- Total content: ~400KB
+- Worked examples: 2 comprehensive guides
+- 40+ Claude Code prompt templates
+- 100+ ASCII diagrams
+- Real examples from AI Learning Agent project throughout
+
+**Benefits:**
+- ✅ Learn proper UI terminology for precise AI prompts
+- ✅ Master design artifacts (wireframes, mockups, design systems, component libraries)
+- ✅ Understand progressive prompting (Lo-Fi → Hi-Fi workflows)
+- ✅ Improve communication with AI when building interfaces
+- ✅ "Vibe Coding для дизайна" - philosophy of UI terminology mastery
+- ✅ 2 comprehensive worked examples with real project artifacts
+
 ### Added (2025-10-16) - Smart Context Selector for AI Chat
 
 **New Feature: Flexible Context Management**
