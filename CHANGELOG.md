@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Changed (2025-10-16) - Model Pricing Update
+
+**Grok 4 Fast Pricing:**
+- Updated Grok 4 Fast model pricing (no longer free)
+- Input cost: $0.05 per 1M tokens
+- Output cost: $0.15 per 1M tokens
+- Updated description: "2M context, auto-cache, affordable pricing"
+- Updated in: backend/config.py, README.md, CHANGELOG.md, documentation
+
 ### Added (2025-10-16) - Web Design Fundamentals Course
 
 **New Course: UI/UX Terminology for AI-Assisted Development**
@@ -292,7 +301,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenRouter integration for multiple LLM access
 - Support for 4 carefully selected AI models:
   - Gemini 2.5 Flash Preview (default, fast & cost-effective)
-  - Grok 4 Fast (FREE now! 2M context, auto-cache)
+  - Grok 4 Fast (2M context, auto-cache, affordable)
   - GPT-4.1 Mini (compact OpenAI model)
   - Claude Sonnet 4.5 (premium quality for code)
 - Automatic model fallback mechanism (Gemini → Grok)

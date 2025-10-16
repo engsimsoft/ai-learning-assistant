@@ -408,7 +408,7 @@ class ChatRequest(BaseModel):
 
 **For cost-sensitive applications:**
 ```python
-DEFAULT_MODEL = "x-ai/grok-4-fast"  # Currently FREE on OpenRouter
+DEFAULT_MODEL = "x-ai/grok-4-fast"  # Affordable: $0.05 in / $0.15 out per 1M
 FALLBACK_MODEL = "google/gemini-2.5-flash-preview-09-2025"  # Very cheap
 ```
 

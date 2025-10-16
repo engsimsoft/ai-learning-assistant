@@ -46,7 +46,7 @@
 - **Gemini 2.5 Flash** (default) - быстрый, экономичный
 - **Claude Sonnet 4.5** - лучший для кода и рассуждений
 - **GPT-4.1 Mini** - сбалансированный OpenAI
-- **Grok 4 Fast** - FREE, 2M context
+- **Grok 4 Fast** - доступный, 2M context
 
 ### 2. Context-Aware Responses
 AI отвечает на основе **выбранных уроков**:

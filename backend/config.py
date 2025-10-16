@@ -37,11 +37,11 @@ class Config:
         {
             "id": "x-ai/grok-4-fast",
             "name": "Grok 4 Fast",
-            "description": "FREE now! 2M context, auto-cache, cheapest output",
+            "description": "2M context, auto-cache, affordable pricing",
             "context_length": 2000000,
             "context_display": "2M",
-            "input_cost_per_1m": 0.0,
-            "output_cost_per_1m": 0.0,
+            "input_cost_per_1m": 0.05,
+            "output_cost_per_1m": 0.15,
             "temperature": 0.7,
             "max_tokens": 4000,
             "top_p": 1.0

@@ -52,7 +52,7 @@ Frontend: http://localhost:5173
 **Backend:**
 - FastAPI 0.115+
 - OpenRouter API (доступ к топовым LLM)
-- Поддержка 4 моделей: Gemini 2.5 Flash (default), Grok 4 Fast (FREE!), GPT-4.1 Mini, Claude Sonnet 4.5
+- Поддержка 4 моделей: Gemini 2.5 Flash (default), Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5
 - Python 3.13
 
 **Frontend:**

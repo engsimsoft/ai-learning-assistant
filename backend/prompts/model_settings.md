@@ -19,7 +19,8 @@ This file documents the settings for each AI model. Actual configuration is in `
 - **Max Tokens:** 4000
 - **Top P:** 1.0
 - **Context Length:** 2,000,000 tokens
-- **Best for:** Long context, FREE tier, auto-caching
+- **Pricing:** $0.05 input / $0.15 output per 1M tokens
+- **Best for:** Long context, auto-caching, affordable pricing
 - **Characteristics:** Largest context window, good for loading many lessons
 
 ## GPT-4.1 Mini

@@ -210,7 +210,7 @@ BUTTONS:
 **Тип:** Dropdown / Select
 **Опции:**
 - Gemini 2.5 Flash · 2M ctx · $0.075 in / $0.30 out
-- Grok 4 Fast · 2M ctx · FREE!
+- Grok 4 Fast · 2M ctx · $0.05 in / $0.15 out
 - GPT-4.1 Mini · 200K ctx · $0.15 in / $0.60 out
 - Claude Sonnet 4.5 · 200K ctx · $3 in / $15 out
 
