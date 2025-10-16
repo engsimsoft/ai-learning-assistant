@@ -14,7 +14,7 @@ from models import (
     ModelsListResponse, ModelInfo,
     HealthResponse
 )
-from services import ContextService, OpenRouterService
+from services import ContextService, OpenRouterService, PromptLoader
 
 # Configure logging
 logging.basicConfig(
@@ -49,11 +49,17 @@ async def lifespan(app: FastAPI):
     context_service = ContextService(config.LESSONS_DIR)
     logger.info(f"Loaded {context_service.get_total_lessons()} lessons")
 
+    logger.info(f"Loading prompts from: {config.PROMPTS_DIR}")
+    prompt_loader = PromptLoader(config.PROMPTS_DIR)
+    logger.info("Prompts loaded successfully")
+
     openrouter_service = OpenRouterService(
         api_key=config.OPENROUTER_API_KEY,
         api_base=config.OPENROUTER_API_BASE,
         default_model=config.DEFAULT_MODEL,
-        fallback_model=config.FALLBACK_MODEL
+        fallback_model=config.FALLBACK_MODEL,
+        prompt_loader=prompt_loader,
+        model_configs=config.AVAILABLE_MODELS
     )
     logger.info(f"OpenRouter service initialized with model: {config.DEFAULT_MODEL}")
 

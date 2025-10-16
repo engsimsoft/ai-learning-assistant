@@ -26,25 +26,37 @@ class Config:
             "id": "google/gemini-2.5-flash-preview-09-2025",
             "name": "Gemini 2.5 Flash Preview",
             "description": "Latest Gemini, fast & cost-effective (default)",
-            "context_length": 1000000
+            "context_length": 1000000,
+            "temperature": 0.7,
+            "max_tokens": 4000,
+            "top_p": 1.0
         },
         {
             "id": "x-ai/grok-4-fast",
             "name": "Grok 4 Fast",
             "description": "FREE now! 2M context, auto-cache, cheapest output",
-            "context_length": 2000000
+            "context_length": 2000000,
+            "temperature": 0.7,
+            "max_tokens": 4000,
+            "top_p": 1.0
         },
         {
             "id": "openai/gpt-4.1-mini",
             "name": "GPT-4.1 Mini",
             "description": "Compact OpenAI model, balanced performance",
-            "context_length": 1000000
+            "context_length": 1000000,
+            "temperature": 0.6,
+            "max_tokens": 3000,
+            "top_p": 0.95
         },
         {
             "id": "anthropic/claude-sonnet-4.5",
             "name": "Claude Sonnet 4.5",
             "description": "Best reasoning & code, premium quality",
-            "context_length": 200000
+            "context_length": 200000,
+            "temperature": 0.5,
+            "max_tokens": 8000,
+            "top_p": 0.95
         }
     ]
 
@@ -54,6 +66,9 @@ class Config:
 
     # Lessons Configuration
     LESSONS_DIR: str = os.path.join(os.path.dirname(__file__), "data", "lessons")
+
+    # Prompts Configuration
+    PROMPTS_DIR: str = os.path.join(os.path.dirname(__file__), "prompts")
 
     # CORS Configuration
     ALLOWED_ORIGINS = [

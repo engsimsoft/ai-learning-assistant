@@ -4,6 +4,7 @@ OpenRouter Service - Handles communication with OpenRouter API for LLM access
 import httpx
 import logging
 from typing import List, Dict, Optional, Any
+from .prompt_loader import PromptLoader
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,15 @@ logger = logging.getLogger(__name__)
 class OpenRouterService:
     """Service for interacting with OpenRouter API"""
 
-    def __init__(self, api_key: str, api_base: str, default_model: str, fallback_model: str):
+    def __init__(
+        self,
+        api_key: str,
+        api_base: str,
+        default_model: str,
+        fallback_model: str,
+        prompt_loader: PromptLoader,
+        model_configs: List[Dict]
+    ):
         """
         Initialize OpenRouter service
 
@@ -20,11 +29,15 @@ class OpenRouterService:
             api_base: OpenRouter API base URL
             default_model: Default model to use
             fallback_model: Fallback model if default fails
+            prompt_loader: PromptLoader instance for loading prompts
+            model_configs: List of model configurations from config
         """
         self.api_key = api_key
         self.api_base = api_base
         self.default_model = default_model
         self.fallback_model = fallback_model
+        self.prompt_loader = prompt_loader
+        self.model_configs = {m["id"]: m for m in model_configs}
 
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -115,12 +128,16 @@ class OpenRouterService:
         # Add current user message
         messages.append({"role": "user", "content": message})
 
-        # Prepare request payload
+        # Get model configuration
+        model_config = self._get_model_config(model)
+
+        # Prepare request payload with model-specific settings
         payload = {
             "model": model,
             "messages": messages,
-            "temperature": 0.7,
-            "max_tokens": 4000
+            "temperature": model_config.get("temperature", 0.7),
+            "max_tokens": model_config.get("max_tokens", 4000),
+            "top_p": model_config.get("top_p", 1.0)
         }
 
         logger.info(f"Sending request to OpenRouter with model: {model}")
@@ -162,7 +179,7 @@ class OpenRouterService:
 
     def _build_system_prompt(self, context: str) -> str:
         """
-        Build system prompt with context
+        Build system prompt using PromptLoader
 
         Args:
             context: Lessons context
@@ -170,22 +187,16 @@ class OpenRouterService:
         Returns:
             Formatted system prompt
         """
-        return f"""You are an AI tutor for web development with access to course materials.
-Your role is to help students learn by answering their questions using the provided lessons.
+        return self.prompt_loader.build_full_prompt(context)
 
-**Guidelines:**
-1. Answer questions based on the lessons provided below
-2. Explain concepts in simple, clear language
-3. Use analogies and examples when helpful
-4. If information is not in the lessons, say so honestly
-5. Encourage students to ask follow-up questions
-6. Be patient and supportive
-7. When appropriate, reference specific lessons by title
+    def _get_model_config(self, model_id: str) -> Dict:
+        """
+        Get configuration for specific model
 
-**COURSE MATERIALS:**
+        Args:
+            model_id: Model identifier
 
-{context}
-
----
-
-Now, please answer the student's question based on these materials."""
+        Returns:
+            Model configuration dictionary
+        """
+        return self.model_configs.get(model_id, {})

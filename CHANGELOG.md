@@ -7,12 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Added (2025-10-16) - Prompt System Refactoring
+
+**Backend Prompts Architecture (следует Уроку 1.7):**
+- Created `backend/prompts/` directory for Markdown-based prompts
+- `system_prompt.md` - AI tutor instructions (moved from hardcoded string in code)
+- `boundaries.md` - Knowledge boundaries as Single Source of Truth (SSOT principle)
+- `model_settings.md` - Documentation for model parameters
+- `PromptLoader` service for loading Markdown prompts with caching
+
+**Model Configuration:**
+- Added model-specific settings in `config.py` (temperature, max_tokens, top_p)
+- Gemini 2.5 Flash: temperature=0.7, max_tokens=4000, top_p=1.0
+- Grok 4 Fast: temperature=0.7, max_tokens=4000, top_p=1.0
+- GPT-4.1 Mini: temperature=0.6, max_tokens=3000, top_p=0.95
+- Claude Sonnet 4.5: temperature=0.5, max_tokens=8000, top_p=0.95 (optimized for code)
+
+**Documentation:**
+- Added `docs/prompt-system.md` - Prompt system architecture guide
+- Removed `docs/ai-agent-boundaries/` - Eliminated duplication (SSOT principle from Lesson 1.7)
+- All prompt configuration now in `backend/prompts/` (Single Source of Truth)
+
+**Benefits:**
+- ✅ Edit prompts without touching Python code
+- ✅ Version control for prompts in Markdown
+- ✅ SSOT principle maintained (no duplication)
+- ✅ Model-specific parameters per model
+- ✅ Follows Lesson 1.7 architecture principles (Separation of Concerns, SSOT, links instead of copying)
+
 ### Changed (2025-10-16)
 - **Backend config:** Changed API port from 8000 to 8001 in `frontend/src/config.js`
 - **Backend CORS:** Added `localhost:5174` to allowed origins in `backend/config.py`
 - **Lesson formatting:** Normalized markdown headers from `###` to `#` in 20 lesson files
 - **UI theme:** Switched right sidebar from dark (Claude-style) to light (Cline-style) theme
-- **Documentation:** Moved detailed content files to `docs/ai-agent-boundaries/` subdirectory
 
 ### Major Changes
 - **🎨 Complete UI Rефакторинг** - Переход на трёхпанельный layout в стиле Claude
