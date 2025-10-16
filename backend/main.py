@@ -247,7 +247,11 @@ async def chat(request: ChatRequest):
 
         # Convert Pydantic models to dicts for the service
         history = [
-            {"role": msg.role, "content": msg.content}
+            {
+                "role": msg.role,
+                "content": msg.content,
+                "images": msg.images if msg.images else []
+            }
             for msg in request.conversation_history
         ]
 
@@ -256,7 +260,8 @@ async def chat(request: ChatRequest):
             message=request.message,
             context=context,
             history=history,
-            model=request.model
+            model=request.model,
+            images=request.images
         )
 
         # Build response with tokens and cost info

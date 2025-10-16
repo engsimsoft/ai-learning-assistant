@@ -60,8 +60,9 @@ class APIService {
    * @param {number[]|null} lessonIds - Array of lesson IDs or null for all
    * @param {string|null} model - Model ID or null for default
    * @param {Array} history - Conversation history
+   * @param {Array} images - Array of base64 encoded images
    */
-  async sendMessage(message, lessonIds = null, model = null, history = []) {
+  async sendMessage(message, lessonIds = null, model = null, history = [], images = []) {
     try {
       const response = await fetch(`${API_URL}/chat`, {
         method: 'POST',
@@ -72,7 +73,8 @@ class APIService {
           message,
           lesson_ids: lessonIds,
           model: model,
-          conversation_history: history
+          conversation_history: history,
+          images: images
         })
       });
 

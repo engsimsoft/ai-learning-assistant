@@ -49,9 +49,13 @@ export default function ChatInterface() {
     loadData();
   }, []);
 
-  const handleSendMessage = async (message) => {
-    // Add user message to chat
-    const userMessage = { role: 'user', content: message };
+  const handleSendMessage = async (message, images = []) => {
+    // Add user message to chat (with images if present)
+    const userMessage = {
+      role: 'user',
+      content: message,
+      images: images
+    };
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     setError(null);
@@ -62,7 +66,8 @@ export default function ChatInterface() {
         message,
         selectedLessons.length > 0 ? selectedLessons : null,
         selectedModel,
-        messages
+        messages,
+        images
       );
 
       // Add AI response to chat

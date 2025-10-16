@@ -8,9 +8,10 @@ import { ContextSelectorModal } from '../context';
 import { getContextModeLabel } from '../../utils/lessonTree';
 import './ClaudeAISidebar.css';
 
-export default function ClaudeAISidebar({ lessons, currentLessonId }) {
+export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [attachedImages, setAttachedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState(null);
   const [models, setModels] = useState([]);
@@ -56,15 +57,17 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
   }, [currentLessonId, contextMode]);
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if ((!inputMessage.trim() && attachedImages.length === 0) || isLoading) return;
 
     const userMessage = {
       role: 'user',
-      content: inputMessage
+      content: inputMessage,
+      images: attachedImages
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
+    setAttachedImages([]);
     setIsLoading(true);
 
     try {
@@ -76,7 +79,8 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
         inputMessage,
         lessonIds,
         selectedModel,
-        messages
+        messages,
+        attachedImages
       );
 
       const assistantMessage = {
@@ -115,11 +119,38 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handlePaste = async (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+
+        const file = item.getAsFile();
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const base64 = event.target.result;
+            setAttachedImages(prev => [...prev, base64]);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+  };
+
+  const removeImage = (index) => {
+    setAttachedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleContextSave = (mode, lessonIds) => {
@@ -141,9 +172,21 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
     <div className="claude-ai-sidebar">
       {/* Header with model selector */}
       <div className="ai-header">
-        <div className="ai-title">
-          <span className="ai-icon">🤖</span>
-          <span>AI Assistant</span>
+        <div className="ai-title-row">
+          <div className="ai-title">
+            <span className="ai-icon">🤖</span>
+            <span>AI Assistant</span>
+          </div>
+          {onClose && (
+            <button
+              className="btn-close-sidebar"
+              onClick={onClose}
+              title="Close AI Chat"
+              aria-label="Close right sidebar"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
         <select
@@ -198,6 +241,18 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
                 key={index}
                 className={`message ${msg.role} ${msg.error ? 'error' : ''}`}
               >
+                {msg.images && msg.images.length > 0 && (
+                  <div className="message-images">
+                    {msg.images.map((img, imgIndex) => (
+                      <img
+                        key={imgIndex}
+                        src={img}
+                        alt={`Attached ${imgIndex + 1}`}
+                        className="message-image"
+                      />
+                    ))}
+                  </div>
+                )}
                 <div className="message-content">
                   {msg.content}
                 </div>
@@ -226,12 +281,30 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
 
       {/* Input area */}
       <div className="input-container">
+        {attachedImages.length > 0 && (
+          <div className="attached-images">
+            {attachedImages.map((img, index) => (
+              <div key={index} className="image-preview">
+                <img src={img} alt={`Attached ${index + 1}`} />
+                <button
+                  type="button"
+                  className="remove-image"
+                  onClick={() => removeImage(index)}
+                  title="Remove image"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <textarea
           className="message-input"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask a question..."
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          placeholder="Ask a question... (Paste images with Ctrl+V)"
           rows={3}
           disabled={isLoading}
         />
@@ -246,7 +319,7 @@ export default function ClaudeAISidebar({ lessons, currentLessonId }) {
           <button
             className="btn-send"
             onClick={handleSendMessage}
-            disabled={!inputMessage.trim() || isLoading}
+            disabled={(!inputMessage.trim() && attachedImages.length === 0) || isLoading}
           >
             {isLoading ? 'Sending...' : 'Send'}
           </button>

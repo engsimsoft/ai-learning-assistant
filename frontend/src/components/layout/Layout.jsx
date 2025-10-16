@@ -134,6 +134,7 @@ export default function Layout() {
                 <ClaudeAISidebar
                   lessons={lessons}
                   currentLessonId={currentLessonId}
+                  onClose={toggleRightSidebar}
                 />
               </div>
             </>

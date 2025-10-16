@@ -89,7 +89,8 @@ POST /chat
   "message": "What is REST API?",
   "lesson_ids": [1, 2, 3],
   "model": "anthropic/claude-3.5-sonnet",
-  "conversation_history": [...]
+  "conversation_history": [...],
+  "images": ["data:image/jpeg;base64,..."]  // Optional: for Vision API
 }
 ```
 
@@ -99,9 +100,11 @@ POST /chat
 # main.py → endpoint
 context_service.build_context([1,2,3])
   ↓
-openrouter_service.chat(message, context, history, model)
+openrouter_service.chat(message, context, history, model, images)
   ↓
-OpenRouter API → Selected model → Response
+If images present → format as multimodal content
+  ↓
+OpenRouter API → Selected model (with vision support) → Response
   ↓
 If error → fallback to another model
   ↓
@@ -293,6 +296,40 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - Choose appropriate model for task
 - Balance between quality and cost
 - Fallback to cheaper models on error
+
+**Vision API (Multimodal):**
+- Images converted to base64 on client side
+- Sent with text in multimodal format
+- Image processing cost: ~85-255 tokens per image
+- All 4 models support vision capabilities
+- Images preserved in conversation history
+
+## Vision API Support
+
+**Capabilities:**
+- Paste images directly into chat with Ctrl+V / Cmd+V
+- Automatic base64 encoding
+- Real-time image preview before sending
+- Images displayed in conversation history
+- Support for multiple images per message
+
+**Supported Models:**
+- ✅ Gemini 2.5 Flash Preview ($0.075/1M in, $0.30/1M out)
+- ✅ Grok 4 Fast ($0.05/1M in, $0.15/1M out)
+- ✅ GPT-4.1 Mini ($0.15/1M in, $0.60/1M out)
+- ✅ Claude Sonnet 4.5 ($3.00/1M in, $15.00/1M out)
+
+**Technical Implementation:**
+- Frontend: `handlePaste()` in ClaudeAISidebar.jsx
+- Base64 encoding via FileReader API
+- Backend: Multimodal content formatting in openrouter_service.py
+- OpenRouter Vision API format: `{"type": "image_url", "image_url": {"url": "data:..."}}`
+
+**Use Cases:**
+- Analyzing UI screenshots
+- Debugging code from images
+- Explaining diagrams and charts
+- Reviewing design mockups
 
 ## Scalability
 

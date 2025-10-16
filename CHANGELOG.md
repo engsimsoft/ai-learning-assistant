@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Added (2025-10-16) - Vision API Support
+
+**AI Agent Can Now See Images:**
+- Added multimodal vision capabilities to AI chat
+- Users can paste screenshots with Ctrl+V / Cmd+V directly into chat input
+- Supports all 4 models: Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5
+- Real-time image preview before sending
+- Images displayed in conversation history
+
+**Frontend Changes:**
+- Updated `ClaudeAISidebar.jsx` with paste event handler and image state management
+- Added `handlePaste()` to detect and convert images to base64
+- Added image preview UI with remove functionality
+- Updated message rendering to display attached images
+- Updated `ClaudeAISidebar.css` with styles for `.attached-images`, `.image-preview`, `.message-images`
+- Updated placeholder text: "Ask a question... (Paste images with Ctrl+V)"
+
+**Backend Changes:**
+- Updated `models.py`: `ChatMessage` and `ChatRequest` now support `images: Optional[List[str]]`
+- Updated `openrouter_service.py`:
+  - `chat()` method accepts `images` parameter
+  - `_send_request()` formats multimodal content for OpenRouter Vision API
+  - Supports images in conversation history
+- Updated `main.py`: `/chat` endpoint passes images to OpenRouter service
+
+**API Changes:**
+- Modified `/chat` endpoint to accept `images` field (array of base64 encoded images)
+- Images format: `data:image/jpeg;base64,...` or `data:image/png;base64,...`
+- Multimodal messages use OpenRouter vision format with `type: "image_url"`
+
+**Cost Impact:**
+- Image token cost: ~85-255 tokens per image (varies by resolution)
+- Vision supported by all 4 models with existing pricing
+
+**Files Modified:**
+- Frontend: `ClaudeAISidebar.jsx`, `ClaudeAISidebar.css`, `api.js`
+- Backend: `models.py`, `openrouter_service.py`, `main.py`
+- Legacy files (not used in v2.0): `InputForm.jsx`, `InputForm.css`, `MessageList.jsx`, `MessageList.css`, `ChatInterface.jsx`
+
 ### Changed (2025-10-16) - Model Pricing Update
 
 **Grok 4 Fast Pricing:**

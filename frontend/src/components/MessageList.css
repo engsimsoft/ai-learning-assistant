@@ -80,6 +80,30 @@
   color: var(--text-secondary);
 }
 
+.message-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.message-image {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.message-image:hover {
+  transform: scale(1.05);
+}
+
+.message.assistant .message-image {
+  border-color: var(--border);
+}
+
 .message-content {
   line-height: 1.6;
   white-space: pre-wrap;

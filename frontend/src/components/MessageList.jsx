@@ -35,6 +35,18 @@ export default function MessageList({ messages, isLoading }) {
               </span>
             )}
           </div>
+          {message.images && message.images.length > 0 && (
+            <div className="message-images">
+              {message.images.map((img, imgIndex) => (
+                <img
+                  key={imgIndex}
+                  src={img}
+                  alt={`Attached ${imgIndex + 1}`}
+                  className="message-image"
+                />
+              ))}
+            </div>
+          )}
           <div className="message-content">
             {message.content}
           </div>

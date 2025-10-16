@@ -16,18 +16,44 @@
   border-bottom: 1px solid var(--right-border);
 }
 
+.ai-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
 .ai-title {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 12px;
   color: var(--right-text);
 }
 
 .ai-icon {
   font-size: 20px;
+}
+
+.btn-close-sidebar {
+  background: transparent;
+  border: none;
+  color: var(--right-text-secondary);
+  font-size: 20px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-close-sidebar:hover {
+  background-color: var(--right-hover);
+  color: var(--right-text);
 }
 
 .model-selector {
@@ -203,6 +229,27 @@
   opacity: 0.7;
 }
 
+/* Message images */
+.message-images {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.message-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 6px;
+  border: 1px solid var(--right-border);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.message-image:hover {
+  transform: scale(1.05);
+}
+
 .message-content {
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -258,6 +305,55 @@
   padding: 16px;
   border-top: 1px solid var(--right-border);
   background-color: var(--right-surface);
+}
+
+/* Attached images preview */
+.attached-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.image-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--right-bg);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove-image:hover {
+  background-color: rgba(220, 38, 38, 1);
 }
 
 .message-input {

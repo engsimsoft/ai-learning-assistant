@@ -51,7 +51,8 @@ class OpenRouterService:
         message: str,
         context: str,
         history: List[Dict] = None,
-        model: Optional[str] = None
+        model: Optional[str] = None,
+        images: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
         Send chat request to OpenRouter
@@ -61,19 +62,22 @@ class OpenRouterService:
             context: Context from lessons
             history: Previous conversation messages
             model: Model to use (None = use default)
+            images: List of base64 encoded images
 
         Returns:
             Dictionary with response, model_used, and token info
         """
         if history is None:
             history = []
+        if images is None:
+            images = []
 
         # Use specified model or default
         selected_model = model or self.default_model
 
         # Try primary model first
         try:
-            result = await self._send_request(message, context, history, selected_model)
+            result = await self._send_request(message, context, history, selected_model, images)
             return result
         except Exception as e:
             logger.warning(f"Primary model {selected_model} failed: {e}")
@@ -82,7 +86,7 @@ class OpenRouterService:
             if selected_model != self.fallback_model:
                 logger.info(f"Attempting fallback to {self.fallback_model}")
                 try:
-                    result = await self._send_request(message, context, history, self.fallback_model)
+                    result = await self._send_request(message, context, history, self.fallback_model, images)
                     return result
                 except Exception as fallback_error:
                     logger.error(f"Fallback model also failed: {fallback_error}")
@@ -98,7 +102,8 @@ class OpenRouterService:
         message: str,
         context: str,
         history: List[Dict],
-        model: str
+        model: str,
+        images: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
         Send request to OpenRouter API
@@ -108,10 +113,14 @@ class OpenRouterService:
             context: Context string
             history: Conversation history
             model: Model identifier
+            images: List of base64 encoded images
 
         Returns:
             Response dictionary
         """
+        if images is None:
+            images = []
+
         # Build system prompt with context
         system_prompt = self._build_system_prompt(context)
 
@@ -120,13 +129,38 @@ class OpenRouterService:
 
         # Add conversation history
         for msg in history:
-            messages.append({
-                "role": msg.get("role", "user"),
-                "content": msg.get("content", "")
-            })
+            msg_content = msg.get("content", "")
+            msg_images = msg.get("images", [])
 
-        # Add current user message
-        messages.append({"role": "user", "content": message})
+            # If message has images, format as multimodal content
+            if msg_images:
+                content_parts = [{"type": "text", "text": msg_content}]
+                for img in msg_images:
+                    content_parts.append({
+                        "type": "image_url",
+                        "image_url": {"url": img}
+                    })
+                messages.append({
+                    "role": msg.get("role", "user"),
+                    "content": content_parts
+                })
+            else:
+                messages.append({
+                    "role": msg.get("role", "user"),
+                    "content": msg_content
+                })
+
+        # Add current user message (with images if present)
+        if images:
+            content_parts = [{"type": "text", "text": message}]
+            for img in images:
+                content_parts.append({
+                    "type": "image_url",
+                    "image_url": {"url": img}
+                })
+            messages.append({"role": "user", "content": content_parts})
+        else:
+            messages.append({"role": "user", "content": message})
 
         # Get model configuration
         model_config = self._get_model_config(model)

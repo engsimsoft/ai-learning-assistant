@@ -9,6 +9,7 @@ class ChatMessage(BaseModel):
     """Single message in conversation"""
     role: str = Field(..., description="Role: 'user' or 'assistant'")
     content: str = Field(..., description="Message content")
+    images: Optional[List[str]] = Field(default=None, description="Base64 encoded images")
 
 
 class ChatRequest(BaseModel):
@@ -25,6 +26,10 @@ class ChatRequest(BaseModel):
     conversation_history: Optional[List[ChatMessage]] = Field(
         default_factory=list,
         description="Previous messages in conversation"
+    )
+    images: Optional[List[str]] = Field(
+        default=None,
+        description="Base64 encoded images (data:image/jpeg;base64,...)"
     )
 
 
