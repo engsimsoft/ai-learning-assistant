@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - Unreleased
 
+### Changed (2025-10-16)
+- **Backend config:** Changed API port from 8000 to 8001 in `frontend/src/config.js`
+- **Backend CORS:** Added `localhost:5174` to allowed origins in `backend/config.py`
+- **Lesson formatting:** Normalized markdown headers from `###` to `#` in 20 lesson files
+- **UI theme:** Switched right sidebar from dark (Claude-style) to light (Cline-style) theme
+- **Documentation:** Moved detailed content files to `docs/ai-agent-boundaries/` subdirectory
+
 ### Major Changes
 - **🎨 Complete UI Rефакторинг** - Переход на трёхпанельный layout в стиле Claude
   - LEFT sidebar: дерево курсов с навигацией

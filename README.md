@@ -42,12 +42,9 @@ Frontend: http://localhost:5173
 
 ## Документация
 
-- [Детальная установка](docs/setup.md) - пошаговая инструкция
-- [Архитектура](docs/architecture.md) - как работает система
+- [Детальная установка](docs/setup.md) | [Архитектура](docs/architecture.md) | [Deployment](docs/deployment.md) | [Troubleshooting](docs/troubleshooting.md)
 - [Структура курса "AI Web Learning"](docs/course-structure.md) - 10 модулей веб-разработки
 - [Структура курса "Project Setup Guide"](docs/project-setup-guide-structure.md) - правильная организация проектов
-- [Deployment](docs/deployment.md) - деплой на Railway
-- [Troubleshooting](docs/troubleshooting.md) - решение проблем
 
 ## Технологии
 
@@ -91,12 +88,9 @@ frontend/
 
 ## Возможности
 
-- **4 оптимальные AI модели** - Gemini 2.5 Flash, Grok 4 Fast (FREE!), GPT-4.1 Mini, Claude Sonnet 4.5
-- **Контекстно-зависимые ответы** - AI знает 72 урока
-- **Гибкий выбор уроков** - используй все или выбери конкретные модули
-- **Автоматический fallback** - Gemini → Grok при ошибке
-- **Real-time чат** - интерактивный диалог с историей
-- **Open Source** - github.com/engsimsoft/ai-learning-assistant
+- **4 AI модели** (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5) + автоматический fallback
+- **Контекстно-зависимые ответы** - AI знает 72 урока с гибким выбором модулей
+- **Real-time чат** с историей | **Open Source** - github.com/engsimsoft/ai-learning-assistant
 
 ## Roadmap
 
