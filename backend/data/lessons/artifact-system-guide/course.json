@@ -1,0 +1,50 @@
+{
+  "id": "artifact-system-guide",
+  "title": "🔬 Artifact System Guide",
+  "description": "Полное руководство по системе интерактивных артефактов - графики, калькуляторы, примеры",
+  "version": "1.0",
+  "author": "AI Learning Agent",
+  "icon": "🔬",
+  "category": "demo",
+  "order": 100,
+  "modules": [
+    {
+      "id": "1-fundamentals",
+      "title": "Fundamentals",
+      "description": "Основы работы с артефактами",
+      "order": 1,
+      "lessons": [
+        {
+          "id": "1.1-introduction",
+          "title": "1.1 Введение - что такое артефакты",
+          "file": "1-fundamentals/1.1 Введение - что такое артефакты.md",
+          "order": 1
+        },
+        {
+          "id": "1.2-plots",
+          "title": "1.2 Графики (Plotly) - типы и примеры",
+          "file": "1-fundamentals/1.2 Графики (Plotly) - типы и примеры.md",
+          "order": 2
+        },
+        {
+          "id": "1.3-calculators",
+          "title": "1.3 Калькуляторы (Math.js) - параметры и формулы",
+          "file": "1-fundamentals/1.3 Калькуляторы (Math.js) - параметры и формулы.md",
+          "order": 3
+        },
+        {
+          "id": "1.4-ai-generation",
+          "title": "1.4 Создание артефактов через AI",
+          "file": "1-fundamentals/1.4 Создание артефактов через AI.md",
+          "order": 4
+        },
+        {
+          "id": "1.5-gallery",
+          "title": "1.5 Галерея шаблонов - справочник",
+          "file": "1-fundamentals/1.5 Галерея шаблонов - справочник.md",
+          "order": 5
+        }
+      ]
+    }
+  ]
+}
