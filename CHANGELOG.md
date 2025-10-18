@@ -5,7 +5,189 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - Unreleased
+## [3.1.1] - 2025-10-19
+
+### Fixed - Artifact Links with ReactMarkdown urlTransform
+
+**Problem:**
+- Artifact links `[📊 Chart](artifact:line-chart)` were opening new browser tabs instead of artifacts in CENTER
+- Root cause: ReactMarkdown/remark-gfm doesn't recognize custom `artifact:` protocol (only http, https, mailto, tel)
+- Result: href attribute was empty, global click handler couldn't find artifact links
+
+**Solution (Official ReactMarkdown API):**
+- Added `customUrlTransform` function to explicitly allow `artifact:` protocol
+- Added `urlTransform={customUrlTransform}` prop to ReactMarkdown component
+- Based on official documentation: https://github.com/remarkjs/react-markdown#urltransform
+- Added global click handler with capture phase to intercept artifact link clicks before browser navigation
+
+**Technical Implementation:**
+```javascript
+// Allow artifact: protocol in ReactMarkdown
+const customUrlTransform = (url) => {
+  if (url && url.startsWith('artifact:')) {
+    return url; // Allow artifact protocol
+  }
+  return url; // Default security for other URLs
+};
+
+<ReactMarkdown urlTransform={customUrlTransform}>
+  {lessonContent}
+</ReactMarkdown>
+```
+
+**Modified Files:**
+- `frontend/src/components/center/LessonViewer.jsx`:
+  - Added `customUrlTransform` function (lines 28-37)
+  - Added `urlTransform` prop to ReactMarkdown (line 257)
+  - Added global click handler with `a[href^="artifact:"]` selector (lines 92-121)
+  - Added `handleArtifactLink` function for parsing artifact URLs and dispatching events (lines 170-225)
+  - Imported `getTemplate` and `hasTemplate` from artifact templates (line 10)
+
+**Result:**
+- ✅ Artifact links now correctly open artifacts in CENTER container
+- ✅ Split view: Lesson + Artifact side-by-side
+- ✅ No more new browser tabs
+- ✅ Fully working with light theme (indigo #6366f1 accent color)
+
+**Testing:**
+- Tested with `artifact-gallery.md` lesson
+- Confirmed: line-chart, scatter-plot, generic-calculator templates load correctly
+- Confirmed: artifact:open events dispatch to CenterContainer
+- Confirmed: CENTER switches to LESSON_ARTIFACT state (split view)
+
+---
+
+## [3.1.0] - 2025-10-18
+
+### Added - Artifact System: Plot & Calculator Templates (Sprint 4-5)
+
+**New Artifact Types (Sprint 4):**
+- Added **Plot** artifact type with Plotly.js integration (interactive charts)
+- Added **Calculator** artifact type with Math.js integration (live calculations)
+- Extended artifact type system from 3 to 5 types: markdown, code, images, plot, calculator
+- Added `config` field to backend Artifact model for storing plot/calculator configurations
+
+**New Components:**
+- `frontend/src/components/artifacts/InteractivePlot.jsx` - Plotly.js chart renderer with export, fullscreen, reset features
+- `frontend/src/components/artifacts/Calculator.jsx` - Math.js calculator with sliders, formulas, live results
+- `frontend/src/components/artifacts/InteractivePlot.css` - Styled toolbar and fullscreen mode
+- `frontend/src/components/artifacts/Calculator.css` - Styled sliders, results, and formulas
+
+**Dependencies:**
+- Installed `plotly.js-dist-min@3.1.2` (3.5MB minified) for interactive charts
+- Installed `mathjs@15.0.0` (500KB) for mathematical expression evaluation
+
+**Template System (Sprint 5):**
+- Created `frontend/src/templates/` directory structure (plots/, calculators/)
+- Created 3 universal templates:
+  * `line-chart.js` - Line charts for time series and trends
+  * `scatter-plot.js` - Scatter plots for correlations and distributions
+  * `generic-calculator.js` - Flexible calculator for custom formulas
+- Created `artifactTemplates.js` - Template registry with helper functions
+- Integrated template selector dropdown in ArtifactCanvas (appears for Plot and Calculator tabs)
+- Each template includes: default config, multiple examples, and usage instructions
+
+**Modified Components:**
+- `backend/models.py` - Extended ArtifactType from 3 to 5 types, added config field
+- `frontend/src/components/rightSidebar/ArtifactCanvas.jsx` - Added Plot and Calculator tabs, integrated template loader
+- `frontend/src/components/layout/Header.jsx` - Added `[🎨]` Canvas button for manual artifact creation
+
+**Markdown Artifact Links (Sprint 6):**
+- Added custom link parser in `LessonViewer.jsx` for `artifact:` protocol
+- Syntax: `[Link Text](artifact:template-id)` or `[Link Text](artifact:template-id:example-name)`
+- Artifact links automatically open templates in CENTER split view (Lesson + Artifact)
+- Visual indicator: 🎨 emoji prepended to artifact link text
+- Created demo lesson: `artifact-links-demo.md` with 10+ example links
+- Styled artifact links with purple accent color and hover effects
+
+**Features:**
+- ✅ Interactive Plotly.js charts with zoom, pan, export PNG, reset, fullscreen
+- ✅ Live Math.js calculations with sliders and number inputs
+- ✅ Template system for quick artifact creation (line-chart, scatter-plot, generic-calculator)
+- ✅ **Markdown artifact links** - embed interactive content directly in lessons
+- ✅ Dark theme integration across all new components
+- ✅ Canvas accessible via Header `[🎨]` button
+
+## [3.0.0] - 2025-10-18
+
+### Added - Layout Redesign (Major UI Overhaul)
+
+**Dynamic CENTER Container with 3 States:**
+- CENTER can now show: Lesson only, Lesson + Artifact (split), or Artifact only
+- Artifacts moved from RIGHT sidebar tab → CENTER container (up to full screen width)
+- Implemented state machine: `LESSON_ONLY`, `LESSON_ARTIFACT`, `ARTIFACT_ONLY`
+- Added ResizeHandle for dragging split between Lesson and Artifact (30%-70% bounds)
+
+**Smart Panel Auto-Hide Logic:**
+- Scenario 1: Artifact from lesson → RIGHT sidebar (chat) auto-hides
+- Scenario 2: Artifact from AI → LEFT sidebar (courses) auto-hides
+- User can manually show/hide any panel via Header buttons
+- Respects user preferences (doesn't auto-restore hidden panels)
+
+**New UI Controls:**
+- Added `[💬]` button in Header to toggle RIGHT sidebar (AI chat)
+- Improved `[☰]` button behavior in Header for LEFT sidebar (courses)
+- Added `[×]` close button in Artifact toolbar
+- Added `[📄 Show Lesson]` button in Artifact toolbar (when lesson hidden)
+- Removed old "reopen sidebar" floating button
+
+**Event System:**
+- Introduced `artifact:open` event for opening artifacts in CENTER
+- Introduced `center:showLesson` event for showing lesson in split view
+- Maintained backward compatibility with legacy `canvas:add` and `rightSidebar:switchTab` events
+
+**New Components:**
+- `frontend/src/components/center/CenterContainer.jsx` - Dynamic CENTER with state machine
+- `frontend/src/components/center/CenterResizeHandle.jsx` - Draggable split handle
+- `frontend/src/components/center/ArtifactViewer.jsx` - Artifact wrapper in CENTER
+
+**Modified Components:**
+- `frontend/src/components/layout/Layout.jsx` - Integrated CenterContainer + auto-hide logic
+- `frontend/src/components/layout/Header.jsx` - Added chat toggle button
+- `frontend/src/components/rightSidebar/ClaudeAISidebar.jsx` - Removed Canvas tab (chat only)
+- `frontend/src/components/center/LessonViewer.jsx` - Sends `artifact:open` events
+
+**Benefits:**
+- ✅ Artifacts get significantly more space (60%+ vs 400-800px in old sidebar)
+- ✅ Context-aware layout adapts to user workflow
+- ✅ Lesson + Artifact visible simultaneously in split view
+- ✅ Smooth transitions between states (300ms CSS transitions)
+- ✅ Better UX for studying demos alongside lessons
+
+**Version:** Bumped to v3.0 in Header component
+
+### Added (2025-10-18) - Personal Documents Folder
+
+**New: my-documents/ folder for user's personal notes**
+- Created `my-documents/` folder in project root for personal learning materials
+- Purpose: Store personal notes/documentation without polluting AI agent context
+- Goal: **Optimize context window usage** - AI agents should not read personal files
+
+**Context Optimization:**
+- Added `my-documents/` to `.gitignore` - won't be committed to repository
+- Created `.claudeignore` file - Claude Code won't index excluded folders
+- Added strict rules to `CLAUDE.md` - agents must NOT read `my-documents/`
+- Updated `DOCUMENTATION_GUIDE.md` - added `my-documents/` to project structure
+- Created `my-documents/README.md` - explains folder purpose and usage
+
+**Why this matters:**
+- ✅ Save context tokens (don't waste on irrelevant files)
+- ✅ Keep personal learning materials separate from project code
+- ✅ AI agents focus only on project-related files
+- ✅ User can store any notes without worrying about commits or context pollution
+
+**Files Modified:**
+- `.gitignore` - added `my-documents/` exclusion
+- `.claudeignore` - created new file with context optimization rules
+- `CLAUDE.md` - added "🚫 Оптимизация контекста" section with strict rules
+- `DOCUMENTATION_GUIDE.md` - added `my-documents/` to structure diagram
+- `my-documents/README.md` - created usage guide
+
+### Changed (2025-10-16) - Prompt System Updates
+- Boundaries merged into the system prompt via PromptLoader; {boundaries} placeholder supported (auto-appended if missing)
+- Added Canvas Demo Rules to system_prompt.md (return exactly one self-contained HTML fenced block for Canvas)
+- Updated docs/prompt-system.md to reflect new placeholders and Canvas rules (SSOT, no duplication of lesson counts)
+
 
 ### Added (2025-10-16) - Vision API Support
 

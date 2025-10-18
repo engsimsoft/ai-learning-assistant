@@ -2,7 +2,7 @@
 Pydantic models for request/response validation
 """
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
 
 
 class ChatMessage(BaseModel):
@@ -129,3 +129,68 @@ class LessonsGroupedResponse(BaseModel):
         ...,
         description="Lessons grouped by course and module"
     )
+
+# ---------------------------
+# Canvas Artifacts (for Canvas MVP)
+# ---------------------------
+
+ArtifactType = Literal["markdown", "code", "images", "plot", "calculator"]
+
+
+class Artifact(BaseModel):
+    id: str = Field(..., description="Artifact identifier")
+    title: str = Field(..., description="Title")
+    type: ArtifactType = Field(..., description="Artifact type")
+    content_markdown: Optional[str] = Field(
+        default=None,
+        description="Markdown content when type=markdown or description for code/images"
+    )
+    html: Optional[str] = Field(
+        default=None,
+        description="HTML content when type=code"
+    )
+    images: Optional[List[str]] = Field(
+        default=None,
+        description="List of images (base64 data URLs) when type=images"
+    )
+    config: Optional[dict] = Field(
+        default=None,
+        description="Configuration for plot/calculator artifacts (JSON)"
+    )
+    source: Optional[str] = Field(
+        default=None,
+        description="Source reference (lesson/chat)"
+    )
+    tags: Optional[List[str]] = Field(default=None, description="Tags")
+    created_at: str = Field(..., description="Creation timestamp (ISO 8601)")
+    updated_at: str = Field(..., description="Update timestamp (ISO 8601)")
+
+
+class ArtifactMeta(BaseModel):
+    id: str = Field(..., description="Artifact identifier")
+    title: str = Field(..., description="Title")
+    type: ArtifactType = Field(..., description="Artifact type")
+    created_at: str = Field(..., description="Creation timestamp (ISO 8601)")
+    updated_at: str = Field(..., description="Update timestamp (ISO 8601)")
+    tags: Optional[List[str]] = Field(default=None, description="Tags")
+
+
+class ArtifactListResponse(BaseModel):
+    items: List[ArtifactMeta] = Field(..., description="List of artifacts")
+
+
+class CreateArtifactRequest(BaseModel):
+    title: str = Field(..., description="Title")
+    type: ArtifactType = Field(..., description="Artifact type")
+    content_markdown: Optional[str] = Field(default=None, description="Markdown content")
+    html: Optional[str] = Field(default=None, description="HTML content when type=code")
+    images: Optional[List[str]] = Field(
+        default=None,
+        description="List of images (base64 data URLs) when type=images"
+    )
+    config: Optional[dict] = Field(
+        default=None,
+        description="Configuration for plot/calculator artifacts (JSON)"
+    )
+    source: Optional[str] = Field(default=None, description="Source reference (lesson/chat)")
+    tags: Optional[List[str]] = Field(default=None, description="Tags")

@@ -1,342 +1,222 @@
 # Быстрый старт AI Learning Agent
 
-> Пошаговая инструкция по запуску и остановке приложения
-
-## 📋 Содержание
-
-- [Запуск приложения](#-запуск-приложения)
-  - [Backend (FastAPI)](#1-backend-fastapi)
-  - [Frontend (React)](#2-frontend-react)
-- [Остановка приложения](#-остановка-приложения)
-- [Проверка работы](#-проверка-работы)
-- [Troubleshooting](#-troubleshooting)
+> Простая инструкция по запуску и остановке приложения (только для macOS)
 
 ---
 
 ## 🚀 Запуск приложения
 
-### 1. Backend (FastAPI)
+### Шаг 1: Запустите Backend
 
-**Откройте первый терминал и выполните:**
+**Откройте первый терминал и вводите команды по очереди:**
 
+#### 1.1. Перейдите в папку backend:
+
+**Вариант А (если ты уже в папке ai-learning-agent):**
 ```bash
-# Перейдите в папку backend
 cd backend
+```
 
-# Активируйте виртуальное окружение
-source venv/bin/activate  # Mac/Linux
-# или
-venv\Scripts\activate     # Windows
+**Вариант Б (если ты в любой другой папке):**
+```bash
+cd /Users/mactm/Projects/ai-learning-agent/backend
+```
 
-# Запустите сервер
+**Проверка:** После команды должно быть:
+```
+mactm@MacBook-Pro-Vladimir backend %
+```
+(в конце написано `backend` - значит ты в правильной папке)
+
+#### 1.2. Активируйте виртуальное окружение:
+```bash
+source venv/bin/activate
+```
+
+После этой команды в начале строки появится `(venv)` - это значит что виртуальное окружение активировано.
+
+#### 1.3. Запустите Backend:
+```bash
 uvicorn main:app --reload
 ```
 
-**Результат:**
+**Вы увидите:**
 ```
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [...]
-INFO:     Started server process [...]
-INFO:     Application startup complete.
-2025-10-16 17:02:47,222 - main - INFO - Total lessons loaded: 76
-2025-10-16 17:02:47,222 - main - INFO - Backend startup complete!
+INFO:     Uvicorn running on http://127.0.0.1:8000
+Total lessons loaded: 76
+Backend startup complete!
 ```
 
-✅ Backend запущен на **http://localhost:8000**
+✅ Backend запущен! **НЕ ЗАКРЫВАЙТЕ этот терминал!**
 
 ---
 
-### 2. Frontend (React)
+### Шаг 2: Запустите Frontend
 
-**Откройте второй терминал (не закрывая первый!) и выполните:**
+**Откройте ВТОРОЙ терминал (первый НЕ закрывайте!) и вводите команды по очереди:**
 
+#### 2.1. Перейдите в папку frontend:
+
+**Вариант А (если ты уже в папке ai-learning-agent):**
 ```bash
-# Перейдите в папку frontend
 cd frontend
+```
 
-# Запустите dev-сервер
+**Вариант Б (если ты в любой другой папке):**
+```bash
+cd /Users/mactm/Projects/ai-learning-agent/frontend
+```
+
+**Проверка:** После команды должно быть:
+```
+mactm@MacBook-Pro-Vladimir frontend %
+```
+(в конце написано `frontend` - значит ты в правильной папке)
+
+#### 2.2. Запустите Frontend:
+```bash
 npm run dev
 ```
 
-**Результат:**
+**Вы увидите:**
 ```
-  VITE v5.4.20  ready in 84 ms
-
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: http://192.168.x.x:5173/
+Local:   http://localhost:5173/
 ```
 
-✅ Frontend запущен на **http://localhost:5173**
+✅ Frontend запущен! **НЕ ЗАКРЫВАЙТЕ этот терминал!**
+
+---
+
+### Шаг 3: Откройте в браузере
+
+Откройте: **http://localhost:5173**
 
 ---
 
 ## 🛑 Остановка приложения
 
-### Способ 1: Остановка через терминал (рекомендуется)
+### Шаг 1: Остановите Backend
 
-**В каждом терминале (Backend и Frontend):**
+**В первом терминале (где Backend):**
 
+#### 1.1. Остановите процесс:
 ```bash
-# Нажмите комбинацию клавиш:
 Ctrl + C
 ```
+(Нажмите клавишу Ctrl и, не отпуская её, нажмите C)
 
-Появится сообщение:
+Вы увидите:
 ```
 ^C
 INFO:     Shutting down
-INFO:     Finished server process [...]
 ```
 
-**Деактивация виртуального окружения (опционально):**
+#### 1.2. Выйдите из виртуального окружения:
 ```bash
-# В терминале backend:
 deactivate
 ```
+(Просто напишите слово `deactivate` и нажмите Enter)
+
+Промпт изменится с `(venv)` на обычный - это значит вы вышли из виртуального окружения.
 
 ---
 
-### Способ 2: Закрытие терминалов
+### Шаг 2: Остановите Frontend
 
-Просто закройте оба терминала (Backend и Frontend).
-
-**⚠️ Внимание:** Процессы могут остаться запущенными в фоне!
-
-Проверьте и завершите их при необходимости:
+**Во втором терминале (где Frontend):**
 
 ```bash
-# Найти процессы на портах
-lsof -i :8000  # Backend
-lsof -i :5173  # Frontend
-
-# Завершить процесс по PID (из вывода lsof)
-kill <PID>
+Ctrl + C
 ```
+(Нажмите клавишу Ctrl и, не отпуская её, нажмите C)
 
 ---
 
-## ✅ Проверка работы
+### Шаг 3: Закройте терминалы
 
-### 1. Проверка Backend
+Закройте оба окна терминала (⌘W).
 
-**Откройте браузер:**
-- API: http://localhost:8000
-- Документация: http://localhost:8000/docs
-- Список уроков: http://localhost:8000/lessons
-- Модели AI: http://localhost:8000/models
+✅ Готово!
 
-**Или через curl:**
+---
+
+## 🔥 Если что-то зависло
+
+**Если приложение не останавливается:**
+
 ```bash
-curl http://localhost:8000/lessons
+# Скопируйте и выполните эту команду:
+lsof -ti :8000,:5173 | xargs kill
 ```
 
-**Ожидаемый результат:**
-```json
-{"total":76,"lessons":[...]}
-```
+Эта команда принудительно убьёт все процессы приложения.
 
 ---
 
-### 2. Проверка Frontend
+## 💡 Быстрая остановка (опционально)
 
-**Откройте браузер:**
-- Приложение: http://localhost:5173
+Чтобы не вводить длинную команду каждый раз, создайте ярлык:
 
-**Проверьте:**
-- ✅ Загрузились уроки в левой панели
-- ✅ Доступен выбор AI модели (Gemini, Claude, GPT, Grok)
-- ✅ Можно отправить сообщение в чат
-
----
-
-### 3. Проверка связки Backend ↔ Frontend
-
-**В браузере (F12 → Console) не должно быть ошибок:**
-```
-✅ No errors (всё работает)
-❌ ERR_CONNECTION_REFUSED (Backend не запущен)
-❌ Failed to fetch (Неправильный порт в .env)
+```bash
+# Выполните один раз:
+echo 'alias stop-agent="lsof -ti :8000,:5173 | xargs kill"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-**В терминале Backend должны появиться запросы:**
-```
-INFO:     127.0.0.1:xxxxx - "GET /lessons HTTP/1.1" 200 OK
-INFO:     127.0.0.1:xxxxx - "GET /models HTTP/1.1" 200 OK
+Теперь при зависании просто пишите:
+```bash
+stop-agent
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## 📋 Краткая памятка
 
-### Проблема 1: Backend не запускается
+### Запуск (каждый раз когда хочешь работать):
 
-**Ошибка:** `No module named 'fastapi'`
-
-**Решение:**
+**Терминал 1 (Backend):**
 ```bash
-cd backend
-source venv/bin/activate  # Активируйте venv!
-pip install -r requirements.txt
+cd backend              # Перейти в папку backend
+source venv/bin/activate  # Активировать venv
+uvicorn main:app --reload # Запустить Backend
+```
+
+**Терминал 2 (Frontend):**
+```bash
+cd frontend   # Перейти в папку frontend
+npm run dev   # Запустить Frontend
+```
+
+**⚠️ Важно:** Команды `cd backend` и `cd frontend` сработают только если ты уже в папке `ai-learning-agent`!
+
+Если ты в другой папке, используй полные пути:
+- `cd /Users/mactm/Projects/ai-learning-agent/backend`
+- `cd /Users/mactm/Projects/ai-learning-agent/frontend`
+
+**Браузер:**
+Открой http://localhost:5173
+
+---
+
+### Остановка (когда закончил работу):
+
+**Терминал 1 (Backend):**
+1. `Ctrl+C` (остановить)
+2. `deactivate` (выйти из venv)
+
+**Терминал 2 (Frontend):**
+1. `Ctrl+C` (остановить)
+
+**Закрой оба терминала (⌘W)**
+
+---
+
+### Если зависло (экстренная остановка):
+
+```bash
+lsof -ti :8000,:5173 | xargs kill
 ```
 
 ---
 
-### Проблема 2: Frontend не видит Backend
-
-**Ошибка в консоли:** `ERR_CONNECTION_REFUSED`
-
-**Причины и решения:**
-
-1. **Backend не запущен** → Запустите Backend (см. выше)
-
-2. **Неправильный порт в .env**
-   ```bash
-   # Проверьте frontend/.env
-   cat frontend/.env
-   ```
-   Должно быть: `VITE_API_URL=http://localhost:8000`
-
-3. **Backend запущен на другом порту**
-   ```bash
-   # Проверьте backend/.env
-   cat backend/.env
-   ```
-   Должно быть: `PORT=8000`
-
-**Исправление:**
-```bash
-# Если порты не совпадают:
-# 1. Остановите frontend (Ctrl+C)
-# 2. Исправьте frontend/.env
-# 3. Перезапустите frontend
-cd frontend
-npm run dev
-```
-
----
-
-### Проблема 3: Порт 8000 или 5173 занят
-
-**Ошибка:** `Address already in use`
-
-**Найти процесс:**
-```bash
-lsof -i :8000  # Для backend
-lsof -i :5173  # Для frontend
-```
-
-**Завершить процесс:**
-```bash
-kill <PID>  # PID из вывода lsof
-```
-
-**Или использовать другой порт:**
-```bash
-# Backend
-uvicorn main:app --reload --port 8001
-
-# Frontend автоматически выберет 5174 если 5173 занят
-```
-
----
-
-### Проблема 4: Нет уроков в левой панели
-
-**Причины:**
-1. Backend не возвращает уроки
-2. Frontend не может подключиться к Backend
-
-**Диагностика:**
-```bash
-# Проверьте Backend напрямую
-curl http://localhost:8000/lessons
-
-# Должен вернуть: {"total":76,"lessons":[...]}
-```
-
-**Если возвращает пустой ответ:**
-```bash
-# Проверьте логи Backend в терминале
-# Должно быть: "Total lessons loaded: 76"
-```
-
----
-
-### Проблема 5: AI не отвечает
-
-**Причины:**
-1. Нет API ключа OpenRouter
-2. Неправильный API ключ
-
-**Решение:**
-```bash
-# Проверьте backend/.env
-cat backend/.env | grep OPENROUTER_API_KEY
-
-# Должен быть валидный ключ:
-OPENROUTER_API_KEY=sk-or-v1-xxxxx
-
-# Получить ключ: https://openrouter.ai
-```
-
-**После изменения .env:**
-```bash
-# Перезапустите Backend (Ctrl+C, затем снова uvicorn main:app --reload)
-```
-
----
-
-## 📚 Дополнительная информация
-
-- **Полная документация:** [README.md](README.md)
-- **Архитектура проекта:** [docs/architecture.md](docs/architecture.md)
-- **Структура курсов:** [docs/course-structure.md](docs/course-structure.md)
-- **Детальная установка:** [docs/setup.md](docs/setup.md)
-
----
-
-## 💡 Полезные команды
-
-### Просмотр логов Backend в реальном времени
-```bash
-# Backend показывает логи автоматически в терминале
-# Каждый запрос виден как:
-INFO:     127.0.0.1:xxxxx - "GET /lessons HTTP/1.1" 200 OK
-```
-
-### Очистка кэша Frontend
-```bash
-cd frontend
-rm -rf node_modules/.vite
-npm run dev
-```
-
-### Пересоздание venv Backend
-```bash
-cd backend
-rm -rf venv
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
----
-
-## ✅ Стандартный процесс работы
-
-**Каждый день при запуске:**
-
-1. Откройте 2 терминала
-2. Терминал 1: `cd backend && source venv/bin/activate && uvicorn main:app --reload`
-3. Терминал 2: `cd frontend && npm run dev`
-4. Откройте браузер: http://localhost:5173
-
-**При завершении работы:**
-
-1. В терминале Backend: `Ctrl + C`
-2. В терминале Frontend: `Ctrl + C`
-3. В терминале Backend: `deactivate` (опционально)
-
----
-
-**Последнее обновление:** 2025-10-16
+**Последнее обновление:** 2025-10-19

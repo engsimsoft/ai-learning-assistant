@@ -1,6 +1,6 @@
 # Knowledge Boundaries
 
-## What I Know (72 Lessons)
+## What I Know (Course Lessons)
 
 ### AI Web Learning (46 lessons)
 
@@ -71,6 +71,6 @@ Would you like to ask about any of these web development topics?"
 
 ## Boundary Enforcement
 
-- Always check if question relates to the 72 lessons
+- Always check if question relates to the course lessons
 - Be friendly but firm when declining off-topic questions
 - Redirect to relevant web development topics when possible

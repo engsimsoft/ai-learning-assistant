@@ -7,6 +7,7 @@ import apiService from '../../services/api';
 import { ContextSelectorModal } from '../context';
 import { getContextModeLabel } from '../../utils/lessonTree';
 import './ClaudeAISidebar.css';
+// REMOVED: import ArtifactCanvas - moved to CENTER
 
 export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
   const [messages, setMessages] = useState([]);
@@ -24,6 +25,9 @@ export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
   const [showContextModal, setShowContextModal] = useState(false);
 
   const [showStatsModal, setShowStatsModal] = useState(false);
+
+  // REMOVED: Tabs (chat | canvas) - Canvas moved to CENTER in Sprint 2
+  // Canvas now lives in CenterContainer, RIGHT sidebar is chat-only
 
   // Conversation statistics
   const [conversationStats, setConversationStats] = useState({
@@ -168,6 +172,78 @@ export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
     return label;
   };
 
+  // Extract first fenced code block from message content
+  const extractFirstCodeBlock = (text) => {
+    if (!text) return null;
+    const match = text.match(/```[a-zA-Z0-9_-]*\n([\s\S]*?)```/);
+    return match ? match[1] : null;
+  };
+
+  // Send a message content to CENTER Artifact Viewer (code preferred, fallback to markdown)
+  const handleSendToCanvas = (msg) => {
+    if (!msg) return;
+    const code = extractFirstCodeBlock(msg.content || '');
+    if (code) {
+      // NEW: Send to CENTER artifact viewer
+      window.dispatchEvent(new CustomEvent('artifact:open', {
+        detail: {
+          type: 'code',
+          title: 'From Chat',
+          html: code,
+          source: 'chat',
+          tags: ['from-chat']
+        }
+      }));
+
+      // LEGACY: Keep for backward compatibility
+      window.dispatchEvent(new CustomEvent('canvas:add', {
+        detail: {
+          type: 'code',
+          title: 'From Chat',
+          html: code,
+          source: 'chat',
+          tags: ['from-chat']
+        }
+      }));
+      return;
+    }
+
+    // Fallback: send markdown content
+    window.dispatchEvent(new CustomEvent('artifact:open', {
+      detail: {
+        type: 'markdown',
+        title: 'From Chat',
+        markdown: msg.content || '',
+        source: 'chat',
+        tags: ['from-chat']
+      }
+    }));
+
+    // LEGACY: Keep for backward compatibility
+    window.dispatchEvent(new CustomEvent('canvas:add', {
+      detail: {
+        type: 'markdown',
+        title: 'From Chat',
+        markdown: msg.content || '',
+        source: 'chat',
+        tags: ['from-chat']
+      }
+    }));
+
+    // If images present, also push them
+    if (msg.images && msg.images.length) {
+      window.dispatchEvent(new CustomEvent('artifact:open', {
+        detail: {
+          type: 'images',
+          title: 'Images from Chat',
+          images: msg.images,
+          source: 'chat',
+          tags: ['from-chat']
+        }
+      }));
+    }
+  };
+
   return (
     <div className="claude-ai-sidebar">
       {/* Header with model selector */}
@@ -210,6 +286,8 @@ export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
         </select>
       </div>
 
+      {/* REMOVED: Tabs UI - Canvas moved to CENTER */}
+
       {/* Context selector */}
       <div className="context-selector">
         <div className="context-summary">
@@ -225,6 +303,8 @@ export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
           ⚙️
         </button>
       </div>
+
+      {/* REMOVED: Canvas container - moved to CENTER */}
 
       {/* Messages list */}
       <div className="messages-container">
@@ -256,6 +336,17 @@ export default function ClaudeAISidebar({ lessons, currentLessonId, onClose }) {
                 <div className="message-content">
                   {msg.content}
                 </div>
+                {msg.role === 'assistant' && (
+                  <div className="message-actions">
+                    <button
+                      className="btn-send-to-canvas"
+                      onClick={() => handleSendToCanvas(msg)}
+                      title="Send this message to Canvas"
+                    >
+                      🧩 Canvas
+                    </button>
+                  </div>
+                )}
                 {msg.metadata && (
                   <div className="message-metadata">
                     <span className="model-badge">{msg.metadata.model}</span>

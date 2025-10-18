@@ -13,7 +13,8 @@ import {
 import Header from './Header';
 import ResizeHandle from './ResizeHandle';
 import LeftSidebar from '../leftSidebar/LeftSidebar';
-import LessonViewer from '../center/LessonViewer';
+import CenterContainer from '../center/CenterContainer';
+import { CENTER_STATES } from '../center/CenterContainer';
 import ClaudeAISidebar from '../rightSidebar/ClaudeAISidebar';
 import './Layout.css';
 
@@ -45,6 +46,40 @@ export default function Layout() {
 
   // Lessons list for navigation
   const [lessons, setLessons] = useState([]);
+
+  // CENTER state management
+  const [centerState, setCenterState] = useState({
+    state: CENTER_STATES.LESSON_ONLY,
+    lessonWidth: 100,
+    artifactWidth: 0,
+    currentLessonId: null,
+    currentArtifact: null
+  });
+
+  /**
+   * Handle CENTER state changes with auto-hide logic
+   * Scenario 1: Artifact from lesson → hide RIGHT sidebar
+   * Scenario 2: Artifact from AI → hide LEFT sidebar
+   */
+  const handleCenterStateChange = (newCenterState) => {
+    setCenterState(newCenterState);
+
+    // Auto-hide logic based on artifact source
+    if (newCenterState.state !== CENTER_STATES.LESSON_ONLY && newCenterState.currentArtifact) {
+      const source = newCenterState.currentArtifact.source;
+
+      if (source === 'lesson') {
+        // Scenario 1: Artifact from lesson → hide RIGHT (chat not needed)
+        setRightSidebarOpen(false);
+      } else if (source === 'chat') {
+        // Scenario 2: Artifact from AI → hide LEFT (course tree not needed)
+        setLeftSidebarOpen(false);
+      }
+    }
+
+    // When returning to LESSON_ONLY, don't auto-restore panels
+    // (user might have manually hidden them - respect user preference)
+  };
 
   // Handle window resize
   useEffect(() => {
@@ -90,6 +125,8 @@ export default function Layout() {
       <Header
         leftSidebarOpen={leftSidebarOpen}
         onToggleLeftSidebar={toggleLeftSidebar}
+        rightSidebarOpen={rightSidebarOpen}
+        onToggleRightSidebar={toggleRightSidebar}
       />
 
       <div className="layout-body">
@@ -108,12 +145,14 @@ export default function Layout() {
           )}
         </aside>
 
-        {/* CENTER - Lesson Viewer */}
+        {/* CENTER - Dynamic Container (Lesson / Artifact / Both) */}
         <main className="layout-center">
-          <LessonViewer
+          <CenterContainer
             lessonId={currentLessonId}
             lessons={lessons}
             onLessonChange={setCurrentLessonId}
+            centerState={centerState}
+            onCenterStateChange={handleCenterStateChange}
           />
         </main>
 
@@ -142,16 +181,7 @@ export default function Layout() {
         </aside>
       </div>
 
-      {/* Show button to reopen right sidebar when closed */}
-      {!rightSidebarOpen && (
-        <button
-          className="reopen-right-sidebar"
-          onClick={toggleRightSidebar}
-          title="Open AI Chat"
-        >
-          💬
-        </button>
-      )}
+      {/* REMOVED: reopen-right-sidebar button - now in Header */}
     </div>
   );
 }

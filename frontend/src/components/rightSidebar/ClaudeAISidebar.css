@@ -566,3 +566,59 @@
   font-weight: 700;
   color: var(--right-accent);
 }
+
+/* Canvas tabs and actions */
+.ai-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--right-border);
+  background-color: var(--right-surface);
+}
+
+.ai-tab {
+  padding: 6px 12px;
+  background-color: var(--right-surface);
+  color: var(--right-text);
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.ai-tab.active {
+  background-color: var(--right-accent);
+  border-color: var(--right-accent);
+}
+
+.ai-tab:hover {
+  background-color: var(--right-hover);
+}
+
+.canvas-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Message actions (send to canvas) */
+.message-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-send-to-canvas {
+  padding: 4px 8px;
+  background-color: var(--right-surface);
+  color: var(--right-text);
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-send-to-canvas:hover {
+  background-color: var(--right-hover);
+  border-color: var(--right-accent);
+}

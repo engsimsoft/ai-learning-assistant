@@ -1,0 +1,332 @@
+/**
+ * ArtifactCanvas Styles
+ */
+.artifact-canvas {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--right-bg);
+  color: var(--right-text);
+}
+
+.canvas-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--right-border);
+  background-color: var(--right-surface);
+}
+
+.canvas-template-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 12px;
+  border-left: 1px solid var(--right-border);
+}
+
+.canvas-template-dropdown {
+  background-color: var(--right-bg);
+  color: var(--right-text);
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.canvas-template-dropdown:hover {
+  background-color: var(--right-hover);
+}
+
+.canvas-template-dropdown:focus {
+  outline: none;
+  border-color: var(--right-accent);
+}
+
+.canvas-tab {
+  padding: 6px 12px;
+  background-color: var(--right-surface);
+  color: var(--right-text);
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.canvas-tab.active {
+  background-color: var(--right-accent);
+  border-color: var(--right-accent);
+}
+
+.canvas-tab:hover {
+  background-color: var(--right-hover);
+}
+
+.canvas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--right-border);
+  background-color: var(--right-surface);
+}
+
+.canvas-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.canvas-title,
+.canvas-source,
+.canvas-tags {
+  background-color: var(--right-bg);
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  color: var(--right-text);
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.canvas-title { min-width: 220px; }
+.canvas-source { min-width: 160px; }
+.canvas-tags { min-width: 220px; }
+
+.canvas-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-run,
+.btn-clear,
+.btn-save {
+  padding: 8px 12px;
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  background-color: var(--right-surface);
+  color: var(--right-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-run { background-color: var(--right-accent); border-color: var(--right-accent); }
+.btn-run:hover { background-color: var(--right-hover);}
+
+.btn-clear:hover,
+.btn-save:hover {
+  background-color: var(--right-hover);
+  border-color: var(--right-accent);
+}
+
+.canvas-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  height: 100%;
+  min-height: 360px;
+}
+
+.canvas-textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  resize: vertical;
+  background-color: var(--right-bg);
+  border: 1px solid var(--right-border);
+  border-radius: 8px;
+  color: var(--right-text);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.canvas-textarea.code {
+  min-height: 90px;
+}
+
+.canvas-preview {
+  background-color: var(--right-bg);
+  border: 1px solid var(--right-border);
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+}
+
+.canvas-code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  min-height: 420px;
+}
+
+.canvas-code-editors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.canvas-code-label {
+  font-size: 12px;
+  color: var(--right-text-secondary);
+}
+
+.canvas-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  border: 1px solid var(--right-border);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.canvas-images {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.canvas-images-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid var(--right-border);
+  border-radius: 6px;
+  background-color: var(--right-surface);
+  color: var(--right-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-upload:hover {
+  background-color: var(--right-hover);
+  border-color: var(--right-accent);
+}
+
+.canvas-images .hint {
+  color: var(--right-text-secondary);
+  font-size: 12px;
+}
+
+.canvas-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.canvas-image-item {
+  position: relative;
+  border: 1px solid var(--right-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--right-bg);
+}
+
+.canvas-image-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.canvas-image-item .remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(239, 68, 68, 0.95);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.canvas-image-item .remove:hover {
+  background-color: rgba(220, 38, 38, 1);
+}
+
+.canvas-images-empty {
+  color: var(--right-text-secondary);
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+  border: 1px dashed var(--right-border);
+  border-radius: 8px;
+}
+
+.save-result {
+  margin: 8px 12px 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.save-result.ok {
+  background-color: #083a2c;
+  color: #34d399;
+  border: 1px solid #065f46;
+}
+
+.save-result.err {
+  background-color: #411a1a;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+}
+
+@media (max-width: 1366px) {
+  .canvas-split,
+  .canvas-code-grid {
+    grid-template-columns: 1fr;
+  }
+  .canvas-textarea {
+    min-height: 220px;
+  }
+  .canvas-iframe {
+    min-height: 260px;
+  }
+}
+
+/* Placeholder for plot/calculator modes */
+.canvas-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: var(--bg-secondary, #252525);
+  border-radius: 8px;
+  margin: 20px;
+  text-align: center;
+}
+
+.canvas-placeholder p:first-child {
+  font-size: 48px;
+  margin: 0;
+}
+
+.canvas-placeholder p:last-child {
+  margin: 10px 0 0 0;
+  color: #999;
+}

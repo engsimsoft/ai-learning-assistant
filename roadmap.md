@@ -1,4 +1,4 @@
-# Roadmap: AI Learning Agent v2.0
+# Roadmap: AI Learning Agent v3.0
 
 ## 🎯 Цель проекта
 
@@ -14,10 +14,10 @@
 ---
 
 ## 📊 Текущий статус
-- **Версия:** v2.0-alpha (активная разработка)
-- **Фаза:** Фаза 2 / 4 (Smart Context Selector завершён)
-- **Прогресс:** 35/67 задач (52%)
-- **Следующее:** Завершить Phase 1.7 (адаптивность) или продолжить Phase 2
+- **Версия:** v3.1 (Artifact System Complete: Plot, Calculator, Templates, Markdown Links)
+- **Фаза:** Фаза 1-2 + Artifact System (Sprint 4-6) завершены ✅ / 4
+- **Прогресс:** 48/67 задач (72%)
+- **Следующее:** Фаза 3 (Cost Display) или Sprint 7 (Testing & Documentation)
 
 ---
 
@@ -78,6 +78,90 @@
 - [X] Создать endpoint GET /lessons/:id (получить урок) (1 час)
 - [X] Обновить models.py (добавить LessonDetailResponse) (30 мин)
 - [X] Обновить context_service.py (метод get_lesson уже существует) (30 мин)
+
+#### 1.9 Layout Redesign - Dynamic CENTER (6-8 часов) ✅ ЗАВЕРШЕН (2025-10-18)
+**См. детальный план:** [layout-redesign-roadmap-md.md](layout-redesign-roadmap-md.md)
+
+**Phase 1: Refactor CENTER Container**
+- [X] Создать CenterContainer.jsx с state machine (3 states) (2 часа)
+- [X] Добавить CENTER state management в Layout.jsx (1 час)
+- [X] Реализовать CSS layout для split view (1 час)
+- [X] Создать CenterResizeHandle для Lesson/Artifact split (1 час)
+
+**Phase 2: Extract Artifact from RIGHT Sidebar**
+- [X] Создать ArtifactViewer.jsx компонент (1 час)
+- [X] Удалить табы из ClaudeAISidebar.jsx (RIGHT = chat only) (30 мин)
+- [X] Расширить событийную систему (artifact:open, center:showLesson) (30 мин)
+
+**Phase 3: Auto-hide Logic**
+- [X] Реализовать panel visibility state machine (1 час)
+- [X] Scenario 1: Artifact from lesson → hide RIGHT (30 мин)
+- [X] Scenario 2: Artifact from AI → hide LEFT (30 мин)
+
+**Phase 4: Control Buttons**
+- [X] Добавить [💬] кнопку в Header (show/hide RIGHT) (30 мин)
+- [X] Добавить [×] и [📄 Show Lesson] в Artifact toolbar (30 мин)
+
+**Результат:**
+- ✅ Artifacts получают до 100% ширины CENTER (vs 400-800px в старом sidebar)
+- ✅ Context-aware layout (адаптируется под workflow)
+- ✅ Lesson + Artifact одновременно в split view
+- ✅ Smooth transitions (300ms CSS)
+
+#### 1.10 Artifact System - Plot & Calculator Templates (12-15 часов) ✅ ЗАВЕРШЕН (2025-10-18)
+**См. детальный план:** [artifact-system-roadmap.md](artifact-system-roadmap.md)
+
+**Sprint 1: Install Libraries (1 час)**
+- [X] Установить plotly.js-dist-min@3.1.2 (30 мин)
+- [X] Установить mathjs@15.0.0 (30 мин)
+
+**Sprint 2: Type System Extension (2 часа)**
+- [X] Обновить backend/models.py (ArtifactType: 5 типов, config field) (1 час)
+- [X] Обновить frontend ArtifactCanvas (5 вкладок вместо 3) (1 час)
+
+**Sprint 3: InteractivePlot Component (3-4 часа)**
+- [X] Создать InteractivePlot.jsx с Plotly.js (2 часа)
+- [X] Добавить Export PNG, Reset, Fullscreen (1 час)
+- [X] Интегрировать в ArtifactCanvas с sample data (1 час)
+
+**Sprint 4: Calculator Component (3-4 часа)**
+- [X] Создать Calculator.jsx с Math.js (2 часа)
+- [X] Добавить sliders, formulas, live calculations (1 час)
+- [X] Интегрировать в ArtifactCanvas с sample config (1 час)
+
+**Sprint 5: Templates System (3-4 часа)**
+- [X] Создать templates/ directory structure (30 мин)
+- [X] Создать line-chart.js template (1 час)
+- [X] Создать scatter-plot.js template (1 час)
+- [X] Создать generic-calculator.js template (1 час)
+- [X] Создать artifactTemplates.js registry (30 мин)
+- [X] Добавить template selector UI в ArtifactCanvas (1 час)
+
+**Sprint 6: Markdown Links (3 часа) ✅ ЗАВЕРШЕН (2025-10-19)**
+- [X] Парсер markdown ссылок в LessonViewer (1 час)
+- [X] Поддержка синтаксиса `[Text](artifact:template-id)` и `[Text](artifact:template-id:example-name)` (1 час)
+- [X] Стили для artifact links (indigo #6366f1, light theme) (30 мин)
+- [X] Создан demo урок `artifact-gallery.md` с примерами (30 мин)
+- [X] **FIX: ReactMarkdown urlTransform** для поддержки `artifact:` протокола (2 часа)
+  - Проблема: remark-gfm не распознает нестандартные протоколы
+  - Решение: добавлен `customUrlTransform` согласно официальной документации
+  - Результат: ссылки `[📊 Chart](artifact:line-chart)` открывают артефакты в CENTER, а не новые вкладки
+
+**Sprint 7: Testing & Documentation (отложен)**
+- [ ] Тестирование всех artifact типов (1 час)
+- [ ] Тестирование template loading (1 час)
+- [ ] Обновление документации (1 час)
+
+**Результат:**
+- ✅ 5 типов артефактов: markdown, code, images, plot, calculator
+- ✅ Интерактивные Plotly.js графики (zoom, pan, export, fullscreen)
+- ✅ Живые Math.js вычисления (sliders, formulas, results)
+- ✅ 3 универсальных шаблона (line-chart, scatter-plot, generic-calculator)
+- ✅ Template selector в Canvas UI
+- ✅ **Markdown artifact links** - `[Text](artifact:template-id)` синтаксис
+- ✅ Canvas доступен через кнопку [🎨] в Header
+
+**📊 Artifact System Roadmap B: 100% ЗАВЕРШЁН ✅**
 
 ---
 
@@ -181,7 +265,7 @@
 - ✅ Создано 3 новых React компонента + 2 utility файла
 - ✅ Светлая тема UI в соответствии с дизайном проекта
 - ✅ Исправлены баги с отображением токенов в сообщениях
-- ⏸️ Следующее: Обновить документацию и сделать commit
+- ✅ Обновлена документация: docs/prompt-system.md, добавлен docs/artifacts.md, обновлен CHANGELOG.md
 
 **2025-10-13:**
 - ✅ Изучена техническая спецификация AI Learning Agent v2.0

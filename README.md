@@ -3,7 +3,7 @@
 > **🚀 В разработке: v2.0** - Полный UI рефакторинг в стиле Claude + новые фичи
 > Текущая стабильная версия: [v1.0](roadmap-v1.0.md) | Roadmap v2.0: [roadmap.md](roadmap.md)
 
-AI-наставник с доступом к 72 урокам веб-разработки. Отвечает на вопросы студентов с поддержкой 4 оптимальных LLM через OpenRouter (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5).
+AI-наставник с доступом к структурированным урокам веб-разработки. Отвечает на вопросы студентов с поддержкой 4 оптимальных LLM через OpenRouter (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5).
 
 ## Быстрый старт
 
@@ -33,11 +33,11 @@ Frontend: http://localhost:5173
 
 ## Образовательные курсы
 
-Проект содержит **три курса** по веб-разработке (94+ урока):
+Проект содержит **три курса** по веб-разработке:
 
-- **[AI Web Learning](docs/course-structure.md)** (42+ урок) - ЧТО создавать: Backend, Frontend, Database, RAG, ML
-- **[Project Setup Guide](docs/project-setup-guide-structure.md)** (21 урок) - КАК организовать: структура, архитектура, работа с ИИ
-- **[Web Design Fundamentals](docs/web-design-fundamentals-structure.md)** (11 уроков) - КАК называть: UI/UX терминология и артефакты дизайна для работы с ИИ
+- **[AI Web Learning](docs/course-structure.md)** — ЧТО создавать: Backend, Frontend, Database, RAG, ML
+- **[Project Setup Guide](docs/project-setup-guide-structure.md)** — КАК организовать: структура, архитектура, работа с ИИ
+- **[Web Design Fundamentals](docs/web-design-fundamentals-structure.md)** — КАК называть: UI/UX терминология и артефакты дизайна для работы с ИИ
 
 **Как связаны:** Setup Guide учит организовать проект, AI Web Learning - что в нём создавать, Web Design Fundamentals - как правильно называть UI элементы и работать с артефактами дизайна.
 
@@ -46,6 +46,7 @@ Frontend: http://localhost:5173
 - [Детальная установка](docs/setup.md) | [Архитектура](docs/architecture.md) | [Deployment](docs/deployment.md) | [Troubleshooting](docs/troubleshooting.md)
 - [Структура курса "AI Web Learning"](docs/course-structure.md) - 10 модулей веб-разработки
 - [Структура курса "Project Setup Guide"](docs/project-setup-guide-structure.md) - правильная организация проектов
+- [Canvas и артефакты](docs/artifacts.md) | [Система промптов](docs/prompt-system.md)
 
 ## Технологии
 
@@ -73,7 +74,7 @@ backend/
 ├── services/
 │   ├── openrouter_service.py  # Работа с LLM через OpenRouter
 │   └── context_service.py     # Управление уроками
-└── data/lessons/        # 72 урока (10 модулей + Project Setup Guide)
+└── data/lessons/        # уроки курсов (см. docs/course-structure.md)
 
 frontend/
 ├── src/
@@ -90,7 +91,7 @@ frontend/
 ## Возможности
 
 - **4 AI модели** (Gemini 2.5 Flash, Grok 4 Fast, GPT-4.1 Mini, Claude Sonnet 4.5) + автоматический fallback
-- **Контекстно-зависимые ответы** - AI знает 72 урока с гибким выбором модулей
+- **Контекстно-зависимые ответы** - AI знает уроки с гибким выбором модулей
 - **Real-time чат** с историей | **Open Source** - github.com/engsimsoft/ai-learning-assistant
 
 ## Roadmap
@@ -106,7 +107,7 @@ frontend/
 **v1.0 (стабильная версия):**
 - ✅ FastAPI backend + React frontend
 - ✅ 4 оптимальные AI модели через OpenRouter
-- ✅ 72 урока (2 курса)
+- ✅ Структурированные уроки (2 курса)
 - ✅ История чата
 
 См. [roadmap-v1.0.md](roadmap-v1.0.md) для истории разработки v1.0.

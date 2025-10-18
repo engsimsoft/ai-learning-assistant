@@ -72,3 +72,6 @@ coverage.xml
 
 # Playwright MCP screenshots
 .playwright-mcp/
+
+# Personal user documents (not related to project)
+my-documents/

@@ -1,0 +1,69 @@
+/**
+ * CenterContainer Styles
+ * Dynamic container with 3 states: lesson only, lesson+artifact split, artifact only
+ */
+
+.center-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-primary, #1a1a1a);
+}
+
+/* State: LESSON_ONLY */
+.center-lesson-only {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+/* State: LESSON_ARTIFACT (split view) */
+.center-split {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  overflow: hidden;
+}
+
+.center-split-lesson {
+  height: 100%;
+  overflow: auto;
+  border-right: 1px solid var(--border-color, #333);
+  background: var(--bg-primary, #1a1a1a);
+  transition: width 0.3s ease-out;
+}
+
+.center-split-artifact {
+  height: 100%;
+  overflow: auto;
+  background: var(--bg-secondary, #252525);
+  transition: width 0.3s ease-out;
+}
+
+/* State: ARTIFACT_ONLY */
+.center-artifact-only {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--bg-secondary, #252525);
+}
+
+/* Smooth transitions for state changes */
+.center-container * {
+  transition: width 0.3s ease-out, opacity 0.2s ease-out;
+}
+
+/* Responsive: ensure minimum widths */
+@media (max-width: 1600px) {
+  .center-split-lesson {
+    min-width: 300px;
+  }
+
+  .center-split-artifact {
+    min-width: 400px;
+  }
+}

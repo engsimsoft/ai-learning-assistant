@@ -6,6 +6,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from contextlib import asynccontextmanager
+import os
+import uuid
+import base64
+from datetime import datetime
 
 from config import config
 from models import (
@@ -14,7 +18,8 @@ from models import (
     ModelsListResponse, ModelInfo,
     HealthResponse,
     ContextPreviewRequest, ContextPreviewResponse,
-    LessonsGroupedResponse
+    LessonsGroupedResponse,
+    CreateArtifactRequest, ArtifactListResponse, Artifact, ArtifactMeta
 )
 from services import ContextService, OpenRouterService, PromptLoader
 
@@ -28,6 +33,111 @@ logger = logging.getLogger(__name__)
 # Global service instances
 context_service: ContextService = None
 openrouter_service: OpenRouterService = None
+
+# Artifacts storage (docs/artifacts)
+ARTIFACTS_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "docs", "artifacts")
+)
+ASSETS_DIR = os.path.join(ARTIFACTS_DIR, "assets")
+
+
+def _ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
+
+
+def _generate_artifact_id() -> str:
+    """Generate unique artifact id: YYYYMMDDHHMMSS-xxxxxx"""
+    return datetime.utcnow().strftime("%Y%m%d%H%M%S") + "-" + uuid.uuid4().hex[:6]
+
+
+def _frontmatter(meta: dict) -> str:
+    """Build YAML-like frontmatter without external deps"""
+    lines = ["---"]
+    for k, v in meta.items():
+        if isinstance(v, list):
+            lines.append(f"{k}: [{', '.join(v)}]")
+        else:
+            lines.append(f"{k}: {v}")
+    lines.append("---")
+    return "\n".join(lines)
+
+
+def _write_markdown_file(artifact_id: str, meta: dict, body: str) -> str:
+    md_path = os.path.join(ARTIFACTS_DIR, f"{artifact_id}.md")
+    content = _frontmatter(meta) + "\n\n" + (body or "")
+    with open(md_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    return md_path
+
+
+def _save_images(images: list[str], artifact_id: str) -> list[str]:
+    """
+    Save data URL images to assets folder.
+    Returns list of relative asset paths 'assets/<file>'.
+    """
+    saved: list[str] = []
+    if not images:
+        return saved
+    _ensure_dir(ASSETS_DIR)
+    for idx, data_url in enumerate(images, start=1):
+        try:
+            if not data_url.startswith("data:"):
+                # skip non data URLs
+                continue
+            header, b64 = data_url.split(",", 1)
+            # data:image/png;base64,...
+            mime = header.split(";")[0].split(":")[1] if ":" in header else "image/png"
+            ext = "png"
+            if mime.endswith("jpeg") or mime.endswith("jpg"):
+                ext = "jpg"
+            elif mime.endswith("png"):
+                ext = "png"
+            elif mime.endswith("webp"):
+                ext = "webp"
+            else:
+                # default to png if unknown
+                ext = "png"
+            binary = base64.b64decode(b64)
+            filename = f"{artifact_id}-{idx}.{ext}"
+            abs_path = os.path.join(ASSETS_DIR, filename)
+            with open(abs_path, "wb") as out:
+                out.write(binary)
+            saved.append(f"assets/{filename}")
+        except Exception as e:
+            logger.error(f"Failed to save image {idx} for artifact {artifact_id}: {e}")
+            continue
+    return saved
+
+
+def _parse_frontmatter(md_text: str) -> tuple[dict, str]:
+    """
+    Naive frontmatter parser: returns (meta_dict, body)
+    Expects:
+    ---
+    key: value
+    ---
+    body...
+    """
+    if not md_text.startswith("---"):
+        return {}, md_text
+    parts = md_text.split("---", 2)
+    if len(parts) < 3:
+        return {}, md_text
+    _, meta_str, body = parts
+    meta: dict = {}
+    for raw in meta_str.strip().splitlines():
+        if ":" not in raw:
+            continue
+        k, v = raw.split(":", 1)
+        key = k.strip()
+        val = v.strip()
+        if val.startswith("[") and val.endswith("]"):
+            # list like [a, b]
+            items = [x.strip() for x in val[1:-1].split(",") if x.strip()]
+            meta[key] = items
+        else:
+            meta[key] = val
+    return meta, body.lstrip("\n")
 
 
 @asynccontextmanager
@@ -54,6 +164,11 @@ async def lifespan(app: FastAPI):
     logger.info(f"Loading prompts from: {config.PROMPTS_DIR}")
     prompt_loader = PromptLoader(config.PROMPTS_DIR)
     logger.info("Prompts loaded successfully")
+
+    # Ensure artifacts directories exist
+    _ensure_dir(ARTIFACTS_DIR)
+    _ensure_dir(ASSETS_DIR)
+    logger.info(f"Artifacts directory ready: {ARTIFACTS_DIR}")
 
     openrouter_service = OpenRouterService(
         api_key=config.OPENROUTER_API_KEY,
@@ -284,6 +399,169 @@ async def chat(request: ChatRequest):
             detail=f"Error processing chat request: {str(e)}"
         )
 
+
+# ---------------------------
+# Artifacts API
+# ---------------------------
+
+@app.post("/artifacts", response_model=Artifact, tags=["Artifacts"])
+async def create_artifact(request: CreateArtifactRequest):
+    """
+    Create and persist an artifact into docs/artifacts.
+    - type=markdown: saves .md with frontmatter + body
+    - type=code: saves .md with description and .html with code
+    - type=images: saves images to assets/ and records paths
+    """
+    try:
+        now_iso = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+        artifact_id = _generate_artifact_id()
+
+        saved_images: list[str] = []
+        if request.type == "images" and request.images:
+            saved_images = _save_images(request.images, artifact_id)
+
+        # Prepare meta
+        meta = {
+            "id": artifact_id,
+            "title": request.title,
+            "type": request.type,
+            "source": (request.source or ""),
+            "tags": request.tags or [],
+            "created_at": now_iso,
+            "updated_at": now_iso
+        }
+
+        # Build body and write files
+        body = ""
+        html_path = None
+        if request.type == "markdown":
+            body = request.content_markdown or ""
+        elif request.type == "code":
+            # Put optional description into body
+            body = (request.content_markdown or "Code artifact")
+            # Save HTML for execution/preview
+            if request.html:
+                html_path = os.path.join(ARTIFACTS_DIR, f"{artifact_id}.html")
+                with open(html_path, "w", encoding="utf-8") as f:
+                    f.write(request.html)
+        elif request.type == "images":
+            if saved_images:
+                lines = ["# Images", ""]
+                for rel in saved_images:
+                    lines.append(f"![image]({rel})")
+                body = "\n".join(lines)
+            else:
+                body = request.content_markdown or "Images artifact"
+
+        _write_markdown_file(artifact_id, meta, body)
+
+        return Artifact(
+            id=artifact_id,
+            title=request.title,
+            type=request.type,
+            content_markdown=body if request.type in ("markdown", "code") else None,
+            html=request.html if request.type == "code" else None,
+            images=saved_images if request.type == "images" else None,
+            source=request.source,
+            tags=request.tags or [],
+            created_at=now_iso,
+            updated_at=now_iso
+        )
+    except Exception as e:
+        logger.error(f"Error creating artifact: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to create artifact")
+
+
+@app.get("/artifacts", response_model=ArtifactListResponse, tags=["Artifacts"])
+async def list_artifacts():
+    """
+    List artifacts by reading docs/artifacts/*.md (excluding specs/help docs)
+    """
+    try:
+        if not os.path.exists(ARTIFACTS_DIR):
+            return ArtifactListResponse(items=[])
+        items: list[ArtifactMeta] = []
+        for name in sorted(os.listdir(ARTIFACTS_DIR)):
+            if not name.endswith(".md"):
+                continue
+            if name in ("ARTIFACTS_SPEC.md", "artifacts.md"):
+                continue
+            md_path = os.path.join(ARTIFACTS_DIR, name)
+            with open(md_path, "r", encoding="utf-8") as f:
+                text = f.read()
+            meta, _ = _parse_frontmatter(text)
+            if not meta:
+                # fallback: derive id from filename
+                art_id = name[:-3]
+                items.append(ArtifactMeta(
+                    id=art_id,
+                    title=art_id,
+                    type="markdown",
+                    created_at="",
+                    updated_at="",
+                    tags=None
+                ))
+                continue
+            items.append(ArtifactMeta(
+                id=str(meta.get("id", name[:-3])),
+                title=str(meta.get("title", name[:-3])),
+                type=str(meta.get("type", "markdown")),  # type: ignore
+                created_at=str(meta.get("created_at", "")),
+                updated_at=str(meta.get("updated_at", "")),
+                tags=meta.get("tags") if isinstance(meta.get("tags"), list) else None
+            ))
+        return ArtifactListResponse(items=items)
+    except Exception as e:
+        logger.error(f"Error listing artifacts: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to list artifacts")
+
+
+@app.get("/artifacts/{artifact_id}", response_model=Artifact, tags=["Artifacts"])
+async def get_artifact(artifact_id: str):
+    """
+    Read a single artifact by id from docs/artifacts
+    """
+    try:
+        md_path = os.path.join(ARTIFACTS_DIR, f"{artifact_id}.md")
+        if not os.path.exists(md_path):
+            raise HTTPException(status_code=404, detail="Artifact not found")
+        with open(md_path, "r", encoding="utf-8") as f:
+            text = f.read()
+        meta, body = _parse_frontmatter(text)
+
+        # Load optional HTML for code type
+        html_content = None
+        if meta.get("type") == "code":
+            html_file = os.path.join(ARTIFACTS_DIR, f"{artifact_id}.html")
+            if os.path.exists(html_file):
+                with open(html_file, "r", encoding="utf-8") as hf:
+                    html_content = hf.read()
+
+        # Collect images by file prefix
+        images_list: list[str] = []
+        if meta.get("type") == "images" and os.path.exists(ASSETS_DIR):
+            for name in sorted(os.listdir(ASSETS_DIR)):
+                if name.startswith(f"{artifact_id}-"):
+                    images_list.append(f"assets/{name}")
+
+        return Artifact(
+            id=str(meta.get("id", artifact_id)),
+            title=str(meta.get("title", artifact_id)),
+            type=str(meta.get("type", "markdown")),  # type: ignore
+            content_markdown=body if meta.get("type") in ("markdown", "code") else None,
+            html=html_content if meta.get("type") == "code" else None,
+            images=images_list if meta.get("type") == "images" else None,
+            source=meta.get("source"),
+            tags=meta.get("tags") if isinstance(meta.get("tags"), list) else None,
+            created_at=str(meta.get("created_at", "")),
+            updated_at=str(meta.get("updated_at", ""))
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error reading artifact {artifact_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to read artifact")
+        
 
 if __name__ == "__main__":
     import uvicorn

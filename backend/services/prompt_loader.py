@@ -42,18 +42,33 @@ class PromptLoader:
 
     def build_full_prompt(self, context: str) -> str:
         """
-        Build complete system prompt with context
+        Build complete system prompt with context and boundaries.
 
-        Args:
-            context: Lessons content to inject
-
-        Returns:
-            Complete system prompt with context
+        - Replaces {context}
+        - If {boundaries} is present in system prompt, replaces it
+        - Otherwise appends a "Knowledge Boundaries" section at the end
         """
         system_prompt = self.load_system_prompt()
 
         # Replace {context} variable with actual lessons
         full_prompt = system_prompt.replace("{context}", context)
+
+        # Try to load boundaries (be resilient if file is missing)
+        boundaries_text = ""
+        try:
+            boundaries_text = self.load_boundaries()
+        except FileNotFoundError:
+            logger.warning("boundaries.md not found; proceeding without boundaries section")
+        except Exception as e:
+            logger.error(f"Error loading boundaries.md: {e}")
+
+        if boundaries_text:
+            if "{boundaries}" in full_prompt:
+                full_prompt = full_prompt.replace("{boundaries}", boundaries_text)
+            else:
+                full_prompt = (
+                    f"{full_prompt}\n\n---\n## Knowledge Boundaries\n\n{boundaries_text}"
+                )
 
         logger.debug(f"Built full prompt, length: {len(full_prompt)} characters")
         return full_prompt
