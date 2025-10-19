@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Lesson 1.10: Canvas vs React Comparison
+
+**Date:** 2025-10-19
+
+Educational lesson comparing two approaches to creating the same P-V diagram:
+React + Recharts (Level 5) vs Vanilla JS + Canvas (Level 6).
+
+**New Files:**
+- **Lesson 1.10** - "Canvas vs React - Два пути к одной цели"
+  - Location: `backend/data/lessons/artifact-system-guide/1-fundamentals/1.10 Canvas vs React - Два пути к одной цели.md`
+  - Comprehensive comparison of library-based vs pure approaches
+  - Bundle size: React + Recharts (~655 KB) vs Vanilla + Canvas (~7 KB)
+  - Performance benchmarks: SVG vs Canvas rendering
+  - Decision matrix: when to use each approach
+  - Real-world case studies
+
+- **Canvas Implementation** - Vanilla JS P-V Diagram
+  - Location: `docs/artifacts/pv-diagram-canvas.html`
+  - Pure HTML5 Canvas API (no libraries)
+  - ~7 KB total size vs ~655 KB for React version
+  - Same features: animation, controls, phase indicator
+  - 60 FPS smooth animation
+
+**Key Comparisons:**
+```
+React + Recharts (Level 5):
+  - Size: ~655 KB
+  - Development: ⭐⭐⭐⭐⭐ (fast)
+  - Performance: ⭐⭐⭐ (good)
+  - Maintainability: ⭐⭐⭐⭐⭐ (excellent)
+
+Vanilla + Canvas (Level 6):
+  - Size: ~7 KB (91x smaller!)
+  - Development: ⭐⭐⭐ (slower)
+  - Performance: ⭐⭐⭐⭐⭐ (excellent)
+  - Maintainability: ⭐⭐⭐ (requires expertise)
+```
+
+**Educational Value:**
+- Teaches when to use libraries vs vanilla approaches
+- Shows trade-offs: development speed vs bundle size
+- Demonstrates SVG vs Canvas rendering differences
+- Provides decision framework for technology choices
+- Includes hybrid approach (React + Canvas)
+
+**Audience:**
+- Junior developers: understand library benefits
+- Senior developers: know when to avoid libraries
+- All levels: make informed technology decisions
+
+---
+
 ### Added - Animated P-V Diagram (Phase 3)
 
 **Date:** 2025-10-19
