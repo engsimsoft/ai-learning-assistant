@@ -56,6 +56,11 @@ const RechartsArea = lazy(() => import('./recharts-area.jsx'));
  */
 const PVDiagram = lazy(() => import('./pv-diagram.jsx'));
 
+/**
+ * PVDiagramCanvas - Vanilla Canvas P-V Diagram (Level 6)
+ */
+const PVDiagramCanvas = lazy(() => import('./pv-diagram-canvas.jsx'));
+
 // ============================================================================
 // REGISTRY
 // ============================================================================
@@ -77,6 +82,9 @@ export const REACT_COMPONENTS = {
 
   // Анимации (Фаза 3) ✅
   'pv-diagram': PVDiagram,
+
+  // Canvas (Level 6) ✅
+  'pv-diagram-canvas': PVDiagramCanvas,
 };
 
 /**

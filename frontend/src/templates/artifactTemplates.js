@@ -125,6 +125,20 @@ const TEMPLATES = {
         initialMaxPressure: 4.5
       }
     }
+  },
+
+  // Canvas components (Level 6) ✅
+  'pv-diagram-canvas': {
+    id: 'pv-diagram-canvas',
+    name: 'P-V Diagram: Canvas Version',
+    category: 'canvas',
+    subcategory: 'vanilla',
+    description: 'Pure HTML5 Canvas implementation of P-V diagram. ~7 KB bundle size (91x smaller than React). Vanilla JavaScript + Canvas API. Interactive controls for compression ratio, displacement, RPM.',
+    config: {
+      type: 'react-component',
+      id: 'pv-diagram-canvas',
+      props: {}
+    }
   }
 };
 

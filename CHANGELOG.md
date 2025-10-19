@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Canvas P-V Diagram as Artifact (Level 6)
+
+**Date:** 2025-10-19
+
+Registered Canvas P-V diagram in artifact system for seamless UI integration.
+Now opens inside AI Learning Agent interface instead of separate browser window.
+
+**Changes:**
+- **New React Component:** `frontend/src/templates/react/pv-diagram-canvas.jsx`
+  - Wraps Canvas HTML in iframe for artifact system
+  - Embeds `/docs/artifacts/pv-diagram-canvas.html`
+  - Seamless integration with artifact renderer
+
+- **Registry Updates:**
+  - Added `pv-diagram-canvas` to `REACT_COMPONENTS` in `registry.js`
+  - Added artifact template in `artifactTemplates.js`
+  - Category: `canvas`, Subcategory: `vanilla`
+
+- **Lesson 1.10 Update:**
+  - Changed link from `/docs/artifacts/pv-diagram-canvas.html` to `artifact:pv-diagram-canvas`
+  - Now both examples use same `artifact:` protocol
+  - Consistent user experience for both Level 5 and Level 6
+
+**User Experience:**
+- ✅ Before: Canvas example opened in new browser window
+- ✅ After: Canvas example opens inside AI Learning Agent UI
+- Both React and Canvas versions now render identically in interface
+
+---
+
 ### Added - Lesson 1.10: Canvas vs React Comparison
 
 **Date:** 2025-10-19
