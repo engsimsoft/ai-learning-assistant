@@ -44,7 +44,18 @@ export default function Calculator({ config, onUpdate }) {
         };
 
         // Evaluate formula
-        const result = math.evaluate(formula.expression, scope);
+        let result = math.evaluate(formula.expression, scope);
+
+        // Convert Math.js Unit objects to numbers
+        if (result && typeof result === 'object' && result.value !== undefined) {
+          result = result.value;
+        }
+
+        // Convert to number if possible
+        if (typeof result !== 'number') {
+          result = Number(result);
+        }
+
         newResults[formula.name] = result;
       } catch (error) {
         newErrors[formula.name] = 'Error';
@@ -133,8 +144,8 @@ export default function Calculator({ config, onUpdate }) {
                 <>
                   <span className="calculator-value">
                     {typeof results[formula.name] === 'number'
-                      ? results[formula.name].toFixed(2)
-                      : results[formula.name]}
+                      ? results[formula.name].toFixed(formula.precision ?? 2)
+                      : String(results[formula.name])}
                   </span>
                   {formula.unit && (
                     <span className="calculator-unit">{formula.unit}</span>

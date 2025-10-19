@@ -13,9 +13,14 @@
 // Import plot templates
 import lineChart from './plots/line-chart.js';
 import scatterPlot from './plots/scatter-plot.js';
+import barChart from './plots/bar-chart.js';
+import multiLine from './plots/multi-line.js';
+import areaChart from './plots/area-chart.js';
 
 // Import calculator templates
 import genericCalculator from './calculators/generic-calculator.js';
+import unitConverter from './calculators/unit-converter.js';
+import formulaCalculator from './calculators/formula-calculator.js';
 
 /**
  * Registry of all available templates
@@ -25,9 +30,14 @@ const TEMPLATES = {
   // Plot templates
   'line-chart': lineChart,
   'scatter-plot': scatterPlot,
+  'bar-chart': barChart,
+  'multi-line': multiLine,
+  'area-chart': areaChart,
 
   // Calculator templates
-  'generic-calculator': genericCalculator
+  'generic-calculator': genericCalculator,
+  'unit-converter': unitConverter,
+  'formula-calculator': formulaCalculator
 };
 
 /**

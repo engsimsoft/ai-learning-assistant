@@ -5,6 +5,77 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2025-10-19
+
+### Changed - Artifact System Guide Course Restructure
+
+**Major Update:** Complete course restructure from 5 lessons to 9 lessons, focusing on **diversity of artifact types** (Level 1-6) rather than deep dive into one library.
+
+**Philosophy Change:**
+- **Before:** 5 lessons with 20+ examples of mostly Plotly (Level 3 only)
+- **After:** 9 lessons showing ALL 6 levels with 1-3 examples each + educational "when/why" explanations
+
+**New Course Structure:**
+```
+1.1 Типы артефактов - полная классификация (taxonomy overview)
+1.2 Level 1-2 - Простые типы (ASCII, HTML, SVG, Mermaid)
+1.3 Level 3 - Plotly.js графики (reduced to 3 types + comparisons)
+1.4 Level 3 - Math.js калькуляторы (added "What is Math.js" intro)
+1.5 Level 4 - Recharts (React графики) (~500 lines, full guide)
+1.6 Level 4-5 - UI компоненты (Tailwind vs CSS, shadcn/ui, Lucide)
+1.7 Level 5 - Анимированные диаграммы (~600 lines, P-V diagram breakdown)
+1.8 Создание артефактов через AI (prompt engineering)
+1.9 Галерея всех артефактов (reference + decision trees)
+```
+
+**New Content:**
+- **docs/artifact-types-taxonomy.md:** Technical reference document (~600 lines)
+  - 6 levels of artifact complexity (ASCII → 3D)
+  - Comprehensive comparison tables (Plotly vs Recharts vs Chart.js vs D3.js)
+  - Decision trees for choosing tools
+
+- **Lesson 1.1:** Full taxonomy with classification of all 6 levels
+- **Lesson 1.2:** Simple types with ASCII box-drawing, HTML, SVG, Mermaid examples
+- **Lesson 1.5:** Recharts guide (~500 lines)
+  - Component composition vs object configuration
+  - Canvas vs SVG rendering
+  - Complete chart type examples
+
+- **Lesson 1.6:** UI components (~800 lines)
+  - 100+ lines CSS vs 1 line Tailwind comparison
+  - 4 CSS approaches compared (Vanilla, CSS Modules, Tailwind, styled-components)
+  - shadcn/ui philosophy and complete component list
+  - Lucide icons integration
+  - Real example showing all tools together
+
+- **Lesson 1.7:** Animated diagrams (~600 lines)
+  - Complete breakdown of animated P-V diagram
+  - Integration of ALL 5 technologies: Recharts + Tailwind + shadcn/ui + Lucide + React hooks
+  - State management with useState/useEffect
+  - Animation logic with setInterval
+  - Level 3 vs Level 5 comparison
+
+- **Lesson 1.8:** AI generation with 8+ prompt examples
+- **Lesson 1.9:** Complete gallery with decision trees and when-to-use guidelines
+
+**Educational Focus:**
+- Added "ЗАЧЕМ" (WHY) explanations for each tool
+- Comparison tables showing when to use each approach
+- Decision trees for choosing the right artifact type
+- Terminology explanations (Tailwind, shadcn/ui, Recharts, etc.)
+
+**Files Modified:**
+- `backend/data/lessons/artifact-system-guide/course.json`: Updated with 9 lessons
+- Deleted old lessons 1.4 and 1.5 (AI generation, gallery)
+- Created new lessons 1.1, 1.2, 1.5, 1.6, 1.7, 1.8, 1.9
+- Updated lessons 1.3 and 1.4 (Plotly simplified, Math.js enhanced)
+
+**Documentation:**
+- `artifact-system-implementation-roadmap.md`: Updated Phase 3 with new structure
+- Total content: ~4000+ lines across 9 lessons + taxonomy doc
+- 100+ ASCII diagrams and code examples
+- 40+ comparison tables
+
 ## [3.1.1] - 2025-10-19
 
 ### Fixed - Artifact Links with ReactMarkdown urlTransform

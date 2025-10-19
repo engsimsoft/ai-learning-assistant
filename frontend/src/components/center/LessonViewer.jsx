@@ -204,7 +204,13 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
 
     if (exampleName && template.examples && template.examples[exampleName]) {
       const example = template.examples[exampleName];
-      config = example;
+      // Merge template.config with example (example overrides template)
+      config = {
+        ...template.config,
+        ...example,
+        // Preserve display settings from template if not in example
+        display: example.display || template.config.display
+      };
       title = example.title || title;
     }
 
@@ -301,17 +307,6 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
           >
             {lessonContent}
           </ReactMarkdown>
-
-          {/* Canvas Action */}
-          <div className="lesson-canvas-action">
-            <button
-              className="open-canvas-button"
-              onClick={handleOpenInCanvas}
-              title="Open this lesson or selection in Canvas"
-            >
-              Open in Canvas
-            </button>
-          </div>
 
           {/* Progress Action */}
           <div className="lesson-progress-action">
