@@ -22,22 +22,32 @@ import genericCalculator from './calculators/generic-calculator.js';
 import unitConverter from './calculators/unit-converter.js';
 import formulaCalculator from './calculators/formula-calculator.js';
 
+// Import interactive templates (Level 4-5)
+import pvDiagram from './interactive/pv-diagram.js';
+import rechartsLine from './interactive/recharts-line.js';
+import rechartsBar from './interactive/recharts-bar.js';
+
 /**
  * Registry of all available templates
  * Structure: { templateId: templateObject }
  */
 const TEMPLATES = {
-  // Plot templates
+  // Plot templates (Level 3)
   'line-chart': lineChart,
   'scatter-plot': scatterPlot,
   'bar-chart': barChart,
   'multi-line': multiLine,
   'area-chart': areaChart,
 
-  // Calculator templates
+  // Calculator templates (Level 3)
   'generic-calculator': genericCalculator,
   'unit-converter': unitConverter,
-  'formula-calculator': formulaCalculator
+  'formula-calculator': formulaCalculator,
+
+  // Interactive templates (Level 4-5)
+  'pv-diagram': pvDiagram,
+  'recharts-line': rechartsLine,
+  'recharts-bar': rechartsBar
 };
 
 /**
