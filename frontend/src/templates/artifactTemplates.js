@@ -22,11 +22,6 @@ import genericCalculator from './calculators/generic-calculator.js';
 import unitConverter from './calculators/unit-converter.js';
 import formulaCalculator from './calculators/formula-calculator.js';
 
-// Import interactive templates (Level 4-5)
-import pvDiagram from './interactive/pv-diagram.js';
-import rechartsLine from './interactive/recharts-line.js';
-import rechartsBar from './interactive/recharts-bar.js';
-
 /**
  * Registry of all available templates
  * Structure: { templateId: templateObject }
@@ -42,12 +37,10 @@ const TEMPLATES = {
   // Calculator templates (Level 3)
   'generic-calculator': genericCalculator,
   'unit-converter': unitConverter,
-  'formula-calculator': formulaCalculator,
+  'formula-calculator': formulaCalculator
 
-  // Interactive templates (Level 4-5)
-  'pv-diagram': pvDiagram,
-  'recharts-line': rechartsLine,
-  'recharts-bar': rechartsBar
+  // Note: Level 4-5 (Recharts, Animated) require React component support
+  // See: react-artifacts-roadmap.md for implementation plan
 };
 
 /**
