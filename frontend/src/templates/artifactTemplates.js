@@ -37,10 +37,95 @@ const TEMPLATES = {
   // Calculator templates (Level 3)
   'generic-calculator': genericCalculator,
   'unit-converter': unitConverter,
-  'formula-calculator': formulaCalculator
+  'formula-calculator': formulaCalculator,
 
-  // Note: Level 4-5 (Recharts, Animated) require React component support
-  // See: react-artifacts-roadmap.md for implementation plan
+  // React components (Level 4-5) - NEW!
+  // Test component
+  'hello-react': {
+    id: 'hello-react',
+    name: 'Hello React',
+    category: 'react',
+    subcategory: 'test',
+    description: 'Test React component for verifying React artifact system',
+    config: {
+      type: 'react-component',
+      id: 'hello-react',
+      props: {
+        title: 'React Artifacts Test',
+        message: 'React.lazy + Suspense + Error Boundary working correctly!',
+        timestamp: Date.now()
+      }
+    }
+  },
+
+  // Recharts components (Фаза 2) ✅
+  'recharts-line': {
+    id: 'recharts-line',
+    name: 'Recharts Line Chart',
+    category: 'react',
+    subcategory: 'charts',
+    description: 'Interactive line chart showing Engine Power Curve (RPM vs Power/Torque)',
+    config: {
+      type: 'react-component',
+      id: 'recharts-line',
+      props: {
+        title: 'Engine Power Curve',
+        xAxisLabel: 'RPM',
+        yAxisLabel: 'Value'
+      }
+    }
+  },
+
+  'recharts-bar': {
+    id: 'recharts-bar',
+    name: 'Recharts Bar Chart',
+    category: 'react',
+    subcategory: 'charts',
+    description: 'Interactive bar chart showing Monthly Fuel Consumption',
+    config: {
+      type: 'react-component',
+      id: 'recharts-bar',
+      props: {
+        title: 'Monthly Fuel Consumption',
+        xAxisLabel: 'Month',
+        yAxisLabel: 'Value'
+      }
+    }
+  },
+
+  'recharts-area': {
+    id: 'recharts-area',
+    name: 'Recharts Area Chart',
+    category: 'react',
+    subcategory: 'charts',
+    description: 'Interactive area chart showing Engine Temperature Monitoring over time',
+    config: {
+      type: 'react-component',
+      id: 'recharts-area',
+      props: {
+        title: 'Engine Temperature Monitoring',
+        xAxisLabel: 'Time (minutes)',
+        yAxisLabel: 'Temperature (°C)'
+      }
+    }
+  },
+
+  // Animated components (Фаза 3) ✅
+  'pv-diagram': {
+    id: 'pv-diagram',
+    name: 'P-V Diagram: Otto Cycle',
+    category: 'react',
+    subcategory: 'animation',
+    description: 'Animated P-V diagram showing Otto cycle with 4 phases. Interactive controls (Play/Pause/Reset), adjustable parameters (Compression Ratio, Max Pressure), phase indicator.',
+    config: {
+      type: 'react-component',
+      id: 'pv-diagram',
+      props: {
+        initialCompressionRatio: 9,
+        initialMaxPressure: 4.5
+      }
+    }
+  }
 };
 
 /**

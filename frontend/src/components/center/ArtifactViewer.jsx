@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import InteractivePlot from '../artifacts/InteractivePlot';
 import Calculator from '../artifacts/Calculator';
+import ReactArtifact from '../artifacts/ReactArtifact';
 import './ArtifactViewer.css';
 
 export default function ArtifactViewer({
@@ -86,6 +87,16 @@ export default function ArtifactViewer({
           <div className="artifact-empty">No images available</div>
         );
 
+      case 'react-component':
+        return config ? (
+          <ReactArtifact
+            componentId={config.id}
+            props={config.props || {}}
+          />
+        ) : (
+          <div className="artifact-empty">No React component configuration available</div>
+        );
+
       default:
         return <div className="artifact-empty">Unknown artifact type: {type}</div>;
     }
@@ -97,7 +108,7 @@ export default function ArtifactViewer({
 
     const { type, config, html } = artifact;
 
-    if (type === 'plot' || type === 'calculator') {
+    if (type === 'plot' || type === 'calculator' || type === 'react-component') {
       return (
         <pre className="artifact-code-view">
           <code>{JSON.stringify(config, null, 2)}</code>
@@ -128,7 +139,7 @@ export default function ArtifactViewer({
 
         <div className="artifact-viewer-toolbar-right">
           {/* Code toggle button */}
-          {(artifact?.type === 'plot' || artifact?.type === 'calculator' || artifact?.type === 'code') && (
+          {(artifact?.type === 'plot' || artifact?.type === 'calculator' || artifact?.type === 'code' || artifact?.type === 'react-component') && (
             <button
               className="btn-toggle-code"
               onClick={toggleCode}

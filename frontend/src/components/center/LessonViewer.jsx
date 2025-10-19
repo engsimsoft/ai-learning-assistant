@@ -196,6 +196,8 @@ export default function LessonViewer({ lessonId, lessons, onLessonChange }) {
       artifactType = 'plot';
     } else if (template.category === 'calculators') {
       artifactType = 'calculator';
+    } else if (template.category === 'react') {
+      artifactType = 'react-component';
     }
 
     // Get config (default or example)

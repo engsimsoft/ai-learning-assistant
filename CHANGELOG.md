@@ -5,6 +5,212 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added - Animated P-V Diagram (Phase 3)
+
+**Date:** 2025-10-19
+
+Animated P-V Diagram for Otto Cycle with full interactivity, demonstrating Level 5 artifacts (animation + React).
+
+**New Component:**
+- **pv-diagram.jsx** - Animated P-V Diagram for Otto Cycle
+  - 4-phase Otto cycle visualization (compression, combustion, expansion, exhaust)
+  - Animated point moving through cycle using requestAnimationFrame
+  - Interactive controls: Play, Pause, Reset buttons (lucide-react icons)
+  - Adjustable parameters: Compression Ratio (7-11), Max Pressure (2-6 MPa)
+  - Phase indicator with color-coded progress bar
+  - Keyboard navigation: Space (Play/Pause), Esc (Reset)
+  - Thermodynamic calculations: isentropic processes (P·V^γ = const, γ=1.4)
+  - Location: `frontend/src/templates/react/pv-diagram.jsx`
+
+**Technical Implementation:**
+- **React Hooks:**
+  - `useState` - animation state, parameters, current step
+  - `useRef` - animation frame ID storage
+  - `useLayoutEffect` - RAF loop + cleanup (prevents memory leaks)
+  - `useMemo` - memoized cycle calculations for performance
+- **Animation:**
+  - `requestAnimationFrame` (NOT setInterval - best practice)
+  - `cancelAnimationFrame` in cleanup function (critical for memory)
+  - ~60fps smooth animation
+- **Recharts:**
+  - **ScatterChart** - correct chart type for P-V diagrams (Y vs X plot)
+  - **Scatter with line prop** - creates cycle path by connecting data points
+  - **Second Scatter** - animated current point with phase-based color
+  - ResponsiveContainer for responsive design
+
+**Bug Fix (2025-10-19):**
+- **Issue:** Initial implementation used `LineChart` with `dataKey="P"`, which plotted P against array indices instead of against V values - only animated point was visible, no cycle path
+- **Root Cause:** `Line` component in Recharts is designed for time-series data, not Y vs X relationships
+- **Solution:** Changed to `ScatterChart` with `Scatter` component using `line={{ stroke: '#6366f1', strokeWidth: 3 }}` prop
+- **Result:** Full Otto cycle path now renders correctly as closed loop with animated point moving along it
+
+**Dependencies:**
+- Added `lucide-react` (icon library for Play/Pause/Reset buttons)
+
+**Registry & Templates:**
+- Registered `pv-diagram` in `registry.js`
+- Added template in `artifactTemplates.js` with default props
+
+**Lesson Updates:**
+- **Lesson 1.7** - Updated from "theory only" to "working animation available"
+  - Added working link: `artifact:pv-diagram`
+  - Updated status from "planned" to "implemented"
+
+**Design Principles:**
+- Followed React animation best practices (useLayoutEffect + RAF)
+- Proper cleanup to prevent memory leaks
+- Accessible (keyboard navigation, ARIA labels)
+- Responsive (Tailwind CSS, ResponsiveContainer)
+- Educational (phase descriptions, real thermodynamics)
+
+### Added - Recharts Integration (Phase 2)
+
+**Date:** 2025-10-19
+
+Three interactive Recharts components for Level 4 artifacts, demonstrating modern React-based charting.
+
+**New Components:**
+- **recharts-line.jsx** - LineChart for Engine Power Curve
+  - Shows RPM vs Power/Torque relationship
+  - Interactive hover with Tooltip
+  - Responsive container (width: 100%, height: 400px)
+  - Gradient styling with Tailwind CSS
+  - Location: `frontend/src/templates/react/recharts-line.jsx`
+
+- **recharts-bar.jsx** - BarChart for Monthly Fuel Consumption
+  - 12 months of fuel consumption and cost data
+  - Grouped bar chart (consumption + cost)
+  - CartesianGrid, Legend, Tooltip
+  - Location: `frontend/src/templates/react/recharts-bar.jsx`
+
+- **recharts-area.jsx** - AreaChart for Engine Temperature Monitoring
+  - 3 temperature lines (engine, coolant, oil)
+  - Gradient fill with linearGradient (SVG defs)
+  - Time-series data visualization
+  - Location: `frontend/src/templates/react/recharts-area.jsx`
+
+**Dependencies:**
+- Added `recharts@^3.2.1` (React charting library, ~500KB)
+- Added `prop-types` (React prop validation)
+
+**Registry Updates:**
+- Registered all 3 Recharts components in `registry.js`
+- Added to `artifactTemplates.js` with default props
+
+**Lesson Updates:**
+- **Lesson 1.5** - Updated from "theory only" to "interactive examples available"
+  - Added 3 working artifact links: `artifact:recharts-line`, `artifact:recharts-bar`, `artifact:recharts-area`
+  - Updated status from "planned" to "implemented"
+
+**Technical Notes:**
+- All components use ResponsiveContainer for responsive design
+- Follow Recharts best practices (official documentation studied)
+- PropTypes validation for all components
+- Tailwind CSS styling for containers
+
+### Added - React Artifacts Infrastructure (Phase 1)
+
+**Date:** 2025-10-19
+
+Complete infrastructure for rendering React components as artifacts in the AI Learning Agent platform.
+
+**New Components:**
+- **ReactArtifact.jsx** - Main wrapper component for React artifacts
+  - Dynamic component loading via React.lazy
+  - Suspense integration with loading fallback
+  - Props passing to child components
+  - Location: `frontend/src/components/artifacts/ReactArtifact.jsx`
+
+- **ReactArtifactErrorBoundary.jsx** - Error handling for React components
+  - Catches runtime errors in React component tree
+  - Beautiful error UI with "Try Again" button
+  - Dev mode detailed error logging
+  - Location: `frontend/src/components/artifacts/ReactArtifactErrorBoundary.jsx`
+
+- **React Components Registry** - Static component mapping for Vite
+  - Solves Vite dynamic import limitations
+  - Static mapping: componentId → lazy(() => import(path))
+  - Location: `frontend/src/templates/react/registry.js`
+  - **Why:** Vite requires static import paths for build-time analysis
+
+- **HelloReact.jsx** - Test component for verification
+  - Simple React component accepting props (title, message, timestamp)
+  - Beautiful gradient UI (indigo → purple)
+  - Displays component info with checkboxes
+  - Location: `frontend/src/templates/react/HelloReact.jsx`
+
+**Frontend Updates:**
+- **ArtifactViewer.jsx** - Added support for `type: 'react-component'`
+  - New case in switch statement for react-component type
+  - Renders ReactArtifact wrapper with config
+
+- **LessonViewer.jsx** - Artifact link handler updated
+  - Added detection for `category: 'react'` templates
+  - Maps react category to `type: 'react-component'`
+
+- **artifactTemplates.js** - Added hello-react template
+  - Template ID: 'hello-react'
+  - Category: 'react', Subcategory: 'test'
+  - Config includes component ID and props
+
+**Backend Updates:**
+- **models.py** - Extended ArtifactType enum
+  - Added "react-component" to Literal type union
+  - Now supports: markdown, code, images, plot, calculator, react-component
+
+- **main.py** - Artifact loading logic updated
+  - Builds config object from frontmatter for react-component type
+  - Parses flat YAML fields: componentId, propsTitle, propsMessage, propsTimestamp
+  - Returns structured config for frontend consumption
+
+**Test Environment:**
+- **backend/data/lessons/react-artifacts-test/** - Isolated test course
+  - Lesson: "React Artifacts Testing.md"
+  - Prevents contamination of production courses
+  - Contains hello-react artifact link
+
+- **docs/artifacts/hello-react.md** - Test artifact file
+  - YAML frontmatter with flat structure (componentId, props* fields)
+  - Markdown content with component description
+  - Type: react-component
+
+**Technical Decisions:**
+- **React.lazy + Suspense** - Industry standard for code splitting
+- **Static Registry Pattern** - Required by Vite build-time analysis
+- **Error Boundary** - Prevents app crashes from component errors
+- **Flat YAML Frontmatter** - Simple parser compatibility
+
+**Testing Results:**
+- ✅ React component loads successfully via React.lazy
+- ✅ Suspense shows loading spinner during load
+- ✅ Props passed correctly (title, message, timestamp)
+- ✅ Error Boundary integrated (not yet tested with errors)
+- ✅ Split view works (lesson | artifact)
+- ✅ Beautiful gradient UI renders correctly
+
+**Files Changed:**
+```
+frontend/src/components/artifacts/ReactArtifact.jsx (new)
+frontend/src/components/artifacts/ReactArtifactErrorBoundary.jsx (new)
+frontend/src/templates/react/registry.js (new)
+frontend/src/templates/react/HelloReact.jsx (new)
+frontend/src/components/center/ArtifactViewer.jsx (modified)
+frontend/src/components/center/LessonViewer.jsx (modified)
+frontend/src/templates/artifactTemplates.js (modified)
+backend/models.py (modified)
+backend/main.py (modified)
+backend/data/lessons/react-artifacts-test/React Artifacts Testing.md (new)
+docs/artifacts/hello-react.md (new)
+react-artifacts-roadmap.md (updated - Phase 1 complete)
+```
+
+**Next Steps:**
+- Phase 2: Recharts integration (Level 4 graphs)
+- Create ADR document for architecture decisions
+- Update docs/architecture.md with React components section
+
 ## [3.2.0] - 2025-10-19
 
 ### Changed - Artifact System Guide Course Restructure

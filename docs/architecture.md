@@ -255,6 +255,218 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - Loading and error states
 - Real-time updates with debounce
 
+## React Artifacts System (NEW - 2025-10-19)
+
+The artifact system enables interactive visualizations and React components within lessons.
+
+### Architecture Overview
+
+```
+Lesson Markdown
+    ↓
+[artifact:template-id] link
+    ↓
+Frontend detects artifact protocol
+    ↓
+ArtifactViewer.jsx
+    ↓
+┌─────────────────────────────────────┐
+│  Artifact Type Router               │
+│                                     │
+│  • markdown → Markdown renderer     │
+│  • code → Code viewer               │
+│  • images → Image gallery           │
+│  • plot → Plotly.js graph           │
+│  • calculator → Math.js calculator  │
+│  • react-component → ReactArtifact  │ ← NEW
+└─────────────────────────────────────┘
+                 ↓
+         ReactArtifact.jsx
+                 ↓
+    ┌────────────────────────┐
+    │  React.lazy + Suspense │
+    │  Error Boundary        │
+    │  Props passing         │
+    └────────────────────────┘
+                 ↓
+        Component Registry
+                 ↓
+    Lazy-loaded React Component
+```
+
+### Artifact Types
+
+| Type | Description | Example Use Cases |
+|------|-------------|-------------------|
+| `markdown` | Rich text content | Lesson documentation, explanations |
+| `code` | Syntax-highlighted code | Code examples, snippets |
+| `images` | Image gallery | Diagrams, screenshots |
+| `plot` | Plotly.js interactive graphs | Data visualization (Level 3) |
+| `calculator` | Math.js calculators | Interactive calculations (Level 3) |
+| **`react-component`** | **Custom React components** | **Recharts graphs (Level 4), Animations (Level 5)** |
+
+### React Component Architecture
+
+**Key Design Decisions:**
+- **React.lazy** - Industry standard for code splitting and dynamic imports
+- **Static Registry** - Required by Vite's build-time analysis (cannot use fully dynamic import paths)
+- **Error Boundary** - Prevents component crashes from breaking entire app
+- **Suspense** - Automatic loading states during component fetch
+
+**Component Structure:**
+
+```javascript
+// 1. Registry (frontend/src/templates/react/registry.js)
+export const REACT_COMPONENTS = {
+  'hello-react': lazy(() => import('./HelloReact.jsx')),
+  'recharts-line': lazy(() => import('./RechartsLine.jsx')),
+  // Static mapping required by Vite
+};
+
+// 2. Wrapper (frontend/src/components/artifacts/ReactArtifact.jsx)
+export default function ReactArtifact({ componentId, props }) {
+  const LazyComponent = getReactComponent(componentId);
+
+  return (
+    <ReactArtifactErrorBoundary componentId={componentId}>
+      <Suspense fallback={<LoadingFallback />}>
+        <LazyComponent {...props} />
+      </Suspense>
+    </ReactArtifactErrorBoundary>
+  );
+}
+
+// 3. Error Boundary (frontend/src/components/artifacts/ReactArtifactErrorBoundary.jsx)
+class ReactArtifactErrorBoundary extends React.Component {
+  componentDidCatch(error, errorInfo) {
+    // Display fallback UI instead of crashing
+  }
+}
+```
+
+**Backend Integration:**
+
+```python
+# backend/models.py
+ArtifactType = Literal["markdown", "code", "images", "plot", "calculator", "react-component"]
+
+# backend/main.py - Artifact loading
+if meta.get("type") == "react-component":
+    config_dict = {
+        "type": "react-component",
+        "id": meta.get("componentId"),
+        "props": {
+            "title": meta.get("propsTitle"),
+            "message": meta.get("propsMessage"),
+            # ... other props from flat YAML
+        }
+    }
+```
+
+**YAML Frontmatter Format:**
+
+```yaml
+# docs/artifacts/hello-react.md
+---
+id: hello-react
+type: react-component
+componentId: hello-react
+propsTitle: React Artifacts Test
+propsMessage: Component working!
+propsTimestamp: 1729350000000
+---
+```
+
+**Why Flat YAML?**
+Backend uses simple YAML parser. Flat structure (propsTitle, propsMessage) is more reliable than nested objects.
+
+### Component Lifecycle
+
+1. **Student clicks artifact link** - `[hello-react](artifact:hello-react)` in lesson
+2. **LessonViewer detects** - Checks if template has `category: 'react'`
+3. **Dispatches event** - `artifact:open` with `type: 'react-component'`
+4. **CenterContainer receives** - Opens split view (lesson | artifact)
+5. **ArtifactViewer routes** - Passes to ReactArtifact component
+6. **ReactArtifact loads** - Registry returns lazy(() => import('./HelloReact.jsx'))
+7. **Suspense shows loading** - Spinner + "Loading component..." message
+8. **Component renders** - HelloReact receives props, displays UI
+9. **Error Boundary monitors** - Catches any runtime errors gracefully
+
+### Performance Optimizations
+
+**Code Splitting:**
+- Each React component is a separate chunk
+- Only loaded when artifact is opened
+- Reduces initial bundle size significantly
+
+**Vite HMR:**
+- Hot module replacement for fast development
+- Component changes reflect instantly (usually)
+- Occasionally requires manual refresh
+
+**Lazy Loading:**
+- Components load on-demand
+- Faster initial page load
+- Better user experience for lessons without React artifacts
+
+### Adding New Components
+
+**3-Step Process:**
+
+```bash
+# Step 1: Create component
+touch frontend/src/templates/react/MyComponent.jsx
+
+# Step 2: Register component (add one line)
+# frontend/src/templates/react/registry.js
+export const REACT_COMPONENTS = {
+  'my-component': lazy(() => import('./MyComponent.jsx')),
+};
+
+# Step 3: Create artifact metadata
+touch docs/artifacts/my-component.md
+```
+
+**Component Template:**
+
+```javascript
+// frontend/src/templates/react/MyComponent.jsx
+export default function MyComponent({ title, data, config }) {
+  return (
+    <div className="my-component">
+      <h2>{title}</h2>
+      {/* Your component logic */}
+    </div>
+  );
+}
+```
+
+### Future Enhancements
+
+**Phase 2 (In Progress):**
+- Recharts integration (Line, Bar, Area charts)
+- Level 4 interactive graphs
+
+**Phase 3 (Planned):**
+- Animated diagrams (P-V diagram, Otto cycle)
+- Level 5 animations with Framer Motion
+
+**Phase 4 (Future):**
+- Three.js / React Three Fiber
+- Level 6 3D visualizations
+
+**Potential Improvements:**
+- Auto-generate registry from filesystem scan
+- TypeScript interfaces for component props
+- Component versioning (v1, v2)
+- Storybook integration for component development
+
+### Related Documentation
+
+- **ADR 004:** React Artifacts Architecture - Design decisions and rationale
+- **react-artifacts-roadmap.md:** Full project roadmap with 4 phases
+- **CHANGELOG.md:** Phase 1 implementation details
+
 ## Security Considerations
 
 **API Keys:**
@@ -330,6 +542,121 @@ See [decisions/001-why-openrouter.md](decisions/001-why-openrouter.md)
 - Debugging code from images
 - Explaining diagrams and charts
 - Reviewing design mockups
+
+## React Artifacts System
+
+**Overview:**
+Dynamic React component rendering for interactive learning artifacts (Level 4-5).
+
+**Architecture:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│            Lesson Content (Markdown)                    │
+│  "See example: [artifact:recharts-line](link)"          │
+└─────────────────┬───────────────────────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────────────────────┐
+│          LessonViewer.jsx (Link Handler)                │
+│  Detects: artifact:* protocol                           │
+│  Maps: category='react' → type='react-component'        │
+└─────────────────┬───────────────────────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────────────────────┐
+│          ArtifactViewer.jsx (Router)                    │
+│  Switch by type:                                        │
+│  - 'react-component' → ReactArtifact                    │
+│  - 'interactive-plot' → InteractivePlot                 │
+│  - 'calculator' → Calculator                            │
+└─────────────────┬───────────────────────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────────────────────┐
+│          ReactArtifact.jsx (Loader)                     │
+│  • Gets lazy component from Registry                    │
+│  • Wraps in Error Boundary                              │
+│  • Wraps in Suspense (loading state)                    │
+│  • Passes props to component                            │
+└─────────────────┬───────────────────────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────────────────────┐
+│          React Components Registry                      │
+│  Static mapping (Vite requirement):                     │
+│  {                                                      │
+│    'recharts-line': lazy(() => import('./recharts-line'))│
+│    'recharts-bar': lazy(() => import('./recharts-bar')) │
+│    'recharts-area': lazy(() => import('./recharts-area'))│
+│  }                                                      │
+└─────────────────┬───────────────────────────────────────┘
+                  │
+                  ↓
+┌─────────────────────────────────────────────────────────┐
+│          Actual React Components                        │
+│  • recharts-line.jsx (LineChart)                        │
+│  • recharts-bar.jsx (BarChart)                          │
+│  • recharts-area.jsx (AreaChart)                        │
+│  Each with: PropTypes, ResponsiveContainer, Tailwind    │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Technical Details:**
+
+**1. Dynamic Import Challenge (Vite)**
+- **Problem:** Vite requires static paths for build-time analysis
+- **Solution:** Registry with static lazy imports
+- **Why:** `lazy(() => import('./' + id))` doesn't work in Vite
+- **ADR:** See `docs/decisions/004-react-artifacts-architecture.md`
+
+**2. Component Loading Flow:**
+```javascript
+// 1. User clicks artifact link
+artifact:recharts-line
+
+// 2. LessonViewer handles it
+const template = getTemplate('recharts-line')
+// template.category === 'react' → type = 'react-component'
+
+// 3. ArtifactViewer routes
+case 'react-component':
+  return <ReactArtifact componentId="recharts-line" props={...} />
+
+// 4. ReactArtifact loads from registry
+const Component = REACT_COMPONENTS['recharts-line']
+// Component = lazy(() => import('./recharts-line.jsx'))
+
+// 5. Suspense + Error Boundary wrap
+<ErrorBoundary>
+  <Suspense fallback={<Loading/>}>
+    <Component {...props} />
+  </Suspense>
+</ErrorBoundary>
+```
+
+**3. Dependencies:**
+- `recharts@^3.2.1` - React charting library (~500KB)
+- `prop-types` - Props validation
+
+**4. Current Artifacts (Phase 2):**
+- **recharts-line** - Engine Power Curve (RPM vs Power/Torque)
+- **recharts-bar** - Monthly Fuel Consumption
+- **recharts-area** - Engine Temperature Monitoring
+
+**5. Design Principles:**
+- **Responsive:** All use `<ResponsiveContainer width="100%" height={400}>`
+- **Interactive:** Hover tooltips, legends, cartesian grids
+- **Styled:** Tailwind CSS for containers, Recharts props for charts
+- **Validated:** PropTypes for all components
+- **Best Practices:** Followed official Recharts documentation
+
+**Files:**
+- `frontend/src/components/artifacts/ReactArtifact.jsx`
+- `frontend/src/components/artifacts/ReactArtifactErrorBoundary.jsx`
+- `frontend/src/templates/react/registry.js`
+- `frontend/src/templates/react/recharts-*.jsx`
+- `frontend/src/templates/artifactTemplates.js` (metadata)
 
 ## Scalability
 

@@ -134,7 +134,7 @@ class LessonsGroupedResponse(BaseModel):
 # Canvas Artifacts (for Canvas MVP)
 # ---------------------------
 
-ArtifactType = Literal["markdown", "code", "images", "plot", "calculator"]
+ArtifactType = Literal["markdown", "code", "images", "plot", "calculator", "react-component"]
 
 
 class Artifact(BaseModel):

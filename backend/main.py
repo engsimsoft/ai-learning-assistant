@@ -544,13 +544,27 @@ async def get_artifact(artifact_id: str):
                 if name.startswith(f"{artifact_id}-"):
                     images_list.append(f"assets/{name}")
 
+        # Build config for react-component type
+        config_dict = None
+        if meta.get("type") == "react-component":
+            config_dict = {
+                "type": "react-component",
+                "id": meta.get("componentId", artifact_id),
+                "props": {
+                    "title": meta.get("propsTitle"),
+                    "message": meta.get("propsMessage"),
+                    "timestamp": int(meta.get("propsTimestamp", 0)) if meta.get("propsTimestamp") else None
+                }
+            }
+
         return Artifact(
             id=str(meta.get("id", artifact_id)),
             title=str(meta.get("title", artifact_id)),
             type=str(meta.get("type", "markdown")),  # type: ignore
-            content_markdown=body if meta.get("type") in ("markdown", "code") else None,
+            content_markdown=body if meta.get("type") in ("markdown", "code", "react-component") else None,
             html=html_content if meta.get("type") == "code" else None,
             images=images_list if meta.get("type") == "images" else None,
+            config=config_dict,
             source=meta.get("source"),
             tags=meta.get("tags") if isinstance(meta.get("tags"), list) else None,
             created_at=str(meta.get("created_at", "")),
