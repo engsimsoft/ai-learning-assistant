@@ -1,0 +1,65 @@
+/**
+ * ChatInterface component styles
+ */
+.chat-interface {
+  width: 100%;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.chat-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
+.chat-header p {
+  margin: 8px 0 0 0;
+  opacity: 0.9;
+  font-size: 0.95em;
+}
+
+.error-banner {
+  background-color: var(--error);
+  color: white;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.chat-controls {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .chat-interface {
+    height: 95vh;
+    border-radius: 0;
+  }
+
+  .chat-header h1 {
+    font-size: 1.4em;
+  }
+
+  .chat-controls {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,43 @@
+/**
+ * ResizeHandle Styles
+ */
+
+.resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  cursor: col-resize;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast);
+  background-color: rgba(229, 231, 235, 0.5); /* Light gray background */
+}
+
+.resize-handle:hover,
+.resize-handle.dragging {
+  background-color: rgba(209, 213, 219, 0.8); /* Slightly darker gray on hover */
+}
+
+.resize-handle-line {
+  width: 3px;
+  height: 60px;
+  background-color: rgba(156, 163, 175, 0.6); /* Neutral gray */
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+}
+
+.resize-handle:hover .resize-handle-line,
+.resize-handle.dragging .resize-handle-line {
+  background-color: #9ca3af; /* Solid neutral gray */
+  height: 80px;
+  width: 4px;
+}
+
+/* Show resize cursor when dragging */
+.resize-handle.dragging {
+  background-color: rgba(209, 213, 219, 0.9);
+}

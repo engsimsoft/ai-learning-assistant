@@ -1,0 +1,154 @@
+/**
+ * Layout Styles - Three-panel design
+ */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Layout Body - three panels */
+.layout-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* LEFT SIDEBAR - Course Navigation (light gray) */
+.layout-left {
+  background-color: var(--left-bg);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  transition: width var(--transition-slow);
+  flex-shrink: 0;
+}
+
+.layout-left.closed {
+  width: 0 !important;
+  border-right: none;
+}
+
+.left-content {
+  padding: 16px;
+  min-width: 350px; /* Prevent content from squishing during transition */
+}
+
+/* CENTER - Lesson Viewer (white) */
+.layout-center {
+  flex: 1;
+  background-color: var(--center-bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.center-content {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* RIGHT SIDEBAR - AI Chat (dark theme) */
+.layout-right {
+  background-color: var(--right-bg);
+  color: var(--right-text);
+  border-left: 1px solid var(--right-border);
+  overflow-y: auto;
+  transition: width var(--transition-fast);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* For ResizeHandle positioning */
+}
+
+.layout-right.closed {
+  width: 0 !important;
+  border-left: none;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 400px; /* Prevent content from squishing during transition */
+}
+
+.right-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--right-border);
+}
+
+.right-header button {
+  background: transparent;
+  border: none;
+  color: var(--right-text);
+  font-size: 20px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color var(--transition-fast);
+}
+
+.right-header button:hover {
+  background-color: var(--right-hover);
+}
+
+/* Reopen right sidebar button (floating) */
+.reopen-right-sidebar {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+  z-index: 1000;
+}
+
+.reopen-right-sidebar:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.1);
+}
+
+.reopen-right-sidebar:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1366px) {
+  .center-content {
+    padding: 32px;
+  }
+
+  .left-content,
+  .right-content {
+    min-width: 320px;
+  }
+}
+
+/* Scrollbar for left sidebar */
+.layout-left::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+/* Scrollbar for right sidebar (dark theme) */
+.layout-right::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+.layout-right::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}

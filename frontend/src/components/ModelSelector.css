@@ -1,0 +1,63 @@
+/**
+ * ModelSelector component styles
+ */
+.model-selector {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.models-list {
+  padding: 8px;
+}
+
+.model-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+}
+
+.model-item:hover {
+  background-color: #f9fafb;
+  border-color: var(--border);
+}
+
+.model-item input[type="radio"] {
+  margin-top: 4px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.model-info {
+  flex: 1;
+}
+
+.model-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.model-description {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.model-context {
+  font-size: 0.8em;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .model-item {
+    padding: 10px;
+  }
+}

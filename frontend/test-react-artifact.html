@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Artifact Test</title>
+</head>
+<body>
+  <h1>React Artifact Direct Test</h1>
+  <p>Тестирование React артефакта напрямую</p>
+
+  <h2>Метод 1: Через ссылку (artifact: protocol)</h2>
+  <p>Кликни на ссылку для открытия артефакта:</p>
+  <a href="artifact:hello-react" style="font-size: 18px; color: blue; text-decoration: underline;">
+    [hello-react](artifact:hello-react) - React Test Component
+  </a>
+
+  <hr>
+
+  <h2>Метод 2: Напрямую в iframe (для быстрого теста)</h2>
+  <p>Если ссылка не работает, можно открыть основное приложение и найти урок:</p>
+  <ul>
+    <li>Открой <a href="http://localhost:5174" target="_blank">http://localhost:5174</a></li>
+    <li>Найди курс "react-artifacts-test" в сайдбаре (может быть внизу списка)</li>
+    <li>Открой урок "React Artifacts Testing"</li>
+    <li>Кликни на ссылку <code>[hello-react](artifact:hello-react)</code></li>
+  </ul>
+
+  <hr>
+
+  <h2>Ожидаемое поведение:</h2>
+  <ol>
+    <li>Loading состояние (spinner + "Loading component...")</li>
+    <li>Затем загрузится компонент с градиентом indigo-purple</li>
+    <li>Заголовок: "React Artifacts Test"</li>
+    <li>Сообщение: "React.lazy + Suspense + Error Boundary working correctly!"</li>
+    <li>Список с галочками ✅</li>
+    <li>Timestamp загрузки</li>
+  </ol>
+
+  <hr>
+
+  <h2>Отладка:</h2>
+  <p>Открой DevTools (F12) → Console для просмотра ошибок</p>
+
+  <script>
+    // Простой тест: попробуем вызвать событие клика на ссылке
+    console.log('Test page loaded');
+    console.log('Artifact link:', document.querySelector('a[href^="artifact:"]'));
+  </script>
+</body>
+</html>

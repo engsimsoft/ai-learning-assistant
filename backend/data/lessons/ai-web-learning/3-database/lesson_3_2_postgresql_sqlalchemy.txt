@@ -1,0 +1,1185 @@
+# Урок 3.2: PostgreSQL и SQLAlchemy ORM - Переводчик между Python и базой данных
+
+> **Модуль 3:** Базы данных  
+> **Урок:** 3.2  
+> **Длительность:** 60-75 минут  
+> **Prerequisite:** Урок 3.1 (SQL vs NoSQL)
+
+---
+
+## 🎯 Цели урока
+
+После этого урока ты сможешь:
+- ✅ Понимать что такое ORM и зачем он нужен (без ORM = писать SQL руками)
+- ✅ Работать с SQLAlchemy для связи Python кода с PostgreSQL
+- ✅ Создавать модели с relationships (One-to-Many, Foreign Keys)
+- ✅ Понимать async SQLAlchemy для FastAPI
+- ✅ Подключаться к Supabase PostgreSQL через Claude Code
+- ✅ Выполнять CRUD операции через ORM
+
+---
+
+## 📖 Концепция: Что такое ORM?
+
+### Простое определение
+
+**ORM (Object-Relational Mapping)** - это переводчик между Python объектами и SQL базой данных. Ты работаешь с Python классами, а ORM переводит это в SQL запросы.
+
+**Без ORM:**
+```python
+# Пишешь SQL руками (опасно, можно ошибиться)
+cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,))
+projects = cursor.fetchall()
+```
+
+**С ORM (SQLAlchemy):**
+```python
+# Работаешь с Python объектами (безопасно, читаемо)
+projects = await session.query(Project).filter(Project.user_id == user_id).all()
+```
+
+### Зачем нужен ORM
+
+**Проблемы без ORM:**
+- ❌ Писать SQL запросы руками (легко ошибиться)
+- ❌ SQL injection уязвимости (хакеры могут взломать)
+- ❌ Разные SQL диалекты для разных БД (PostgreSQL ≠ MySQL)
+- ❌ Нет type safety (Python не знает структуру данных)
+- ❌ Много повторяющегося кода
+
+**С ORM:**
+- ✅ Python код вместо SQL (привычный синтаксис)
+- ✅ Безопасность (ORM защищает от SQL injection)
+- ✅ Кроссплатформенность (одинаковый код для PostgreSQL/MySQL)
+- ✅ Type hints (IDE подсказывает поля)
+- ✅ Меньше кода (DRY - Don't Repeat Yourself)
+
+---
+
+## 🏪 Аналогия: Переводчик в иностранном ресторане
+
+Представь что ты в Китае в ресторане, не знаешь китайский язык:
+
+### Без переводчика (Без ORM)
+
+```
+Ты (турист)          Повар (БД)
+     │                   │
+     │  "给我一份..." ❌   │
+     └──────────────────►│ (Не понял!)
+                         │
+     │   "Um... food?"   │
+     └──────────────────►│ (Confusion!)
+```
+
+**Проблемы:**
+- ❌ Ты не знаешь китайский (SQL)
+- ❌ Можешь сказать неправильно
+- ❌ Повар не поймёт
+- ❌ Долго и сложно
+
+---
+
+### С переводчиком (С ORM)
+
+```
+Ты (Python)         Переводчик (ORM)         Повар (PostgreSQL)
+     │                      │                        │
+     │ "Хочу лапшу"         │                        │
+     └─────────────────────►│                        │
+                            │  SELECT * FROM dishes   │
+                            │  WHERE name='noodles'   │
+                            └───────────────────────►│
+                                                     │
+                            │    [Лапша готова]      │
+                            ◄───────────────────────┘
+     │    Noodles object    │
+     ◄─────────────────────┘
+```
+
+**Преимущества:**
+- ✅ Говоришь на своём языке (Python)
+- ✅ Переводчик знает китайский (SQL)
+- ✅ Переводчик не ошибается
+- ✅ Быстро и просто
+
+**SQLAlchemy - это переводчик между Python и PostgreSQL!**
+
+---
+
+## 💡 Контекст применения (КРИТИЧНО!)
+
+### Когда использовать ORM (SQLAlchemy)
+
+**✅ Идеально для:**
+
+1. **REST API приложения (как EngineCamPro v2)**
+   - Python Backend + SQL БД
+   - Сложные связи между данными
+   - CRUD операции (Create, Read, Update, Delete)
+   - Type safety для работы с ИИ
+
+2. **Микросервисы на Python**
+   - FastAPI + PostgreSQL
+   - Async операции с БД
+   - Независимые сервисы
+
+3. **Data Science / ML приложения**
+   - Jupyter Notebooks + БД
+   - Pandas integration
+   - Сложные аналитические запросы
+
+4. **Корпоративные приложения**
+   - Большие команды (читаемый код)
+   - Миграции БД (Alembic)
+   - Разные СУБД (PostgreSQL/MySQL/SQLite)
+
+---
+
+### Когда НЕ использовать ORM
+
+**⚠️ Плохой выбор для:**
+
+1. **Next.js Full-Stack проекты**
+   - JavaScript/TypeScript везде
+   - Используй Prisma ORM (для JavaScript)
+   - Или Drizzle ORM (для TypeScript)
+
+2. **Простые SQL запросы**
+   - Один SELECT без JOIN
+   - Raw SQL быстрее и проще
+
+3. **Экстремально высокая производительность**
+   - Финансовые торговые системы
+   - Real-time игры
+   - Raw SQL оптимальнее
+
+4. **Очень сложные SQL запросы**
+   - Множественные JOIN
+   - Window functions
+   - Лучше написать raw SQL
+
+---
+
+## 🔧 Три типа проектов курса - использование ORM
+
+### 1. EngineCamPro v2 (FastAPI + React)
+
+**Используем: SQLAlchemy** ✅
+
+**Почему:**
+```python
+# Python Backend → SQLAlchemy → PostgreSQL
+
+# Модели понятны для ИИ:
+class User(Base):
+    __tablename__ = "users"
+    id = Column(String(255), primary_key=True)
+    projects = relationship("Project")  # Связь!
+
+class Project(Base):
+    __tablename__ = "projects"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String(255), ForeignKey("users.id"))
+    cams = relationship("Cam")  # Связь!
+
+# ORM автоматически делает JOIN:
+user_projects = await session.query(Project)\
+    .filter(Project.user_id == "user123")\
+    .all()
+```
+
+**Преимущества:**
+- ✅ Type hints для работы с Claude Code
+- ✅ Async для FastAPI (высокая производительность)
+- ✅ Relationships (User → Projects → Cams)
+- ✅ Migrations через Alembic
+
+---
+
+### 2. Быстрые Full-Stack проекты (Next.js)
+
+**Используем: Prisma ORM** ✅
+
+**Почему:**
+```typescript
+// JavaScript/TypeScript везде
+// Prisma ORM для Next.js
+
+// schema.prisma
+model User {
+  id       String    @id @default(cuid())
+  email    String    @unique
+  posts    Post[]    // Связь!
+}
+
+model Post {
+  id       Int       @id @default(autoincrement())
+  title    String
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String
+}
+
+// TypeScript код:
+const posts = await prisma.post.findMany({
+  where: { authorId: userId },
+  include: { author: true }  // JOIN автоматически!
+})
+```
+
+**Не используем SQLAlchemy:**
+- ❌ Python ORM не нужен для JavaScript проекта
+- ✅ Prisma - правильный выбор для Next.js
+
+---
+
+### 3. Интерактивная онлайн-школа (RAG + AI)
+
+**Используем: SQLAlchemy + pgvector** 🔄
+
+**Почему:**
+```python
+# FastAPI Backend + PostgreSQL + pgvector extension
+
+# Обычные модели:
+class User(Base):
+    courses = relationship("Course")
+
+class Course(Base):
+    documents = relationship("Document")
+
+# Специальная модель для RAG:
+from pgvector.sqlalchemy import Vector
+
+class Document(Base):
+    __tablename__ = "documents"
+    id = Column(Integer, primary_key=True)
+    content = Column(Text)
+    embedding = Column(Vector(1536))  # OpenAI embeddings!
+
+# Semantic search через ORM:
+results = await session.query(Document)\
+    .order_by(Document.embedding.cosine_distance(query_embedding))\
+    .limit(5)\
+    .all()
+```
+
+**Комбинация:**
+- ✅ SQLAlchemy для структурированных данных
+- ✅ pgvector extension для vector search (RAG)
+
+---
+
+## 🔄 SQLAlchemy vs Raw SQL vs Other ORMs
+
+### Сравнительная таблица
+
+| Аспект | SQLAlchemy (Python) | Raw SQL | Prisma (JS/TS) | Django ORM |
+|--------|---------------------|---------|----------------|------------|
+| **Язык** | Python | SQL | TypeScript | Python |
+| **Type safety** | ✅ Type hints | ❌ Нет | ✅ Полная | ⚠️ Частичная |
+| **Async поддержка** | ✅ Да (v2.0+) | ✅ Да | ✅ Да | ⚠️ Частичная |
+| **Кривая обучения** | ⚠️ Средняя | ⚠️ Средняя | ✅ Простая | ⚠️ Средняя |
+| **Производительность** | ✅ Высокая | ✅ Максимальная | ✅ Высокая | ⚠️ Средняя |
+| **Relationships** | ✅ Отлично | ❌ Руками | ✅ Отлично | ✅ Отлично |
+| **Миграции** | ✅ Alembic | ❌ Руками | ✅ Prisma Migrate | ✅ Django Migrations |
+| **Для FastAPI** | ✅ Идеально | ⚠️ Можно | ❌ Нет | ❌ Нет |
+| **Для Next.js** | ❌ Нет | ⚠️ Можно | ✅ Идеально | ❌ Нет |
+| **Работа с ИИ** | ✅ Отлично | ⚠️ Средне | ✅ Отлично | ⚠️ Средне |
+| **EngineCamPro v2** | ✅ Используем | ❌ Нет | ❌ Нет | ❌ Нет |
+
+---
+
+## 🌐 Как работает SQLAlchemy в веб-приложении
+
+### Поток данных с ORM
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│              ВЕБ-ПРИЛОЖЕНИЕ С SQLALCHEMY ORM                            │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  💻 FRONTEND         🔌 FASTAPI          🔄 SQLALCHEMY      🗄️ POSTGRES  │
+│                                                                         │
+│  React               Backend             ORM               Database     │
+│                                                                         │
+│  [User clicks        [Endpoint]          [Python Models]   [Tables]    │
+│   "My Projects"]                                                        │
+│         │                  │                    │              │        │
+│         │  GET             │                    │              │        │
+│         │  /api/projects   │                    │              │        │
+│         └─────────────────►│                    │              │        │
+│                            │                    │              │        │
+│                 ┌──────────▼──────────┐         │              │        │
+│                 │  async def           │         │              │        │
+│                 │  get_projects()      │         │              │        │
+│                 └──────────┬──────────┘         │              │        │
+│                            │                    │              │        │
+│                            │  Python код:       │              │        │
+│                            │  session.query()   │              │        │
+│                            └───────────────────►│              │        │
+│                                                 │              │        │
+│                                    ┌────────────▼───────────┐  │        │
+│                                    │  SQLAlchemy Переводит: │  │        │
+│                                    │                        │  │        │
+│                                    │  query(Project)        │  │        │
+│                                    │  .filter(...)          │  │        │
+│                                    │        ↓               │  │        │
+│                                    │  SELECT * FROM projects│  │        │
+│                                    │  WHERE user_id = ?     │  │        │
+│                                    └────────────┬───────────┘  │        │
+│                                                 │              │        │
+│                                                 │  SQL Query   │        │
+│                                                 └─────────────►│        │
+│                                                                │        │
+│                                                    ┌───────────▼──────┐ │
+│                                                    │   PostgreSQL     │ │
+│                                                    │                  │ │
+│                                                    │  ┌────────────┐  │ │
+│                                JSON                │  │  projects  │  │ │
+│                            ◄───────────────────────┼──│ id | name  │  │ │
+│       [{id:1, name:"V8"}]                          │  │ 1  | V8    │  │ │
+│                                                    │  │ 2  | V6    │  │ │
+│                                                    │  └────────────┘  │ │
+│                                                    └──────────────────┘ │
+│                                                                         │
+│  [Display projects]                                                     │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Ключевые моменты:
+
+1. **Frontend → Backend:** HTTP запрос (JSON)
+2. **Backend → ORM:** Python код (`session.query(Project)`)
+3. **ORM → БД:** SQL запрос (`SELECT * FROM projects`)
+4. **БД → ORM:** Результаты (строки таблицы)
+5. **ORM → Backend:** Python объекты (`List[Project]`)
+6. **Backend → Frontend:** JSON ответ
+
+**ORM = прозрачный переводчик между Python и SQL!**
+
+---
+
+## 📚 SQLAlchemy основы
+
+### Async SQLAlchemy 2.0
+
+**Почему async?**
+- FastAPI работает асинхронно
+- Не блокирует другие запросы пока ждём БД
+- Высокая производительность (много запросов параллельно)
+
+### Структура SQLAlchemy проекта
+
+```
+backend/
+├── app/
+│   ├── database.py          # ⚙️ Подключение к БД
+│   ├── models/              # 📦 SQLAlchemy модели
+│   │   ├── __init__.py
+│   │   ├── user.py          # User модель
+│   │   ├── project.py       # Project модель
+│   │   └── cam.py           # Cam модель
+│   ├── schemas/             # 📋 Pydantic схемы
+│   │   ├── user.py
+│   │   ├── project.py
+│   │   └── cam.py
+│   └── routers/             # 🛣️ API endpoints
+│       └── projects.py
+```
+
+---
+
+### Файл: `app/database.py`
+
+```python
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.pool import NullPool
+import os
+
+# DATABASE_URL из .env файла
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Async engine для PostgreSQL
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True,  # Логирование SQL запросов (для отладки)
+    poolclass=NullPool  # Для Serverless (Railway, Heroku)
+)
+
+# Session factory
+AsyncSessionLocal = sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False  # Объекты доступны после commit
+)
+
+# Base class для моделей
+Base = declarative_base()
+
+# Dependency для FastAPI endpoints
+async def get_db():
+    """Создаёт сессию БД для каждого запроса"""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()  # Автоматический commit
+        except Exception:
+            await session.rollback()  # Откат при ошибке
+            raise
+        finally:
+            await session.close()
+```
+
+---
+
+### Файл: `app/models/user.py`
+
+```python
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from app.database import Base
+
+class User(Base):
+    """Модель пользователя"""
+    __tablename__ = "users"
+    
+    # Поля таблицы
+    id = Column(String(255), primary_key=True)  # Clerk user ID
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    subscription_status = Column(String(50), default="free")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships (связи с другими моделями)
+    projects = relationship(
+        "Project",
+        back_populates="user",
+        cascade="all, delete-orphan"  # Удалил user → удалились projects
+    )
+    
+    def __repr__(self):
+        return f"<User(id={self.id}, email={self.email})>"
+```
+
+---
+
+### Файл: `app/models/project.py`
+
+```python
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from app.database import Base
+
+class Project(Base):
+    """Модель проекта кулачков"""
+    __tablename__ = "projects"
+    
+    # Поля таблицы
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String(255), ForeignKey("users.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False)
+    description = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="projects")
+    cams = relationship(
+        "Cam",
+        back_populates="project",
+        cascade="all, delete-orphan"  # Удалил project → удалились cams
+    )
+    
+    def __repr__(self):
+        return f"<Project(id={self.id}, name={self.name})>"
+```
+
+---
+
+### Файл: `app/models/cam.py`
+
+```python
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from app.database import Base
+
+class Cam(Base):
+    """Модель кулачка"""
+    __tablename__ = "cams"
+    
+    # Поля таблицы
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False)
+    cam_type = Column(String(50), nullable=False)  # 'intake' или 'exhaust'
+    
+    # Параметры кулачка
+    lift = Column(Numeric(5, 2), nullable=False)  # мм
+    duration = Column(Integer, nullable=False)     # градусы
+    
+    # Расчётные данные (JSON)
+    profile_points = Column(JSONB)  # [{angle: 0, radius: 20}, ...]
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    project = relationship("Project", back_populates="cams")
+    
+    def __repr__(self):
+        return f"<Cam(id={self.id}, name={self.name}, type={self.cam_type})>"
+```
+
+---
+
+### Relationships (Связи между моделями)
+
+```python
+# One-to-Many: User → Projects
+class User(Base):
+    projects = relationship("Project", back_populates="user")
+
+class Project(Base):
+    user_id = Column(ForeignKey("users.id"))
+    user = relationship("User", back_populates="projects")
+
+
+# One-to-Many: Project → Cams
+class Project(Base):
+    cams = relationship("Cam", back_populates="project")
+
+class Cam(Base):
+    project_id = Column(ForeignKey("projects.id"))
+    project = relationship("Project", back_populates="cams")
+```
+
+**Диаграмма связей:**
+```
+User (1) ─────────── (Many) Projects
+              │
+              └────────────── (Many) Cams
+
+user.projects  → List[Project]
+project.user   → User
+project.cams   → List[Cam]
+cam.project    → Project
+```
+
+---
+
+## 🤖 Работа с Claude Code
+
+### Задача: Создать SQLAlchemy модели для EngineCamPro v2
+
+---
+
+### ❌ Плохой диалог (неэффективный)
+
+```
+Ты: Создай модели для базы данных.
+
+Claude Code: Какие модели нужны? Какие поля?
+
+Ты: Для проектов.
+
+Claude Code: Какие поля в проекте? Какие связи с другими таблицами?
+
+Ты: Не знаю, сделай стандартные.
+
+Claude Code: [создаёт что-то общее, не подходящее для EngineCamPro]
+```
+
+**Проблемы:**
+- ❌ Нет описания структуры данных
+- ❌ Не указаны связи (relationships)
+- ❌ Нет информации о типах полей
+- ❌ Claude Code вынужден угадывать
+
+---
+
+### ✅ Хороший диалог (эффективный)
+
+```
+Ты: Создай структуру SQLAlchemy моделей для EngineCamPro v2.
+
+Контекст проекта:
+- Backend: FastAPI (async)
+- База данных: PostgreSQL (Supabase)
+- ORM: SQLAlchemy 2.0+ (async)
+- Python 3.11+
+
+Структура данных:
+
+1. Users (пользователи)
+   - id: VARCHAR(255) PK (Clerk user ID, не auto-increment)
+   - email: VARCHAR(255) UNIQUE NOT NULL
+   - subscription_status: VARCHAR(50) DEFAULT 'free'
+   - created_at, updated_at: TIMESTAMP
+
+2. Projects (проекты кулачков)
+   - id: SERIAL PK (auto-increment)
+   - user_id: VARCHAR(255) FK → users.id
+   - name: VARCHAR(255) NOT NULL
+   - description: TEXT (optional)
+   - created_at, updated_at: TIMESTAMP
+
+3. Cams (кулачки в проекте)
+   - id: SERIAL PK
+   - project_id: INTEGER FK → projects.id
+   - name: VARCHAR(255) NOT NULL
+   - cam_type: VARCHAR(50) ('intake' или 'exhaust')
+   - lift: DECIMAL(5,2) NOT NULL (мм)
+   - duration: INTEGER NOT NULL (градусы)
+   - profile_points: JSONB (массив точек профиля)
+   - created_at, updated_at: TIMESTAMP
+
+Relationships:
+- User HAS MANY Projects (One-to-Many)
+- Project HAS MANY Cams (One-to-Many)
+- CASCADE DELETE: удалил user → удалились projects
+- CASCADE DELETE: удалил project → удалились cams
+
+Файлы:
+backend/app/database.py - async engine, session, Base
+backend/app/models/__init__.py - экспорт моделей
+backend/app/models/user.py - User модель
+backend/app/models/project.py - Project модель
+backend/app/models/cam.py - Cam модель
+
+Требования:
+- Async SQLAlchemy (AsyncSession)
+- Type hints для всех методов
+- Indexes на Foreign Keys (производительность)
+- __repr__ методы для отладки
+- Docstrings для моделей
+- back_populates для relationships
+
+Claude Code: Отлично! Детальный план создания моделей:
+
+1. app/database.py:
+   - create_async_engine (PostgreSQL + asyncpg)
+   - AsyncSession factory
+   - get_db() dependency для FastAPI
+   - Base = declarative_base()
+
+2. app/models/user.py:
+   - User модель с полями (id, email, subscription_status, timestamps)
+   - relationship("Project", back_populates="user", cascade="all, delete-orphan")
+   - Index на email (для поиска)
+   - __repr__ для отладки
+
+3. app/models/project.py:
+   - Project модель с полями (id, user_id FK, name, description, timestamps)
+   - relationship на User (Many-to-One)
+   - relationship на Cams (One-to-Many)
+   - Index на user_id (для JOIN)
+   - __repr__
+
+4. app/models/cam.py:
+   - Cam модель с полями (id, project_id FK, name, cam_type, lift, duration, profile_points JSONB, timestamps)
+   - relationship на Project (Many-to-One)
+   - Index на project_id
+   - __repr__
+
+5. app/models/__init__.py:
+   - Импорт всех моделей
+   - __all__ = ["User", "Project", "Cam", "Base"]
+
+Структура связей:
+User.projects → List[Project]
+Project.user → User
+Project.cams → List[Cam]
+Cam.project → Project
+
+Применить? [Y/n]
+
+Ты: Y
+
+Claude Code: ✅ Создал все файлы!
+
+app/database.py:
+```python
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker, declarative_base
+import os
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost/db")
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+Base = declarative_base()
+
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
+```
+
+app/models/user.py:
+[User модель с relationships]
+
+app/models/project.py:
+[Project модель с relationships]
+
+app/models/cam.py:
+[Cam модель с JSONB для profile_points]
+
+app/models/__init__.py:
+```python
+from app.models.user import User
+from app.models.project import Project
+from app.models.cam import Cam
+from app.database import Base
+
+__all__ = ["User", "Project", "Cam", "Base"]
+```
+
+Следующий шаг:
+1. Создать .env файл с DATABASE_URL
+2. Установить зависимости: sqlalchemy[asyncio], asyncpg, psycopg2-binary
+3. Настроить подключение к Supabase PostgreSQL
+
+Создать документацию по подключению? [Y/n]
+
+Ты: Y
+
+Claude Code: ✅ Создал документацию!
+
+docs/database-setup.md:
+- Как создать Supabase проект (бесплатный tier)
+- Где найти DATABASE_URL
+- Как настроить .env файл
+- Как установить зависимости
+- Troubleshooting подключения
+
+.env.example:
+```
+DATABASE_URL=postgresql+asyncpg://user:password@host:5432/database
+```
+
+requirements.txt обновлён:
+```
+fastapi
+uvicorn
+sqlalchemy[asyncio]==2.0.23
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+pydantic==2.5.0
+```
+
+Готово! Теперь нужно:
+1. Создать Supabase проект
+2. Скопировать DATABASE_URL
+3. Создать .env файл
+4. Установить зависимости: pip install -r requirements.txt
+
+Хочешь создать Alembic миграции для автоматического создания таблиц? [Y/n]
+
+Ты: Пока нет, сначала протестирую подключение. Как проверить что всё работает?
+
+Claude Code: Отлично! Создам тестовый скрипт:
+
+scripts/test_database.py:
+```python
+import asyncio
+from app.database import engine, Base
+from app.models import User, Project, Cam
+
+async def test_connection():
+    """Проверка подключения к БД"""
+    async with engine.begin() as conn:
+        # Создать все таблицы
+        await conn.run_sync(Base.metadata.create_all)
+        print("✅ Таблицы созданы!")
+        
+        # Показать список таблиц
+        tables = await conn.run_sync(lambda sync_conn: Base.metadata.tables.keys())
+        print(f"📊 Таблицы: {list(tables)}")
+
+if __name__ == "__main__":
+    asyncio.run(test_connection())
+```
+
+Запусти:
+```bash
+python scripts/test_database.py
+```
+
+Ожидаемый результат:
+```
+✅ Таблицы созданы!
+📊 Таблицы: ['users', 'projects', 'cams']
+```
+
+Если видишь ошибку - проверь DATABASE_URL в .env файле.
+
+Ты: Отлично! Всё работает. Теперь покажи примеры CRUD операций.
+
+Claude Code: Создам примеры!
+
+scripts/crud_examples.py:
+```python
+from app.database import AsyncSessionLocal
+from app.models import User, Project, Cam
+from sqlalchemy import select
+
+async def create_example():
+    """Создание данных (CREATE)"""
+    async with AsyncSessionLocal() as session:
+        # Создать пользователя
+        user = User(
+            id="user_123",
+            email="test@example.com",
+            subscription_status="free"
+        )
+        session.add(user)
+        await session.commit()
+        print(f"✅ Создан: {user}")
+
+async def read_example():
+    """Чтение данных (READ)"""
+    async with AsyncSessionLocal() as session:
+        # Получить пользователя по email
+        result = await session.execute(
+            select(User).where(User.email == "test@example.com")
+        )
+        user = result.scalar_one_or_none()
+        print(f"📖 Найден: {user}")
+        
+        # Получить все проекты пользователя (через relationship!)
+        print(f"📁 Проектов: {len(user.projects)}")
+
+async def update_example():
+    """Обновление данных (UPDATE)"""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(User).where(User.email == "test@example.com")
+        )
+        user = result.scalar_one()
+        
+        # Обновить subscription
+        user.subscription_status = "pro"
+        await session.commit()
+        print(f"✅ Обновлён: {user}")
+
+async def delete_example():
+    """Удаление данных (DELETE)"""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(User).where(User.email == "test@example.com")
+        )
+        user = result.scalar_one()
+        
+        # Удалить пользователя (projects удалятся автоматически - CASCADE!)
+        await session.delete(user)
+        await session.commit()
+        print("✅ Удалён пользователь и его проекты")
+```
+
+Запусти примеры:
+```bash
+python -c "import asyncio; from scripts.crud_examples import *; asyncio.run(create_example())"
+python -c "import asyncio; from scripts.crud_examples import *; asyncio.run(read_example())"
+```
+
+Готово! Модели работают и связи (relationships) функционируют! 🎉
+```
+
+**Почему это эффективно:**
+- ✅ Детальное описание структуры данных
+- ✅ Указаны все relationships
+- ✅ Требования к async SQLAlchemy
+- ✅ Итеративное улучшение (тесты, примеры)
+- ✅ Claude Code создал полную структуру с документацией
+
+---
+
+## 🛠️ Практическое задание
+
+### Задача
+
+Создай SQLAlchemy модели для EngineCamPro v2 через диалог с Claude Code и подключись к Supabase PostgreSQL. Проверь что всё работает.
+
+---
+
+### Работа с Claude Code
+
+**Шаг 1:** Создай Supabase проект (если ещё нет)
+
+1. Зайди на [supabase.com](https://supabase.com)
+2. Создай аккаунт (бесплатный)
+3. Создай новый проект:
+   - Название: `enginecampro-v2`
+   - Database Password: (запомни!)
+   - Region: выбери ближайший
+
+4. Дождись создания проекта (~2 минуты)
+
+5. Получи DATABASE_URL:
+   - Settings → Database → Connection String
+   - Выбери: "URI" (не "Connection Pooling")
+   - Скопируй строку типа:
+     ```
+     postgresql://postgres:[YOUR-PASSWORD]@db.xxx.supabase.co:5432/postgres
+     ```
+   - Замени `[YOUR-PASSWORD]` на свой пароль
+   - Измени `postgresql://` на `postgresql+asyncpg://` (для async!)
+
+---
+
+**Шаг 2:** Открой терминал в папке backend
+
+```bash
+cd ~/projects/enginecampro-v2/backend
+claude
+```
+
+---
+
+**Шаг 3:** Диалог с Claude Code
+
+Скопируй диалог из секции "✅ Хороший диалог" выше и общайся с Claude Code. Он создаст:
+- `app/database.py` - подключение к БД
+- `app/models/user.py` - User модель
+- `app/models/project.py` - Project модель
+- `app/models/cam.py` - Cam модель
+- `app/models/__init__.py` - экспорт
+
+---
+
+**Шаг 4:** Создай `.env` файл
+
+```bash
+# В корне backend/
+cat > .env << EOF
+DATABASE_URL=postgresql+asyncpg://postgres:YOUR_PASSWORD@db.xxx.supabase.co:5432/postgres
+EOF
+```
+
+Замени `YOUR_PASSWORD` и `db.xxx.supabase.co` на свои значения!
+
+---
+
+**Шаг 5:** Установи зависимости
+
+```bash
+pip install sqlalchemy[asyncio] asyncpg psycopg2-binary alembic
+```
+
+---
+
+**Шаг 6:** Проверь подключение
+
+```bash
+# Создай тестовый скрипт через Claude Code (как в диалоге выше)
+python scripts/test_database.py
+```
+
+**Ожидаемый результат:**
+```
+✅ Таблицы созданы!
+📊 Таблицы: ['users', 'projects', 'cams']
+```
+
+---
+
+**Шаг 7:** Проверь таблицы в Supabase
+
+1. Зайди в Supabase Dashboard
+2. Table Editor (слева в меню)
+3. Должны быть видны таблицы: `users`, `projects`, `cams`
+
+---
+
+## ❓ Вопросы для самопроверки
+
+### 1. Объясни что такое ORM через аналогию
+
+Используй свою аналогию (не обязательно переводчик). Например: ORM как...?
+
+<details>
+<summary>💡 Подсказка</summary>
+
+Подумай про ситуации где нужен "переводчик":
+- Разные языки (Python ↔ SQL)
+- Разные форматы (JSON ↔ XML)
+- Разные протоколы (HTTP ↔ WebSocket)
+</details>
+
+---
+
+### 2. Зачем нужен ORM? Перечисли минимум 5 преимуществ
+
+1. _______
+2. _______
+3. _______
+4. _______
+5. _______
+
+<details>
+<summary>💡 Подсказка</summary>
+
+Подумай про:
+- Безопасность (SQL injection)
+- Читаемость кода
+- Type safety
+- Кроссплатформенность
+- DRY (Don't Repeat Yourself)
+</details>
+
+---
+
+### 3. Что такое relationship в SQLAlchemy?
+
+Объясни своими словами и приведи пример из EngineCamPro (User → Projects).
+
+<details>
+<summary>💡 Подсказка</summary>
+
+Relationship - это связь между моделями.
+- Один пользователь (User) имеет много проектов (Projects)
+- `user.projects` возвращает список проектов
+- Как это работает через Foreign Key?
+</details>
+
+---
+
+### 4. Async vs Sync SQLAlchemy - в чём разница?
+
+Почему для FastAPI мы используем async SQLAlchemy?
+
+<details>
+<summary>💡 Подсказка</summary>
+
+Подумай про:
+- Блокировка vs неблокировка
+- Производительность (параллельные запросы)
+- FastAPI асинхронный фреймворк
+</details>
+
+---
+
+### 5. Практический вопрос
+
+У тебя есть User модель с relationship на Projects. Как получить все проекты пользователя с email "john@example.com"?
+
+Напиши SQLAlchemy код (async).
+
+<details>
+<summary>💡 Подсказка</summary>
+
+```python
+from sqlalchemy import select
+
+async with session:
+    result = await session.execute(
+        select(User).where(User.email == "john@example.com")
+    )
+    user = result.scalar_one()
+    projects = user.projects  # Через relationship!
+```
+</details>
+
+---
+
+## 🔗 Связь с другими уроками
+
+**Основано на уроках:**
+- **Урок 3.1:** SQL vs NoSQL - выбрали PostgreSQL для EngineCamPro
+- **Модуль 2:** Backend разработка - FastAPI будет использовать SQLAlchemy
+
+**Подготавливает к урокам:**
+- **Урок 3.3:** Миграции и схема БД - эволюция моделей через Alembic
+- **Урок 3.4:** Supabase - уже подключились к Supabase PostgreSQL!
+- **Модуль 5:** Интеграция - FastAPI endpoints будут использовать модели
+
+**Связь с EngineCamPro:**
+- Этот урок создал **базу** для всего проекта - модели БД
+- Теперь можем писать API endpoints которые работают с БД
+- В следующих уроках добавим миграции и CRUD endpoints
+
+**Связь с Next.js (Модуль 8):**
+- В Модуле 8 увидишь Prisma ORM для JavaScript/TypeScript
+- Та же концепция ORM, но для другого языка
+
+**Связь с RAG (Модуль 9):**
+- В Модуле 9 используем SQLAlchemy + pgvector extension для vector search
+
+---
+
+## ✅ Критерии завершения урока
+
+**Понимание (могу объяснить):**
+- [ ] Что такое ORM и зачем он нужен
+- [ ] Как SQLAlchemy переводит Python → SQL
+- [ ] Что такое relationships (One-to-Many, Foreign Keys)
+- [ ] Разница async vs sync SQLAlchemy
+- [ ] Почему для FastAPI используем async
+
+**Практические навыки:**
+- [ ] Создал SQLAlchemy модели через Claude Code
+- [ ] Подключился к Supabase PostgreSQL
+- [ ] Понимаю структуру проекта (database.py, models/)
+- [ ] Могу выполнять CRUD операции через ORM
+
+**Готовность к следующему уроку:**
+- [ ] Модели созданы и работают
+- [ ] Таблицы созданы в Supabase
+- [ ] Понимаю как работают relationships
+- [ ] Готов изучать миграции (Alembic)
+
+**Дополнительно:**
+- [ ] Задокументировал выводы в `notes/module-3/lesson-3-2-notes.md`
+- [ ] Ответил на все вопросы для самопроверки
+- [ ] Протестировал CRUD операции
+
+---
+
+## 📚 Дополнительные материалы (для углубления)
+
+Если хочешь узнать больше:
+
+**Документация:**
+- [SQLAlchemy 2.0 официальная документация](https://docs.sqlalchemy.org/en/20/) - самая полная документация
+- [FastAPI + SQLAlchemy гайд](https://fastapi.tiangolo.com/tutorial/sql-databases/) - официальный tutorial
+- [Supabase документация](https://supabase.com/docs) - Backend-as-a-Service
+
+**Статьи:**
+- "Understanding SQLAlchemy Relationships" - One-to-Many, Many-to-Many
+- "Async SQLAlchemy 2.0 - What's New" - изменения в 2.0 версии
+
+**Видео (опционально):**
+- "SQLAlchemy ORM Tutorial" - полное руководство
+- "FastAPI + SQLAlchemy Best Practices" - продвинутые техники
+
+**НО!** Это не обязательно для курса. Главное - понять концепцию ORM и уметь работать с моделями через Claude Code.
+
+---
+
+**Статус урока:** ⏳ Не начат  
+**Дата начала:** _________  
+**Дата завершения:** _________  
+**Время потрачено:** _______ минут
+
+---
+
+## 🎉 Поздравляю!
+
+Ты теперь понимаешь как работает SQLAlchemy ORM и можешь создавать модели базы данных для Python/FastAPI приложений! Это фундамент для всей backend разработки.
+
+**В следующем уроке (3.3)** мы изучим миграции БД через Alembic - как безопасно изменять схему базы данных не теряя данные.
+
+**Помни:** ORM = переводчик между Python и SQL. Говори на Python, пусть ORM переводит в SQL! 🚀

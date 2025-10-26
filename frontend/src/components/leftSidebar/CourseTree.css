@@ -1,0 +1,309 @@
+/**
+ * CourseTree Styles
+ */
+
+.course-tree {
+  padding: 0;
+}
+
+/* Course Level */
+.course-block {
+  margin-bottom: 4px;
+}
+
+.course-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-align: left;
+}
+
+.course-header:hover {
+  background-color: var(--left-hover);
+}
+
+.course-header.expanded {
+  background-color: var(--left-selected);
+  color: var(--text-primary);
+}
+
+.course-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.course-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-count {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.course-arrow {
+  font-size: 10px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Course Modules Container */
+.course-modules {
+  padding-left: 0;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Module Level */
+.module-block {
+  margin-bottom: 2px;
+}
+
+.module-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 32px;
+  background-color: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  text-align: left;
+}
+
+.module-header:hover {
+  background-color: var(--left-hover);
+}
+
+.module-header.expanded {
+  background-color: var(--left-selected);
+}
+
+.module-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.module-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.module-count {
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.module-arrow {
+  font-size: 9px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Module Lessons Container */
+.module-lessons {
+  padding-left: 0;
+  animation: slideDown 0.15s ease;
+}
+
+/* Lesson Level */
+.lesson-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 48px;
+  background-color: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.lesson-item:hover {
+  background-color: var(--left-hover);
+}
+
+.lesson-item.active {
+  background-color: var(--left-selected);
+  border-left-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.lesson-icon {
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.lesson-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Progress Indicators */
+
+/* Course Progress Counter */
+.course-progress {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* Module Progress Counter */
+.module-progress {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Progress Bar Container */
+.course-progress-bar,
+.module-progress-bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.module-progress-bar {
+  height: 2px;
+  margin-left: 32px;
+  margin-right: 16px;
+}
+
+/* Progress Bar Fill */
+.course-progress-fill,
+.module-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.module-progress-fill {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* Lesson Item Wrapper (checkbox + lesson) */
+.lesson-item-wrapper {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.lesson-item-wrapper.active {
+  background-color: var(--left-selected);
+}
+
+.lesson-item-wrapper.active .lesson-item {
+  border-left-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.lesson-item-wrapper.completed .lesson-title {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.lesson-item-wrapper.completed .lesson-icon {
+  opacity: 0.5;
+}
+
+/* Checkbox Button */
+.lesson-checkbox {
+  width: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-left: 48px;
+  transition: background-color var(--transition-fast);
+}
+
+.lesson-checkbox:hover {
+  background-color: var(--left-hover);
+}
+
+.lesson-checkbox:active {
+  transform: scale(0.95);
+}
+
+/* Checkbox Icon */
+.checkbox-icon {
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.lesson-item-wrapper.completed .checkbox-icon {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.lesson-checkbox:hover .checkbox-icon {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* Update lesson-item to work within wrapper */
+.lesson-item-wrapper .lesson-item {
+  flex: 1;
+  padding-left: 8px;
+  padding-right: 16px;
+  margin-left: 0;
+}
+
+/* Remove active state from lesson-item (handled by wrapper) */
+.lesson-item-wrapper .lesson-item.active {
+  background-color: transparent;
+}

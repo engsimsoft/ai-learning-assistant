@@ -1,0 +1,118 @@
+/**
+ * Global styles - AI Learning Agent v2.0
+ * Three-panel layout with Claude-inspired design
+ */
+:root {
+  /* Accent colors */
+  --primary-color: #6366f1;      /* Indigo (main accent) */
+  --primary-hover: #5558e3;
+  --secondary-color: #7c3aed;
+
+  /* LEFT Sidebar colors (light gray) */
+  --left-bg: #f9fafb;
+  --left-hover: #f3f4f6;
+  --left-selected: #e5e7eb;
+  --left-border: 3px solid #6366f1;
+
+  /* CENTER colors (white) */
+  --center-bg: #ffffff;
+  --center-text: #1f2937;
+  --center-heading: #111827;
+  --center-secondary: #374151;
+
+  /* RIGHT Sidebar colors (light theme, like Cline interface) */
+  --right-bg: #ffffff;           /* White background */
+  --right-surface: #f9fafb;      /* Light gray surface */
+  --right-user-msg: #f3f4f6;     /* User message background (light gray) */
+  --right-text: #1f2937;         /* Dark text */
+  --right-text-secondary: #6b7280; /* Secondary text (gray) */
+  --right-border: #e5e7eb;       /* Light borders */
+  --right-accent: #9ca3af;       /* Neutral gray accent (for Send button) */
+  --right-hover: #f3f4f6;        /* Light hover state */
+
+  /* Common colors */
+  --background: #f9fafb;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --error: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+
+  /* Shadows */
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+
+  /* Transitions */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-width: 1366px; /* Minimum supported screen width (desktop only) */
+  overflow-x: auto;
+}
+
+code {
+  font-family: var(--font-mono);
+  background-color: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+pre {
+  font-family: var(--font-mono);
+  background-color: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+/* Scrollbar styling (for webkit browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}

@@ -1,0 +1,44 @@
+/**
+ * CenterResizeHandle Styles
+ * Vertical handle for resizing split between lesson and artifact
+ */
+
+.center-resize-handle {
+  width: 8px;
+  height: 100%;
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.center-resize-handle:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.center-resize-handle.dragging {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.center-resize-handle-line {
+  width: 2px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1px;
+  transition: background-color 0.2s ease, height 0.2s ease;
+}
+
+.center-resize-handle:hover .center-resize-handle-line {
+  background: rgba(255, 255, 255, 0.4);
+  height: 60px;
+}
+
+.center-resize-handle.dragging .center-resize-handle-line {
+  background: rgb(99, 102, 241);
+  height: 100%;
+}

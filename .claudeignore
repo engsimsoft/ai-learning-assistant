@@ -1,0 +1,33 @@
+# Claude Code Ignore File
+# Files and directories listed here will be ignored by Claude Code agents
+# This helps optimize context window usage by excluding irrelevant files
+
+# Personal user documents (not related to project)
+my-documents/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Node modules
+node_modules/
+
+# Cache and temporary files
+__pycache__/
+.pytest_cache/
+.cache/
+*.pyc
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Playwright MCP artifacts (browser automation screenshots/temp files)
+.playwright-mcp/
