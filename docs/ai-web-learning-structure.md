@@ -88,24 +88,31 @@
 
 ---
 
-## 📕 Опциональные модули (14+ уроков)
+## 📕 Опциональные модули (21 уроков)
 
-### Module 8: Node.js Fundamentals (3 урока, в разработке) 🟢
+### Module 8: Node.js Fundamentals (7 уроков) ✅
 **Путь:** `backend/data/lessons/ai-web-learning/8-nodejs/`
 
-1. `lesson-8-1-nodejs-basics.md` — Что такое Node.js и зачем он нужен
-2. `lesson-8-2-npm.md` — npm - Package Manager для JavaScript
-3. `lesson-8-3-express.md` — Express - REST API на Node.js
+1. `lesson-8-1-nodejs-basics.md` — Что такое Node.js и зачем он нужен (40-50 мин)
+2. `lesson-8-2-npm.md` — npm - Package Manager для JavaScript (30-40 мин)
+3. `lesson-8-3-express.md` — Express - REST API на Node.js (35-45 мин)
+4. `lesson-8-4-typescript.md` — TypeScript с Node.js (30-35 мин)
+5. `lesson-8-5-build-tools.md` — Build Tools - Vite и альтернативы ⭐⭐ КЛЮЧЕВОЙ (50-60 мин)
+6. `lesson-8-6-nodejs-capabilities.md` — Возможности Node.js (Electron, CLI, Real-time, .exe) (60-70 мин)
+7. `lesson-8-7-nodejs-vs-python.md` — Node.js vs Python - когда что выбирать (25-30 мин)
 
-**Статус:** 🔄 В разработке (3/7 уроков готовы)
-
-**Запланированные уроки:**
-4. TypeScript с Node.js
-5. Build Tools - Vite и альтернативы
-6. Возможности Node.js (Electron, CLI, Real-time)
-7. Node.js vs Python - когда что выбирать
+**Статус:** ✅ Завершен (7/7 уроков)
 
 **Цель модуля:** Понимание экосистемы JavaScript backend/tooling перед изучением Next.js
+
+**Ключевые темы:**
+- Node.js Runtime Environment (V8 engine, Event Loop)
+- npm package manager и node_modules экосистема
+- Express framework (middleware, routing)
+- TypeScript для типобезопасности
+- Build Tools сравнение (Vite, Webpack, Rollup, Parcel, ESBuild, Turbopack)
+- Desktop приложения (Electron + Node.js→.exe для Windows 7)
+- Выбор между Node.js и Python для backend
 
 ---
 
@@ -171,11 +178,11 @@
 | Категория | Количество модулей | Количество уроков |
 |-----------|-------------------|-------------------|
 | **Основные модули** | 7 | 30 |
-| **Опциональные модули** | 4 | 17+ |
+| **Опциональные модули** | 4 | 21 |
 | **Worked Examples** | 1 | 1 |
-| **Всего** | 12 | 48+ |
+| **Всего** | 12 | 52 |
 
-**Статус Module 8 (Node.js):** 🔄 В разработке (3/7 уроков готовы)
+**Статус Module 8 (Node.js):** ✅ Завершен (7/7 уроков) - 2025-10-27
 
 ---
 
