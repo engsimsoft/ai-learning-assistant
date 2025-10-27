@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Module 8: Node.js Fundamentals (In Development)
+
+**Date:** 2025-10-27
+
+**New Module:** Node.js Fundamentals added to AI Web Learning course (3/7 lessons ready).
+
+**Reason:** Students encountered unexplained terms (Node.js, Express, npm, Vite) in Module 8 (Next.js).
+**Solution:** Create dedicated Node.js module BEFORE Next.js to explain JavaScript backend ecosystem.
+
+**Module Restructure:**
+- Created new `backend/data/lessons/ai-web-learning/8-nodejs/` folder
+- Renamed existing modules:
+  - `8-nextjs/` → `9-nextjs/` (Next.js Full-Stack)
+  - `9-rag-ai/` → `10-rag-ai/` (RAG + AI Agent)
+  - `10-ml/` → `11-ml/` (Machine Learning)
+
+**Module 8 Content (7 lessons planned, 3 ready):**
+
+**Ready Lessons:**
+1. `lesson-8-1-nodejs-basics.md` - What is Node.js and why it's needed
+2. `lesson-8-2-npm.md` - npm Package Manager
+3. `lesson-8-3-express.md` - Express REST API framework
+
+**Planned Lessons (4 remaining):**
+4. TypeScript with Node.js
+5. Build Tools - Vite and alternatives (Webpack, Rollup, Parcel, ESBuild, Turbopack)
+6. Node.js capabilities (Electron, CLI tools, Real-time apps)
+7. Node.js vs Python - when to use each
+
+**Technical Specification:**
+- Created `docs/technical-spec-module-8-nodejs.md` (~700 lines)
+- Detailed requirements for professional instructor
+- Emphasis on: Express explanation, Build Tools comparison, Electron + Node.js→.exe alternatives
+
+**Documentation Updated:**
+- `docs/ai-web-learning-structure.md` - Added Module 8, updated modules 9-11
+- Course statistics: 11 modules → 12 modules, 42+ lessons → 48+ lessons
+- Status: 🔄 In Development (3/7 lessons)
+
+**Benefits:**
+- Students understand Node.js BEFORE learning Next.js
+- Detailed explanation of Express (no longer mysterious)
+- Vite and build tools comparison (6 tools)
+- Clear understanding of when to use Node.js vs Python
+
+---
+
 ### Changed - Course Structure File Renamed
 
 **Date:** 2025-10-27
