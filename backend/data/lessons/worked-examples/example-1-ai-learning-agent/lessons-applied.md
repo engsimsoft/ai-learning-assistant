@@ -281,7 +281,7 @@ backend/              # Source code (SSOT)
 docs/                 # Documentation (explains SSOT)
 ├── architecture.md
 ├── prompt-system.md
-└── course-structure.md
+└── ai-web-learning-structure.md
 ```
 
 ✅ **Markdown for documentation**

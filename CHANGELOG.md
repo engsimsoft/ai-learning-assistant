@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - Course Structure File Renamed
+
+**Date:** 2025-10-27
+
+**Reason:** Improved consistency with other course structure file naming conventions.
+
+- Renamed `docs/course-structure.md` → `docs/ai-web-learning-structure.md`
+- Updated naming pattern to match other courses:
+  - `project-setup-guide-structure.md` - Project Setup Guide course
+  - `web-design-fundamentals-structure.md` - Web Design Fundamentals course
+  - `ai-web-learning-structure.md` - AI Web Learning course (NEW)
+- Updated all references (8 files):
+  - README.md (3 references)
+  - docs/prompt-system.md
+  - docs/web-design-fundamentals-structure.md
+  - docs/project-setup-guide-structure.md
+  - backend/data/lessons/worked-examples/README.md
+  - CHANGELOG.md (3 references)
+
+**Benefits:**
+- Clear, consistent naming across all course structure files
+- Easier to identify which course each file describes
+- Better organization with 4 courses in the project
+
+---
+
 ### Added - Canvas P-V Diagram as Artifact (Level 6)
 
 **Date:** 2025-10-19
@@ -620,7 +646,7 @@ const customUrlTransform = (url) => {
 **Documentation:**
 - Added `docs/web-design-fundamentals-structure.md` - complete course structure
 - Updated README.md section "Образовательные курсы" (2 курса → 3 курса, 72 → 94 урока)
-- Updated `docs/course-structure.md` with link to new course
+- Updated `docs/ai-web-learning-structure.md` with link to new course
 - Project now teaches: WHAT to create (AI Web Learning), HOW to organize (Project Setup Guide), HOW to name (Web Design Fundamentals)
 
 **Backend Integration:**
@@ -688,7 +714,7 @@ const customUrlTransform = (url) => {
 - `integration-guide.md` - How to adapt for your project (3 integration levels, use cases) (71 KB)
 
 **Course Structure Updates:**
-- Updated `docs/course-structure.md` with Worked Examples section
+- Updated `docs/ai-web-learning-structure.md` with Worked Examples section
 - Added to course statistics: 42+ total lessons (41 lessons + 1 worked example)
 - Documents real-world application of course principles
 
@@ -844,7 +870,7 @@ const customUrlTransform = (url) => {
   - Renamed all module folders: removed "module-" and "part-" prefixes
   - New naming: `1-basics`, `2-backend`, `3-database`, etc. (auto-sorted)
 - **Documentation improvements**
-  - Added `docs/course-structure.md` - detailed AI Web Learning course structure
+  - Added `docs/ai-web-learning-structure.md` - detailed AI Web Learning course structure
   - Added `docs/project-setup-guide-structure.md` - Project Setup Guide structure
   - Updated README.md with course overview section
   - Added critical pre-commit checklist to CLAUDE.md

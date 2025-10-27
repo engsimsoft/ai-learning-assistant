@@ -395,7 +395,7 @@
 
 ## 🔗 Связанные документы
 
-- **Структура основного курса:** [course-structure.md](course-structure.md)
+- **Структура курса "AI Web Learning":** [ai-web-learning-structure.md](ai-web-learning-structure.md)
 - **Структура Project Setup Guide:** [project-setup-guide-structure.md](project-setup-guide-structure.md)
 - **Главная страница проекта:** [README.md](../README.md)
 - **Архитектура системы:** [architecture.md](architecture.md)

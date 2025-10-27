@@ -148,5 +148,5 @@ uvicorn main:app --reload
 ## 🔗 См. также
 
 - [architecture.md](architecture.md) — Архитектура системы
-- [course-structure.md](course-structure.md) — Структура курсов
+- [ai-web-learning-structure.md](ai-web-learning-structure.md) — Структура курса "AI Web Learning"
 - [ARTIFACTS_SPEC.md](artifacts/ARTIFACTS_SPEC.md) — Спецификация Canvas/Artifacts

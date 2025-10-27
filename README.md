@@ -35,7 +35,7 @@ Frontend: http://localhost:5173
 
 Проект содержит **три курса** по веб-разработке:
 
-- **[AI Web Learning](docs/course-structure.md)** — ЧТО создавать: Backend, Frontend, Database, RAG, ML
+- **[AI Web Learning](docs/ai-web-learning-structure.md)** — ЧТО создавать: Backend, Frontend, Database, RAG, ML
 - **[Project Setup Guide](docs/project-setup-guide-structure.md)** — КАК организовать: структура, архитектура, работа с ИИ
 - **[Web Design Fundamentals](docs/web-design-fundamentals-structure.md)** — КАК называть: UI/UX терминология и артефакты дизайна для работы с ИИ
 
@@ -44,7 +44,7 @@ Frontend: http://localhost:5173
 ## Документация
 
 - [Детальная установка](docs/setup.md) | [Архитектура](docs/architecture.md) | [Deployment](docs/deployment.md) | [Troubleshooting](docs/troubleshooting.md)
-- [Структура курса "AI Web Learning"](docs/course-structure.md) - 10 модулей веб-разработки
+- [Структура курса "AI Web Learning"](docs/ai-web-learning-structure.md) - 10 модулей веб-разработки
 - [Структура курса "Project Setup Guide"](docs/project-setup-guide-structure.md) - правильная организация проектов
 - [Canvas и артефакты](docs/artifacts.md) | [Система промптов](docs/prompt-system.md)
 
@@ -74,7 +74,7 @@ backend/
 ├── services/
 │   ├── openrouter_service.py  # Работа с LLM через OpenRouter
 │   └── context_service.py     # Управление уроками
-└── data/lessons/        # уроки курсов (см. docs/course-structure.md)
+└── data/lessons/        # уроки курсов (см. docs/ai-web-learning-structure.md)
 
 frontend/
 ├── src/

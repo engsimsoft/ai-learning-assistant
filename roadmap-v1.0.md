@@ -139,7 +139,7 @@
 - ✅ Создали три категории: ai-web-learning, project-setup-guide, extras
 - ✅ Упростили названия модулей (удалили префиксы "module-" и "part-")
 - ✅ Обновили context_service.py для поддержки новой структуры
-- ✅ Создали документацию курсов (docs/course-structure.md, docs/project-setup-guide-structure.md)
+- ✅ Создали документацию курсов (docs/ai-web-learning-structure.md, docs/project-setup-guide-structure.md)
 - ✅ Добавили критически важное правило в CLAUDE.md о предкоммитном обновлении документации
 - ✅ Исправлена критическая проблема UI с отображением названий курсов
 - ✅ Установлен и использован Playwright MCP для диагностики CSS проблем

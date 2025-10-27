@@ -75,3 +75,11 @@ coverage.xml
 
 # Personal user documents (not related to project)
 my-documents/
+
+# Script logs and PID files
+*.log
+*.pid
+backend.log
+frontend.log
+backend.pid
+frontend.pid

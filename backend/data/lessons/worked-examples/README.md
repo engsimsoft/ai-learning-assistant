@@ -64,7 +64,7 @@ example-X-название/
 
 ## 🔗 Связанные документы
 
-- [Course Structure](../../../docs/course-structure.md) - Структура всего курса
+- [AI Web Learning Structure](../../../docs/ai-web-learning-structure.md) - Структура курса "AI Web Learning"
 - [README](../../../README.md) - Главная страница проекта
 - [Architecture](../../../docs/architecture.md) - Общая архитектура
 

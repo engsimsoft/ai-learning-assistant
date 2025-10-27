@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная P-V диаграмма</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 0;
+            min-height: 700px;
+        }
+
+        .diagram-section {
+            padding: 40px;
+            background: white;
+            position: relative;
+        }
+
+        .controls-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 3px solid #2a5298;
+        }
+
+        .canvas-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #pvCanvas {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-group h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #2a5298;
+            padding-bottom: 8px;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .phase-indicator {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .phase {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .phase.active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .phase.intake { background: #e3f2fd; color: #1976d2; }
+        .phase.intake.active { border-color: #1976d2; }
+
+        .phase.compression { background: #fff3e0; color: #f57c00; }
+        .phase.compression.active { border-color: #f57c00; }
+
+        .phase.power { background: #ffebee; color: #d32f2f; }
+        .phase.power.active { border-color: #d32f2f; }
+
+        .phase.exhaust { background: #f3e5f5; color: #7b1fa2; }
+        .phase.exhaust.active { border-color: #7b1fa2; }
+
+        .info-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Интерактивная P-V диаграмма</h1>
+            <p>Изучите термодинамический цикл двигателя в реальном времени</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="diagram-section">
+                <div class="canvas-container">
+                    <canvas id="pvCanvas" width="600" height="450"></canvas>
+                </div>
+
+                <div class="phase-indicator">
+                    <div class="phase intake" data-phase="intake">
+                        🌬️ Впуск
+                    </div>
+                    <div class="phase compression" data-phase="compression">
+                        🔧 Сжатие
+                    </div>
+                    <div class="phase power" data-phase="power">
+                        💥 Рабочий ход
+                    </div>
+                    <div class="phase exhaust" data-phase="exhaust">
+                        🌫️ Выпуск
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <h4 id="currentPhase">Выберите параметры и нажмите "Запуск"</h4>
+                    <p id="phaseDescription">Настройте параметры двигателя справа и запустите анимацию цикла</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <button class="play-button" onclick="toggleAnimation()">
+                    ▶️ Запустить цикл
+                </button>
+
+                <div class="control-group">
+                    <h3>⚙️ Параметры двигателя</h3>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Степень сжатия</span>
+                            <span id="compressionValue">10.0</span>
+                        </div>
+                        <input type="range" class="slider" id="compressionRatio"
+                               min="8" max="15" step="0.5" value="10">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Рабочий объем (л)</span>
+                            <span id="displacementValue">2.0</span>
+                        </div>
+                        <input type="range" class="slider" id="displacement"
+                               min="1.0" max="6.0" step="0.2" value="2.0">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Обороты (×1000)</span>
+                            <span id="rpmValue">4.0</span>
+                        </div>
+                        <input type="range" class="slider" id="rpm"
+                               min="1" max="8" step="0.5" value="4">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>📈 Текущие показатели</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="currentPressure">1.0</div>
+                            <div class="stat-label">Давление (бар)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="currentVolume">100</div>
+                            <div class="stat-label">Объем (%)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="currentTemp">300</div>
+                            <div class="stat-label">Температура (К)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="currentWork">0</div>
+                            <div class="stat-label">Работа (кДж)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('pvCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let animationId;
+        let isAnimating = false;
+        let currentStep = 0;
+        let totalSteps = 360;
+
+        const phases = {
+            intake: { start: 0, end: 90, name: "Впуск", desc: "Поршень движется вниз, всасывая смесь" },
+            compression: { start: 90, end: 180, name: "Сжатие", desc: "Поршень сжимает топливно-воздушную смесь" },
+            power: { start: 180, end: 270, name: "Рабочий ход", desc: "Воспламенение смеси толкает поршень вниз" },
+            exhaust: { start: 270, end: 360, name: "Выпуск", desc: "Поршень выталкивает отработанные газы" }
+        };
+
+        // Обновление значений слайдеров
+        document.getElementById('compressionRatio').oninput = function() {
+            document.getElementById('compressionValue').textContent = this.value;
+            drawDiagram();
+        };
+
+        document.getElementById('displacement').oninput = function() {
+            document.getElementById('displacementValue').textContent = this.value;
+            drawDiagram();
+        };
+
+        document.getElementById('rpm').oninput = function() {
+            document.getElementById('rpmValue').textContent = this.value;
+            drawDiagram();
+        };
+
+        function getEngineParams() {
+            return {
+                compressionRatio: parseFloat(document.getElementById('compressionRatio').value),
+                displacement: parseFloat(document.getElementById('displacement').value),
+                rpm: parseFloat(document.getElementById('rpm').value) * 1000
+            };
+        }
+
+        function calculateCyclePoint(step) {
+            const params = getEngineParams();
+            const angle = (step / totalSteps) * 360;
+            const cr = params.compressionRatio;
+
+            let volume, pressure, temperature;
+
+            if (angle <= 90) { // Впуск
+                volume = 50 + (angle / 90) * 50;
+                pressure = 1.0;
+                temperature = 300;
+            } else if (angle <= 180) { // Сжатие
+                const progress = (angle - 90) / 90;
+                volume = 100 - progress * (100 - 100/cr);
+                pressure = 1.0 * Math.pow(cr, progress * 1.3);
+                temperature = 300 + progress * 200;
+            } else if (angle <= 270) { // Рабочий ход
+                const progress = (angle - 180) / 90;
+                volume = 100/cr + progress * (100 - 100/cr);
+                pressure = cr * 3 * Math.pow(1 - progress, 1.3);
+                temperature = 2000 - progress * 1500;
+            } else { // Выпуск
+                volume = 100;
+                pressure = 1.0;
+                temperature = 500;
+            }
+
+            return { volume, pressure, temperature, angle };
+        }
+
+        function drawDiagram() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Оси
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(60, 380);
+            ctx.lineTo(560, 380); // X-axis (Volume)
+            ctx.moveTo(60, 380);
+            ctx.lineTo(60, 40);   // Y-axis (Pressure)
+            ctx.stroke();
+
+            // Подписи осей
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.fillText('Объем', 300, 410);
+            ctx.save();
+            ctx.translate(25, 200);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('Давление', 0, 0);
+            ctx.restore();
+
+            // Сетка
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 10; i++) {
+                const x = 60 + i * 50;
+                const y = 380 - i * 34;
+                ctx.beginPath();
+                ctx.moveTo(x, 380);
+                ctx.lineTo(x, 40);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(60, y);
+                ctx.lineTo(560, y);
+                ctx.stroke();
+            }
+
+            // Цикл
+            const params = getEngineParams();
+            ctx.strokeStyle = '#2a5298';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (let step = 0; step <= totalSteps; step++) {
+                const point = calculateCyclePoint(step);
+                const x = 60 + (point.volume / 100) * 500;
+                const y = 380 - (point.pressure / 30) * 340;
+
+                if (step === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                // Текущая точка
+                if (step === currentStep && isAnimating) {
+                    ctx.save();
+                    ctx.fillStyle = '#ff4444';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.restore();
+
+                    updateCurrentValues(point);
+                }
+            }
+            ctx.stroke();
+
+            // Фазы цикла (цветные участки)
+            drawPhases();
+        }
+
+        function drawPhases() {
+            const colors = ['#1976d2', '#f57c00', '#d32f2f', '#7b1fa2'];
+            const phaseNames = ['intake', 'compression', 'power', 'exhaust'];
+
+            phaseNames.forEach((phaseName, index) => {
+                const phase = phases[phaseName];
+                ctx.strokeStyle = colors[index];
+                ctx.lineWidth = 5;
+                ctx.globalAlpha = 0.7;
+                ctx.beginPath();
+
+                for (let step = phase.start; step <= phase.end; step++) {
+                    const point = calculateCyclePoint(step);
+                    const x = 60 + (point.volume / 100) * 500;
+                    const y = 380 - (point.pressure / 30) * 340;
+
+                    if (step === phase.start) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        function updateCurrentValues(point) {
+            document.getElementById('currentPressure').textContent = point.pressure.toFixed(1);
+            document.getElementById('currentVolume').textContent = point.volume.toFixed(0);
+            document.getElementById('currentTemp').textContent = point.temperature.toFixed(0);
+
+            const work = (point.pressure - 1) * point.volume * 0.1;
+            document.getElementById('currentWork').textContent = work.toFixed(1);
+
+            // Обновление активной фазы
+            const currentPhase = getCurrentPhase(point.angle);
+            updatePhaseIndicator(currentPhase);
+        }
+
+        function getCurrentPhase(angle) {
+            for (const [name, phase] of Object.entries(phases)) {
+                if (angle >= phase.start && angle < phase.end) {
+                    return name;
+                }
+            }
+            return 'intake';
+        }
+
+        function updatePhaseIndicator(currentPhase) {
+            document.querySelectorAll('.phase').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            const activePhase = document.querySelector(`.phase[data-phase="${currentPhase}"]`);
+            if (activePhase) {
+                activePhase.classList.add('active');
+            }
+
+            const phase = phases[currentPhase];
+            document.getElementById('currentPhase').textContent = phase.name;
+            document.getElementById('phaseDescription').textContent = phase.desc;
+        }
+
+        function animate() {
+            currentStep++;
+            if (currentStep > totalSteps) {
+                currentStep = 0;
+            }
+
+            drawDiagram();
+
+            if (isAnimating) {
+                const params = getEngineParams();
+                const speed = params.rpm / 2000; // Скорость анимации
+                setTimeout(() => {
+                    animationId = requestAnimationFrame(animate);
+                }, 100 / speed);
+            }
+        }
+
+        function toggleAnimation() {
+            const button = document.querySelector('.play-button');
+
+            if (isAnimating) {
+                isAnimating = false;
+                cancelAnimationFrame(animationId);
+                button.innerHTML = '▶️ Запустить цикл';
+                button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else {
+                isAnimating = true;
+                currentStep = 0;
+                button.innerHTML = '⏸️ Остановить';
+                button.style.background = 'linear-gradient(135deg, #dc3545, #fd7e14)';
+                animate();
+            }
+        }
+
+        // Инициализация
+        drawDiagram();
+    </script>
+</body>
+</html>
