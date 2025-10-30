@@ -7,6 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Module 4: Express + React Setup (Project Setup Guide) ✅ COMPLETED
+
+**Date:** 2025-10-30
+
+**New Module:** Module 4 (Express + React Setup) added to Project Setup Guide course (8 lessons).
+
+**Reason:** Course had a gap - covered FastAPI + React and Next.js, but missing Express + React approach.
+**Solution:** Create comprehensive module teaching Express + TypeScript + React + Drizzle ORM stack.
+
+**Module 4 Content (8 lessons, ~4,952 lines):**
+
+1. **4.1 Когда использовать Express vs FastAPI vs Next.js.md**
+   - Architectural decision-making
+   - Comparison of three full-stack approaches
+   - Real-world example: 527 ShortCut project
+
+2. **4.2 Инициализация Backend (Express + TypeScript).md**
+   - Creating Node.js project
+   - Express + TypeScript setup
+   - tsconfig.json configuration
+
+3. **4.3 Структура папок Backend (Express).md**
+   - Layered architecture for Express
+   - server/routes/, server/services/, server/middleware/
+   - shared/schema.ts for type sharing
+
+4. **4.4 Database с Drizzle ORM.md**
+   - Why Drizzle ORM for TypeScript projects
+   - Type-safe database queries
+   - Schema definition and migrations
+
+5. **4.5 Инициализация Frontend (React + Vite).md**
+   - React + Vite setup
+   - Integration with Express backend
+   - Environment variables configuration
+
+6. **4.6 Связка всех частей + Полный анализ 527 ShortCut.md**
+   - CORS configuration
+   - Complete architecture analysis of production project
+   - Express + React + Drizzle integration
+
+7. **4.7 Чек-лист Express + React + Drizzle проекта.md**
+   - Project structure validation checklist
+   - Common mistakes and how to avoid them
+
+8. **4.8-DOCUMENTATION-GUIDE.md**
+   - Documentation specification for 527 ShortCut project
+   - Express project documentation standards
+
+**Course Statistics Update:**
+- Project Setup Guide: 21 → 29 lessons
+- New stack covered: Express + TypeScript + React + Drizzle ORM
+
+**Documentation Updated:**
+- `docs/project-setup-guide-structure.md` - added Part 4 description
+- Course statistics table updated (21 → 29 lessons)
+- Added Express + React to project types comparison
+- Added layered architecture example for Express
+
+---
+
 ### Added - Module 8: Node.js Fundamentals ✅ COMPLETED
 
 **Date:** 2025-10-27 (started and completed same day)

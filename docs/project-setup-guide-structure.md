@@ -162,6 +162,60 @@
 
 ---
 
+### Часть 4: Express + React Setup (8 уроков) 🟢
+**Путь:** `backend/data/lessons/project-setup-guide/4- Express + React /`
+
+**Тип проекта:** Разделенный Backend (Express + TypeScript) + Frontend (React) с Drizzle ORM
+
+1. **4.1 Когда использовать Express vs FastAPI vs Next.js.md**
+   - Сравнение трёх подходов к full-stack разработке
+   - Когда выбирать Express + React
+   - Реальный пример проекта 527 ShortCut
+   - Принятие архитектурных решений
+
+2. **4.2 Инициализация Backend (Express + TypeScript).md**
+   - Создание Node.js проекта
+   - Установка Express и TypeScript
+   - Настройка tsconfig.json
+   - Первый запуск Express сервера
+
+3. **4.3 Структура папок Backend (Express).md**
+   - server/routes/ - API endpoints
+   - server/services/ - бизнес-логика
+   - server/middleware/ - Express middleware
+   - shared/schema.ts - общие типы (Drizzle)
+
+4. **4.4 Database с Drizzle ORM.md**
+   - Почему Drizzle ORM для Express проектов
+   - Настройка Drizzle с PostgreSQL
+   - Создание схемы БД (shared/schema.ts)
+   - Генерация миграций
+   - Type-safe database queries
+
+5. **4.5 Инициализация Frontend (React + Vite).md**
+   - npm create vite@latest
+   - Установка зависимостей
+   - Настройка .env для клиента
+   - Интеграция с Express backend
+
+6. **4.6 Связка всех частей + Полный анализ 527 ShortCut.md**
+   - CORS настройка для Express
+   - API клиент в React
+   - Полный разбор архитектуры 527 ShortCut
+   - Взаимодействие Express + React + Drizzle
+   - Best practices для production
+
+7. **4.7 Чек-лист Express + React + Drizzle проекта.md**
+   - Проверка правильности структуры
+   - Что должно работать
+   - Типичные ошибки Express проектов
+
+8. **4.8-DOCUMENTATION-GUIDE.md**
+   - Спецификация документации для 527 ShortCut
+   - Правила ведения документации Express проектов
+
+---
+
 ### Часть 5: Работа с ИИ (1 урок) 🤖
 **Путь:** `backend/data/lessons/project-setup-guide/5-ai-tools/`
 
@@ -191,11 +245,10 @@
 | **Часть 1** | Основы организации | 9 |
 | **Часть 2** | FastAPI + React Setup | 6 |
 | **Часть 3** | Next.js Setup | 4 |
+| **Часть 4** | Express + React Setup | 8 |
 | **Часть 5** | Работа с ИИ | 1 |
 | **Часть 6** | Шаблоны и чек-листы | 1 |
-| **Всего** | | **21 урок** |
-
-**Примечание:** Части 4 не существует (пропуск в нумерации).
+| **Всего** | | **29 уроков** |
 
 ---
 
@@ -205,13 +258,20 @@
 - Backend: FastAPI (Python)
 - Frontend: React + Vite (JavaScript)
 - Deployment: Раздельный (Railway backend, Vercel frontend)
-- Когда использовать: Микросервисы, API для мобильных приложений
+- Когда использовать: Микросервисы, API для мобильных приложений, Python-ориентированные проекты
 
 ### 2. **Next.js (Full-stack монолит)**
 - Frontend + Backend: Next.js (JavaScript/TypeScript)
 - API Routes: встроенные в Next.js
 - Deployment: Vercel
-- Когда использовать: Full-stack приложения, быстрый старт
+- Когда использовать: Full-stack приложения, быстрый старт, SEO-оптимизация
+
+### 3. **Express + React (JavaScript full-stack)**
+- Backend: Express + TypeScript (Node.js)
+- Frontend: React + Vite (JavaScript/TypeScript)
+- Database: Drizzle ORM + PostgreSQL
+- Deployment: Раздельный (Railway/Render backend, Vercel frontend)
+- Когда использовать: JavaScript везде, нужна гибкость Express, type-safe database
 
 ---
 
@@ -235,6 +295,24 @@ src/
 │   ├── ui/          # Переиспользуемые UI
 │   └── features/    # Бизнес-компоненты
 └── lib/             # Utilities, database
+```
+
+### Структура для Express + React:
+```
+project/
+├── server/              # Backend (Express + TypeScript)
+│   ├── routes/         # API endpoints
+│   ├── services/       # Business logic
+│   ├── middleware/     # Express middleware
+│   └── index.ts        # Express app
+├── client/             # Frontend (React + Vite)
+│   ├── src/
+│   │   ├── components/
+│   │   ├── services/   # API client
+│   │   └── App.tsx
+│   └── package.json
+└── shared/
+    └── schema.ts       # SSOT: Drizzle schema + TypeScript types
 ```
 
 ---
@@ -359,4 +437,4 @@ BEST PRACTICES:
 
 ---
 
-**Последнее обновление:** 2025-10-13
+**Последнее обновление:** 2025-10-30

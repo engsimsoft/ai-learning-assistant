@@ -18,6 +18,7 @@
 - **Фаза:** Фаза 1-2 + Artifact System (Sprint 4-6) завершены ✅ / 4
 - **Прогресс:** 48/67 задач (72%)
 - **Следующее:** Фаза 3 (Cost Display) или Sprint 7 (Testing & Documentation)
+- **Контент:** Module 4 (Express + React Setup) добавлен в Project Setup Guide (8 уроков) ✅ 2025-10-30
 
 ---
 
